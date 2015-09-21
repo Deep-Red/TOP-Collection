@@ -14,6 +14,10 @@ a:hover {
  
 }
 
+li {
+	display: inline;
+}
+
 #sib {
 	float: right;
 	background-color: #4285F4;
