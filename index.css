@@ -5,10 +5,23 @@
 }
 
 a {
+		font-family: "Impact";
 		text-decoration: none;
 		color: #777777;
-		font-family: "Arial Narrow";
 	}
+a:hover {
+	text-decoration: underline;
+ 
+}
+
+#sib {
+	float: right;
+	background-color: #4285F4;
+}
+
 #Center {
-	margin:auto;
+	position: absolute;
+	left: 30%;
+	top: 30%;
+	margin: auto;
 }
