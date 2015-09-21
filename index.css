@@ -5,9 +5,9 @@
 }
 
 a {
-		font-family: "Times New Roman";
+		font-family: "Impact";
 		text-decoration: none;
-		color: #777777;
+		color: #333333;
 	}
 a:hover {
 	text-decoration: underline;
@@ -29,5 +29,6 @@ a:hover {
 #Footer {
 	position: absolute;
 	bottom: 0;
-	right: 0;
+	left: 0;
+	a:color777777;
 }
