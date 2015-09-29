@@ -11,8 +11,6 @@ var sumOfMultiples = function(){
     var input = document.getElementById("problem_1_input").value;
     var answer = document.getElementById("answer");
     var sum = 0
-    alert("Test!" + 4);
-    alert(input)
     for(var i = 1; i < input; i++){
         sum += isMultiple(i);
     }
