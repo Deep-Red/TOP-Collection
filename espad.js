@@ -1,5 +1,10 @@
 $(document).ready(
-	function makeDivs(len){
+	function makeDiv(){
+		var $cell = $("<div id='cell1' class='cell1' />")
+		$("#box").append($cell);
+
+
+/*	function makeDivs(len){
 		var e = document.body;
 		var len = 16
 		var $newDiv1 = $("<div id='newDiv1' class='row' />")
@@ -14,4 +19,6 @@ $(document).ready(
 		
 
 document.getElementById("box").innerText = e.innerHTML;
+}
+*/
 });

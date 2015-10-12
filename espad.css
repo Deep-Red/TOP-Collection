@@ -7,3 +7,9 @@
 	border-color: 1px #AAAA00;
 	background-color: #CCCCCC;
 }
+
+.cell1{
+	background-color: #FF0000;
+	width: 300px;
+	height: 300px;
+}
