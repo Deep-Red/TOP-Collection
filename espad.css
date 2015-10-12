@@ -16,8 +16,8 @@
 }
 */
 .row{
-	width: 300px;
+	width: 85%;
 	height: 50px;
-	border-style: dotted;
-	border-color: 1px #FF0000;
+	background-color: #FF0000;
+	padding: 2px;
 }

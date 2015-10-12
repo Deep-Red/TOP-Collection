@@ -1,10 +1,10 @@
 $(document).ready(
-	function makeRow($len){
-		var $len = 16
-		var $row = $("<div id='row'+y class='row' />")
-		for(var y = 0; y < $len; y++){
+	function makeRow(len){
+		var len = 16
+		var $row = $("<div id='row' class='row' />")
+		for(var y = 0; y < len; y++){
 			$("#box").append($row);
-		}	
+		}
 	}
 
 
