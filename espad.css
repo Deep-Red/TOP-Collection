@@ -1,4 +1,4 @@
-.wrapper{
+/*.wrapper{
 	border-style: groove;
 	border-color: 1px #AAAA00;
 }
@@ -10,6 +10,13 @@
 
 .cell1{
 	background-color: #FF0000;
+	width: 30px;
+	height: 30px;
+}
+*/
+.row{
 	width: 300px;
-	height: 300px;
+	height: 50px;
+	border-style: dotted;
+	border-color: 1px #FF0000;
 }

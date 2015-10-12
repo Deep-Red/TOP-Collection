@@ -1,8 +1,14 @@
 $(document).ready(
-	function makeDiv(){
+	function makeRow(){
+		var $row = $("<div id='row'+y class='row' />")
+		$("#box").append($row);
+	}
+
+
+/*	function makeCell(){
 		var $cell = $("<div id='cell1' class='cell1' />")
 		$("#box").append($cell);
-
+*/
 
 /*	function makeDivs(len){
 		var e = document.body;
@@ -21,4 +27,4 @@ $(document).ready(
 document.getElementById("box").innerText = e.innerHTML;
 }
 */
-});
+);
