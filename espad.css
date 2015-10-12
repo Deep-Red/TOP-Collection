@@ -5,4 +5,5 @@
 .gridSquare{
 	border-style: groove;
 	border-color: 1px #AAAA00;
+	background-color: #CCCCCC;
 }

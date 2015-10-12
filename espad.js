@@ -2,19 +2,16 @@ $(document).ready(
 	function makeDivs(len){
 		var e = document.body;
 		var len = 16
+		var $newDiv1 = $("<div id='newDiv1' class='row' />")
+		var $newDiv2 = $("<div id='newDiv2' class='gridsquare' />");
 		for(var y=0; y < len; y++){
-			var row = document.createElement("div");
+			$("box").append($newDiv1);
 		}
-		row.className="row";
-
+		
 		for(var x=1; x < len; x++){
-			var cell = document.createElement("div");
+			$("row").append($newDiv2);
 		}
-		cell.className="gridsquare";
-		cell.innerText="(y * len) + x";
-		row.appendChild(cell);
-	
-	e.appendChild(row);
+		
 
 document.getElementById("box").innerText = e.innerHTML;
 });
