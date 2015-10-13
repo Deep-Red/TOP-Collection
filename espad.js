@@ -1,12 +1,27 @@
-$(document).ready(
-	function makeRow(len){
-		var len = 16
+/*$(document).ready(
+*/
+
+	var newGrid = function() {
+		var length = document.getElementById("length").value
+		var area = length * length
+		$('.wrapper').empty();
+		for(var i=0; i < area; i++){
+			$('#box').append("<div id='cell' class='cell'></div>");
+		};
+		var boardLength = document.getElementById("box").offsetHeight
+		$('cell').css('width', boardLength);
+		$('cell').css('height', boardLength);
+
+	}
+
+/*
+	function makeRow() {
 		var $row = $("<div id='row' class='row' />")
-		for(var y = 0; y < 16; y++){
+		for(var y=0; y<16; y++){
 			$("#box").append($row);
 		}
 	}
-
+*/
 
 /*	function makeCell(){
 		var $cell = $("<div id='cell1' class='cell1' />")
@@ -29,5 +44,6 @@ $(document).ready(
 
 document.getElementById("box").innerText = e.innerHTML;
 }
-*/
+
 );
+*/

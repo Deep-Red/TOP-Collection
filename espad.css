@@ -1,4 +1,6 @@
 .wrapper{
+	width: 90vh;
+	height: 90vh;
 	border-style: groove;
 	border-color: 1px #AAAA00;
 }
@@ -8,16 +10,19 @@
 	border-color: 1px #AAAA00;
 	background-color: #CCCCCC;
 }
-
-.cell1{
-	background-color: #FF0000;
-	width: 30px;
-	height: 30px;
-}
 */
+/*
 .row{
 	width: 85%;
 	height: 50px;
 	background-color: #FF0000;
-	padding: 2px;
+	margin: 2px;
+}
+*/
+.cell{
+	background-color: #FF0000;
+	width: 55px;
+	height: 55px;
+	margin: 1px;
+	float: left;
 }
