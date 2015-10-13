@@ -8,7 +8,7 @@
 		for(var i=0; i < area; i++){
 			$('#box').append("<div id='cell' class='cell'></div>");
 		};
-		var boardLength = ((550 / length) - (2 * length)) //document.getElementById("box").offsetHeight
+		var boardLength = ((550 / length) - (2)) //document.getElementById("box").offsetHeight
 		$('.cell').css('width', boardLength);
 		$('.cell').css('height', boardLength);
 
