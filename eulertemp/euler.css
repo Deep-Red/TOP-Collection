@@ -1,0 +1,17 @@
+h1{
+    text-shadow: 2px 2px #ff2222
+}
+h2{
+    text-indent: 20px;
+    color: #222200; 
+}
+.content{
+    text-align: center;
+    border-style: groove;
+    border-color: 1px #AAAA00;
+}
+.problems{
+	border-style: groove;
+	border-color: 2px #CCCC00;
+	padding: 50px;
+}
