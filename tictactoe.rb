@@ -1,4 +1,4 @@
-Class Row
+class Row
 def initialize(rownum)
 	@rownum = rownum
 	@val = [nil,nil,nil]
@@ -24,10 +24,11 @@ end
 turn = 0
 winner = 0
 
+public
 def show_board()
-	display_row(1)
-	display_row(2)
-	display_row(3)
+	Row.display_row(1)
+	Row.display_row(2)
+	Row.display_row(3)
 end
 
 def show_board_map()
@@ -45,7 +46,7 @@ def play(turn)
 	puts "Turn #{turn}:" 
 	puts "It is player #{player}'s turn!"
 
-	show_board
+	Row.show_board
 	puts "Which space would you like to choose, Player #{player}?"
 	choice = gets.chomp
 	mark(player, choice)
