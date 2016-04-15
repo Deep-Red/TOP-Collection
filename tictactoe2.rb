@@ -1,14 +1,12 @@
 class Board
 
 def initialize()
-	@gamestate = Array.new
-	3.times do 
-		@gamestate.push(["A","B","C"])
+	@gamestate = Array.new("a","b","c","d","e","f","g","h","i")
 	end
 end
 
 def horizontal_line()
-	puts "-----"
+	puts "-+-+-"
 end
 
 def show_gamestate()
@@ -30,13 +28,11 @@ end
 def mark(player, choice)
 	piece = player == 1 ? "X" : "O"
 	pick = choice.to_i
-	if pick <= 3
-		@gamestate[0[pick - 1]] = [piece]
-	elsif pick >= 7
-		@gamestate[1[pick - 7]] = [piece]
-	else
-		@gamestate[2[pick - 4]] = [piece]
-	end		
+	row = (pick.to_f / 3).ceil
+	col = (pick % 3) == 0 ? 3 : (pick % 3)
+	puts @gamestate[row[col]]
+	@gamestate[row[col]] = [piece]
+ 
 	show_gamestate
 end
 
