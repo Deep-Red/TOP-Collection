@@ -3,6 +3,7 @@ class Gameboard
 	@@colormap2 = ["\e[0;31;49mX\e[0m", "\e[0;33;49mX\e[0m", "\e[0;32;49mX\e[0m", "\e[0;36;49mX\e[0m", "\e[0;34;49mX\e[0m", "\e[0;35;49mX\e[0m"]
 
 def initialize()
+	@board = Array.new
 	@codekey = Array.new(4, 0)
 	@codekey.map!{rand(1..6)}
 	puts @codekey.inspect
@@ -11,12 +12,33 @@ end
 def show_gamestate()
 	puts @@colormap.join(" ")
 	puts "\e[1;30;49m\n X X X X \n\e[0m"
+	puts @board
+end
+
+def win
+	puts "YOU WON!"
+	show_gamestate
+end
+
+def lose
+	puts "Sorry, you lose."
+	show_gamestate
+end
+
+def gameover?(turn, pegs)
+	if	pegs == ["\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m"]
+		win
+	elsif turn == 12
+		lose
+	else
+		play(turn)
+	end
 end
 
 def evaluate_guess(guess, turn)
 	feedback = @codekey.dup
 #	backdoor = @codekey.dup
-	feedbacktemp = feedback
+#	feedbacktemp = feedback
 
 #	puts @codekey.inspect
 #	puts feedback.inspect
@@ -39,17 +61,18 @@ def evaluate_guess(guess, turn)
 			pegs[i] = "\e[0;33;49m|\e[0m"
 #			feedback[c.to_i] = "#{rand()}"
 			feedback[i] = "#{rand()}"
-			feedbacktemp[i] = "#{rand()}"
+#			feedbacktemp[i] = "#{rand()}"
 		end }
 		}
 
 	evaluate_return = "#{display_guess(guess)}" + " " + pegs.join("")
 	puts evaluate_return
+	@board[(turn - 1)] = evaluate_return
 #	puts @codekey.inspect
 #	puts backdoor.inspect
 #	feedback = "Garbage"
 #	puts feedback
-	play(turn)
+	gameover?(turn, pegs)
 end
 
 def valid_guess?(guess, turn)
@@ -69,6 +92,7 @@ def display_guess(guess)
 	dg[i] = @@colormap2[(g.to_i-1)]
 	}
 	print " " + dg.join(" ")
+	return " " + dg.join(" ")
 end
 
 
