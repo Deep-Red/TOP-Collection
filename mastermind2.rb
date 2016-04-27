@@ -14,8 +14,11 @@ def show_gamestate()
 end
 
 def evaluate_guess(guess, turn)
+	feedback = []
+	feedbacktemp = []
 	feedback = @codekey
 	feedbacktemp = feedback
+
 	puts @codekey.inspect
 	puts feedback.inspect
 	puts feedbacktemp.inspect
