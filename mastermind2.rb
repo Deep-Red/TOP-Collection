@@ -26,7 +26,7 @@ def evaluate_guess(guess, turn)
 		end
 	}
 
-	puts feedback.inspect + " " + pegs.join("")
+#	puts feedback.inspect + " " + pegs.join("")
 
 	guess.each_with_index{|f, i|
 		feedback.find_index{ |c|
@@ -35,7 +35,6 @@ def evaluate_guess(guess, turn)
 			feedback[c.to_i] = "#{rand()}"
 			feedback[i] = "#{rand()}"
 			feedbacktemp[i] = "#{rand()}"
-			puts feedback
 		end }
 		}
 
