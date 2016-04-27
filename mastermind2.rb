@@ -14,10 +14,11 @@ def show_gamestate()
 end
 
 def evaluate_guess(guess, turn)
-	feedback = @codekey
+	feedback = @codekey.dup
+#	backdoor = @codekey.dup
 	feedbacktemp = feedback
 
-	puts @codekey.inspect
+#	puts @codekey.inspect
 #	puts feedback.inspect
 #	puts feedbacktemp.inspect
 	pegs = ["\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
@@ -36,7 +37,7 @@ def evaluate_guess(guess, turn)
 		feedback.find_index{ |c|
 			if c == f
 			pegs[i] = "\e[0;33;49m|\e[0m"
-			feedback[c.to_i] = "#{rand()}"
+#			feedback[c.to_i] = "#{rand()}"
 			feedback[i] = "#{rand()}"
 			feedbacktemp[i] = "#{rand()}"
 		end }
@@ -44,8 +45,10 @@ def evaluate_guess(guess, turn)
 
 	evaluate_return = "#{display_guess(guess)}" + " " + pegs.join("")
 	puts evaluate_return
-	feedback = "Garbage"
-	puts feedback
+#	puts @codekey.inspect
+#	puts backdoor.inspect
+#	feedback = "Garbage"
+#	puts feedback
 	play(turn)
 end
 
