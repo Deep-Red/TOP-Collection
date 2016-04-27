@@ -6,7 +6,7 @@ def initialize()
 	@board = Array.new
 	@codekey = Array.new(4, 0)
 	@codekey.map!{rand(1..6)}
-	puts @codekey.inspect
+#	puts @codekey.inspect
 end
 
 def show_gamestate()
@@ -16,13 +16,14 @@ def show_gamestate()
 end
 
 def win
-	puts "YOU WON!"
 	show_gamestate
+	puts "Congratulations, you won!"
 end
 
 def lose
-	puts "Sorry, you lose."
+	
 	show_gamestate
+	puts "Sorry, you lost."
 end
 
 def gameover?(turn, pegs)
@@ -66,7 +67,7 @@ def evaluate_guess(guess, turn)
 		}
 
 	evaluate_return = "#{display_guess(guess)}" + " " + pegs.join("")
-	puts evaluate_return
+#	puts evaluate_return
 	@board[(turn - 1)] = evaluate_return
 #	puts @codekey.inspect
 #	puts backdoor.inspect
@@ -91,7 +92,7 @@ def display_guess(guess)
 	guess.each_with_index{|g, i|
 	dg[i] = @@colormap2[(g.to_i-1)]
 	}
-	print " " + dg.join(" ")
+#	print " " + dg.join(" ")
 	return " " + dg.join(" ")
 end
 
@@ -102,8 +103,8 @@ def play(turn)
 	show_gamestate
 	puts "Guess Below:"
 	guess = gets.chomp.split("")
-	display_guess(guess)
-	puts ""
+#	display_guess(guess)
+#	puts ""
 	guess.map!{ |x| x.to_i}
 	valid_guess?(guess, turn)
 end
