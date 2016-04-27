@@ -14,14 +14,12 @@ def show_gamestate()
 end
 
 def evaluate_guess(guess, turn)
-	feedback = []
-	feedbacktemp = []
 	feedback = @codekey
 	feedbacktemp = feedback
 
 	puts @codekey.inspect
-	puts feedback.inspect
-	puts feedbacktemp.inspect
+#	puts feedback.inspect
+#	puts feedbacktemp.inspect
 	pegs = ["\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
 
 	feedback.each_with_index{|f, i|
@@ -46,6 +44,8 @@ def evaluate_guess(guess, turn)
 
 	evaluate_return = "#{display_guess(guess)}" + " " + pegs.join("")
 	puts evaluate_return
+	feedback = "Garbage"
+	puts feedback
 	play(turn)
 end
 
