@@ -6,7 +6,7 @@ def initialize()
 	@board = Array.new
 	@codekey = Array.new(4, 0)
 	@codekey.map!{rand(1..6)}
-#	puts @codekey.inspect
+	puts @codekey.inspect
 end
 
 def show_gamestate()
