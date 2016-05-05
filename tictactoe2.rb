@@ -17,14 +17,14 @@ def show_gamestate()
 	horizontal_line
 	puts @gamestate[3..5].join "|"
 	horizontal_line
-	puts @gamestate[6..9].join "|"
+	puts @gamestate[6..8].join "|"
 end
 
 def show_board_map()
 	puts "1|2|3"
-	self.horizontal_line
+	horizontal_line
 	puts "4|5|6"
-	self.horizontal_line
+	horizontal_line
 	puts "7|8|9"
 end
 
@@ -39,9 +39,16 @@ end
 
 def game_over_check(player, turn, choice)
 	pick = choice.to_i
-	if WINS.any? { |line| 
-		line.all? { |square| 
-			@gamestate[square] == "X" } }
+	if WINS.any? { |line|
+		comp_arr = []
+		line.each { |spot|
+		comp_arr << @gamestate[spot]
+		}
+		if comp_arr.inspect == '[["X"], ["X"], ["X"]]' || comp_arr.inspect == '[["O"], ["O"], ["O"]]'
+			puts "Player #{player} Wins!"
+			return true
+		end
+		}
 	then 
 		return true
 	elsif turn == 9
@@ -74,11 +81,10 @@ end
 
 end
 
-
 gameboard = Board.new
 turn = 0
 winner = 0
 puts "Welcome to Tic Tac Toe"
-puts "Use the following space numbers to choose your move."
+puts "Use the following numbers to choose your move."
 gameboard.show_board_map
 gameboard.play(turn)
