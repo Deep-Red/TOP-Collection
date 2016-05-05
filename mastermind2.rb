@@ -6,7 +6,7 @@ def initialize()
 	@board = Array.new
 	@codekey = Array.new(4, 0)
 	@codekey.map!{rand(1..6)}
-	puts @codekey.inspect
+#	puts @codekey.inspect
 end
 
 def show_gamestate()
@@ -44,13 +44,14 @@ def evaluate_guess(guess, turn)
 		if feedback[i] == guess[i]
 			pegs[i] = "\e[0;32;49m|\e[0m"
 			feedback[i] = "#{rand()}" #eliminates bulls from feedback
+#			guess[i] = "#{rand()}"
 		end
 	}
 
 
 	guess.each_with_index{|f, i|
 		feedback.find_index{ |c|
-			if c == f
+			if feedback[c] == f
 			pegs[i] = "\e[0;33;49m|\e[0m"
 #			feedback[c.to_i] = "#{rand()}"
 #			feedback[i] = "#{rand()}"
