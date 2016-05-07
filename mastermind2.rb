@@ -43,7 +43,7 @@ def evaluate_guess(guess, turn)
 	feedback.each_with_index{|f, i|
 		if feedback[i] == guess[i]
 			pegs[i] = "\e[0;32;49m|\e[0m"
-			feedback[i] = "#{rand()}" #eliminates bulls from feedback
+			feedback[i] = 0 #eliminates bulls from feedback
 #			guess[i] = "#{rand()}"
 		end
 	}
