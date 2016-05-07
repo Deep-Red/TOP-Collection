@@ -41,15 +41,15 @@ def evaluate_guess(guess, turn)
 	feedback2 = guess.dup
 	pegs = ["\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
 
-	guess.each_with_index{|f, i|
-		if feedback[i] == guess[i]
+	feedback2.each_with_index{|f, i|
+		if feedback[i] == feedback2[i]
 			pegs[i] = "\e[0;32;49m|\e[0m"
-			feedback[i] = 0 #eliminates bulls from feedback
-#			feedback2[i] = "#{rand()}"
+#			feedback[i] = 0 #eliminates bulls from feedback
+			feedback2[i] = 0.5
 		end
 	}
 
-	guess.each_with_index{|g, i|
+	feedback2.each_with_index{|g, i|
 		if feedback.include?(g)
 			feedback[i] = 0
 			pegs[i] = "\e[0;33;49m|\e[0m"
