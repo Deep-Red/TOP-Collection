@@ -6,7 +6,7 @@ def initialize()
 	@board = Array.new
 	@codekey = Array.new(4, 0)
 	@codekey.map!{rand(1..6)}
-#	puts @codekey.inspect
+	puts @codekey.inspect
 end
 
 def show_gamestate()
@@ -38,26 +38,35 @@ end
 
 def evaluate_guess(guess, turn)
 	feedback = @codekey.dup
+	feedback2 = guess.dup
 	pegs = ["\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
 
-	feedback.each_with_index{|f, i|
+	guess.each_with_index{|f, i|
 		if feedback[i] == guess[i]
 			pegs[i] = "\e[0;32;49m|\e[0m"
 			feedback[i] = 0 #eliminates bulls from feedback
-#			guess[i] = "#{rand()}"
+#			feedback2[i] = "#{rand()}"
+		end
+	}
+
+	guess.each_with_index{|g, i|
+		if feedback.include?(g)
+			feedback[i] = 0
+			pegs[i] = "\e[0;33;49m|\e[0m"
 		end
 	}
 
 
-	guess.each_with_index{|f, i|
-		feedback.find_index{ |c|
-			if feedback[c] == f
-			pegs[i] = "\e[0;33;49m|\e[0m"
+
+#	guess.each_with_index{|f, i|
+#		feedback.find_index{ |c|
+#			if feedback[c] == f
+#			pegs[i] = "\e[0;33;49m|\e[0m"
 #			feedback[c.to_i] = "#{rand()}"
 #			feedback[i] = "#{rand()}"
 #			feedbacktemp[i] = "#{rand()}"
-		end }
-		}
+#		end }
+#		}
 
 	evaluate_return = "#{display_guess(guess)}" + " " + pegs.join("")
 	@board[(turn - 1)] = evaluate_return
