@@ -1,59 +1,71 @@
 class Gameboard
-	require 'colorize'
-	@@colormap = ["1".red, "2".yellow, "3".green, "4".cyan, "5".blue, "6".magenta]
+	@@colormap = ["\e[0;31;49m1\e[0m", "\e[0;33;49m2\e[0m", "\e[0;32;49m3\e[0m", "\e[0;36;49m4\e[0m", "\e[0;34;49m5\e[0m", "\e[0;35;49m6\e[0m"]
 	@@colormap2 = ["\e[0;31;49mX\e[0m", "\e[0;33;49mX\e[0m", "\e[0;32;49mX\e[0m", "\e[0;36;49mX\e[0m", "\e[0;34;49mX\e[0m", "\e[0;35;49mX\e[0m"]
 
-
 def initialize()
+	@board = Array.new
 	@codekey = Array.new(4, 0)
 	@codekey.map!{rand(1..6)}
-	puts @codekey
+#	puts @codekey.inspect
 end
 
 def show_gamestate()
 	puts @@colormap.join(" ")
-#	puts @@colormap.inspect
-	puts "\n X X X X \n".black.bold
-	puts "\n X X X X \n".black.bold.inspect
-	
-	
+	puts "\e[1;30;49m\n X X X X \n\e[0m"
+	puts @board
 end
 
-#def check_cows(guess_no_b, check_arr, bull_arr, turn, codekey)
-#	puts guess_no_b.inspect
-#	puts check_arr.inspect
-#	#puts codekey
-#	#puts guess.inspect
-#	#puts "you are here"
-#	check_arr.map! { |element| 
-#				guess_no_b.include?(element) ? element : nil }
-#	puts check_arr.inspect
-#	#puts #check_bulls(turn)
-#end
+def win
+	show_gamestate
+	puts "Congratulations, you won!"
+end
 
-def check_bulls(guess, turn)
-	codekey = @codekey
-	bull_arr = []
-	check_arr = guess
-	guess_no_b = []
-	guess.each_with_index { |g, i| 
-		if codekey[i] == guess[i] 
-		then bull_arr[i] = "B"
-			codekey[i] = ".".black
-			guess_no_b[i] = nil
-		else guess_no_b[i] = g
-			check_arr[i] = nil
+def lose
+	
+	show_gamestate
+	puts "Sorry, you lost."
+end
+
+def gameover?(turn, pegs)
+	if	pegs == ["\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m"]
+		win
+	elsif turn == 12
+		lose
+	else
+		play(turn)
+	end
+end
+
+def evaluate_guess(guess, turn)
+	feedback = @codekey.dup
+	feedback2 = guess.dup
+	pegs = ["\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
+
+	feedback2.each_with_index{|f, i|
+		if feedback[i] == feedback2[i]
+			pegs[i] = "\e[0;32;49m|\e[0m"
+			feedback[i] = 0 #eliminates bulls from feedback
+			feedback2[i] = 0.5
 		end
 	}
-#	puts bull_arr.inspect
-#	check_cows(guess_no_b, check_arr, bull_arr, turn, codekey)
-	generate_feedback(bull_arr, codekey, guess)
 
+	feedback2.each_with_index{|g, i|
+		g2 = feedback.find_index(g)
+		if	g2
+			feedback[g2] = 0
+			feedback2[i] = 0.5
+			pegs[i] = "\e[0;33;49m|\e[0m"
+		end
+	}
+
+	evaluate_return = "#{display_guess(guess)}" + " " + pegs.join("")
+	@board[(turn - 1)] = evaluate_return
+	gameover?(turn, pegs)
 end
 
 def valid_guess?(guess, turn)
 	guess.length != 4 ? invalid_guess(guess, turn) : 
-	check_bulls(guess, turn)
+	evaluate_guess(guess, turn)
 end
 
 def invalid_guess(guess, turn)
@@ -67,42 +79,18 @@ def display_guess(guess)
 	guess.each_with_index{|g, i|
 	dg[i] = @@colormap2[(g.to_i-1)]
 	}
-	puts " " + dg.join(" ")
+	return " " + dg.join(" ")
 end
 
-def generate_feedback(bull_arr, codekey, guess)
-	feedback = codekey
-	eval = ["|".red, "|".red, "|".red, "|".red]
-	bull_arr.each_with_index{|b, i| 
-		if b == "B"
-			feedback[i] = @@colormap2[(i.to_i - 1)]
-			eval[i] = "|".green
-			guess[i] = "O"
-#			codekey[i] = "X"
-		end
-	}
-	guess.each_with_index{|g, i|
-		if g == feedback.any?
-			eval[i] = "|".yellow
-			end
-	}
-
-	
-	puts " " + feedback.join(" ") + (eval.join)
-end
 
 def play(turn)
 	turn += 1
 	puts "Turn #{turn}:"
 	show_gamestate
-	
 	puts "Guess Below:"
 	guess = gets.chomp.split("")
-	display_guess(guess)
 	guess.map!{ |x| x.to_i}
 	valid_guess?(guess, turn)
-
-
 end
 
 end

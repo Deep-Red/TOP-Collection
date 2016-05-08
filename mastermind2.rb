@@ -58,18 +58,6 @@ def evaluate_guess(guess, turn)
 		end
 	}
 
-
-
-#	guess.each_with_index{|f, i|
-#		feedback.find_index{ |c|
-#			if feedback[c] == f
-#			pegs[i] = "\e[0;33;49m|\e[0m"
-#			feedback[c.to_i] = "#{rand()}"
-#			feedback[i] = "#{rand()}"
-#			feedbacktemp[i] = "#{rand()}"
-#		end }
-#		}
-
 	evaluate_return = "#{display_guess(guess)}" + " " + pegs.join("")
 	@board[(turn - 1)] = evaluate_return
 	gameover?(turn, pegs)
