@@ -44,14 +44,15 @@ def evaluate_guess(guess, turn)
 	feedback2.each_with_index{|f, i|
 		if feedback[i] == feedback2[i]
 			pegs[i] = "\e[0;32;49m|\e[0m"
-#			feedback[i] = 0 #eliminates bulls from feedback
+			feedback[i] = 0 #eliminates bulls from feedback
 			feedback2[i] = 0.5
 		end
 	}
 
 	feedback2.each_with_index{|g, i|
-		if feedback.include?(g)
-			feedback[i] = 0
+		g2 = feedback.find_index(g)
+		if	g2
+			feedback[g2] = 0
 			feedback2[i] = 0.5
 			pegs[i] = "\e[0;33;49m|\e[0m"
 		end
