@@ -2,11 +2,25 @@ class Gameboard
 	@@colormap = ["\e[0;31;49m1\e[0m", "\e[0;33;49m2\e[0m", "\e[0;32;49m3\e[0m", "\e[0;36;49m4\e[0m", "\e[0;34;49m5\e[0m", "\e[0;35;49m6\e[0m"]
 	@@colormap2 = ["\e[0;31;49mX\e[0m", "\e[0;33;49mX\e[0m", "\e[0;32;49mX\e[0m", "\e[0;36;49mX\e[0m", "\e[0;34;49mX\e[0m", "\e[0;35;49mX\e[0m"]
 
-def initialize()
+def initialize
 	@board = Array.new
 	@codekey = Array.new(4, 0)
-	@codekey.map!{rand(1..6)}
+	$role == "BREAK" ? @codekey.map!{rand(1..6)} : playerset
 #	puts @codekey.inspect
+end
+
+def playerset
+	puts "Enter a four digit number to represent your code:"
+	code = gets.chomp.split("")
+	if code.each {|digit| 
+		[1..6].include?(digit)
+	}
+	puts "Valid Code!"
+	@codekey = code
+	puts @codekey
+	else
+	puts "Invalid Code!" 
+	end
 end
 
 def show_gamestate()
@@ -82,18 +96,52 @@ def display_guess(guess)
 	return " " + dg.join(" ")
 end
 
-
-def play(turn)
-	turn += 1
-	puts "Turn #{turn}:"
-	show_gamestate
+def human_guess(turn)
 	puts "Guess Below:"
 	guess = gets.chomp.split("")
 	guess.map!{ |x| x.to_i}
 	valid_guess?(guess, turn)
 end
 
+def computer_guess_random(turn)
+	puts "The computer will make a guess:"
+	guess = []
+	guess.map!{rand(1..6)}
+	evaluate_guess(guess, turn)
 end
 
-x = Gameboard.new
-x.play(0)
+def play(turn)
+		turn += 1
+		puts "Turn #{turn}:"
+		show_gamestate
+	if $role == "BREAK"
+		human_guess(turn)
+	else
+		computer_guess_random(turn)
+	end
+
+end
+
+end
+
+def role_valid
+	if $role == "SET" || $role == "BREAK" 
+		x = Gameboard.new
+		x.play(0) 
+	else 
+		choose_role
+	end
+
+end
+
+def choose_role
+	puts "Would you prefer to SET the code or BREAK the code?"
+	$role = gets.chomp
+	role_valid
+end
+
+
+puts "Hello, welcome to Mastermind!"
+puts "A colorful game of codebreaking!"
+choose_role
+
