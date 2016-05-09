@@ -16,7 +16,7 @@ def playerset
 		[1..6].include?(digit)
 	}
 	puts "Valid Code!"
-	@codekey = code
+	@codekey = code.map!{|d| d.to_i}
 	puts @codekey
 	else
 	puts "Invalid Code!" 
@@ -54,6 +54,9 @@ def evaluate_guess(guess, turn)
 	feedback = @codekey.dup
 	feedback2 = guess.dup
 	pegs = ["\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
+
+#	puts feedback.inspect
+#	puts feedback2.inspect
 
 	feedback2.each_with_index{|f, i|
 		if feedback[i] == feedback2[i]
@@ -105,8 +108,9 @@ end
 
 def computer_guess_random(turn)
 	puts "The computer will make a guess:"
-	guess = []
+	guess = Array.new(4, 0)
 	guess.map!{rand(1..6)}
+	puts guess.inspect
 	evaluate_guess(guess, turn)
 end
 
