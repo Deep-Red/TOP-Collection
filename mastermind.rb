@@ -27,6 +27,7 @@ def show_gamestate()
 	puts @@colormap.join(" ")
 	puts "\e[1;30;49m\n X X X X \n\e[0m"
 	puts @board
+#	puts @board.inspect
 end
 
 def win
@@ -114,6 +115,32 @@ def computer_guess_random(turn)
 	evaluate_guess(guess, turn)
 end
 
+def computer_guess_randomish(turn)
+	puts "The computer will make a guess:"
+	guess_temp ||= [] 
+	guess = Array.new(4, 0)
+#	guess.map!{rand(1..6)}
+#	puts guess.inspect
+#	puts "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
+#	puts @board[-1].inspect
+#	puts @board[-1].to_s[69..70].inspect
+	prev_peg_colors = [@board[-1].to_s[69..70], @board[-1].to_s[84..85], @board[-1].to_s[99..100], @board[-1].to_s[114..115]]
+	puts prev_peg_colors.inspect
+	guess.map!.with_index{|g, i|
+		if prev_peg_colors[i] == "32"
+			puts "G!"
+			guess.map!{guess_temp[i]}
+		else
+			guess.map!{rand(1..6)}
+			puts "NotG!"
+		end
+	}
+
+	puts guess.inspect
+	guess_temp = guess.dup
+	evaluate_guess(guess, turn)
+end
+
 def play(turn)
 		turn += 1
 		puts "Turn #{turn}:"
@@ -121,7 +148,7 @@ def play(turn)
 	if $role == "BREAK"
 		human_guess(turn)
 	else
-		computer_guess_random(turn)
+		computer_guess_randomish(turn)
 	end
 
 end
