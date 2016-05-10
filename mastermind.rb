@@ -136,6 +136,9 @@ def computer_guess_randomish(turn)
 		if prev_peg_colors[i] == "32"
 			puts "G!"
 			guess[i] = @guess_temp[i]
+		elsif prev_peg_colors.include?("33")
+			guess[i] = @guess_temp[prev_peg_colors.find_index("33")]
+			puts "Y"
 		else
 			guess[i] = rand(1..6)
 			puts "NotG!"
