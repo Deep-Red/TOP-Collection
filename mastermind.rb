@@ -12,12 +12,14 @@ end
 def playerset
 	puts "Enter a four digit number to represent your code:"
 	code = gets.chomp.split("")
+	code.map!{|d| d.to_i}
+#	puts code.inspect
 	if code.each {|digit| 
 		[1..6].include?(digit)
 	}
 	puts "Valid Code!"
-	@codekey = code.map!{|d| d.to_i}
-	puts @codekey
+	@codekey = code.dup
+#	puts @codekey.inspect
 	else
 	puts "Invalid Code!" 
 	end
@@ -117,27 +119,31 @@ end
 
 def computer_guess_randomish(turn)
 	puts "The computer will make a guess:"
-	guess_temp ||= [] 
+	@guess_temp ||= [] 
 	guess = Array.new(4, 0)
+	puts guess.inspect
+	puts @guess_temp.inspect
 #	guess.map!{rand(1..6)}
 #	puts guess.inspect
 #	puts "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
 #	puts @board[-1].inspect
 #	puts @board[-1].to_s[69..70].inspect
 	prev_peg_colors = [@board[-1].to_s[69..70], @board[-1].to_s[84..85], @board[-1].to_s[99..100], @board[-1].to_s[114..115]]
-	puts prev_peg_colors.inspect
-	guess.map!.with_index{|g, i|
+#	puts prev_peg_colors.inspect
+
+	guess.each_with_index{|g, i|
+#		g = i
 		if prev_peg_colors[i] == "32"
 			puts "G!"
-			guess.map!{guess_temp[i]}
+			guess[i] = @guess_temp[i]
 		else
-			guess.map!{rand(1..6)}
+			guess[i] = rand(1..6)
 			puts "NotG!"
 		end
 	}
 
 	puts guess.inspect
-	guess_temp = guess.dup
+	@guess_temp = guess.dup
 	evaluate_guess(guess, turn)
 end
 
@@ -167,7 +173,7 @@ end
 
 def choose_role
 	puts "Would you prefer to SET the code or BREAK the code?"
-	$role = gets.chomp
+	$role = gets.upcase.chomp
 	role_valid
 end
 
