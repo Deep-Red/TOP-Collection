@@ -4,9 +4,15 @@ class Gameboard
 
 def initialize
 	@board = Array.new
-	@codekey = Array.new(4, 0)
+	difficulty?
+	@codekey = Array.new($level, 0)
 	$role == "BREAK" ? @codekey.map!{rand(1..6)} : playerset
-#	puts @codekey.inspect
+	#	puts @codekey.inspect
+end
+
+def difficulty?
+	puts "What level would you like to play?"
+	$level = gets.chomp.to_i
 end
 
 def playerset
@@ -44,7 +50,7 @@ def lose
 end
 
 def gameover?(turn, pegs)
-	if	pegs == ["\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m"]
+	if	pegs.all?{ |p| p == "\e[0;32;49m|\e[0m"} #, "\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m", "\e[0;32;49m|\e[0m"]
 		win
 	elsif turn == 12
 		lose
@@ -56,7 +62,7 @@ end
 def evaluate_guess(guess, turn)
 	feedback = @codekey.dup
 	feedback2 = guess.dup
-	pegs = ["\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
+	pegs = Array.new($level, "\e[0;31;49m|\e[0m") #, "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
 
 #	puts feedback.inspect
 #	puts feedback2.inspect
@@ -84,7 +90,7 @@ def evaluate_guess(guess, turn)
 end
 
 def valid_guess?(guess, turn)
-	guess.length != 4 ? invalid_guess(guess, turn) : 
+	guess.length != $level ? invalid_guess(guess, turn) : 
 	evaluate_guess(guess, turn)
 end
 
