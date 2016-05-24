@@ -14,42 +14,53 @@ def initialize
 		end
 	end
 	choose_word(possible_words, wordcount)
-	incorrect_guesses = []
-	knowledge = [wordcount, "_"]
-	play(0, knowledge, incorrect_guesses)
+	@incorrect_guesses = []
+	knowledge = Array.new(@word.length, "_").join(" ")
+	play(0, knowledge)
 end
 end
 
 def choose_word(possible_words, wordcount)
 	word_num = rand(wordcount-1)
-	@word = possible_words[word_num].downcase
+	@word = possible_words[word_num].downcase.split("")
+	puts @word.inspect
 end
 
 def player_guess
 	puts "What letter would you like to guess?"
 	guess = gets.downcase.chomp
-	evaluate_guess(guess)
+	return guess
 end
 
-def evaluate_guess
-	guess =~ /[[:alpha:]]/ ? true : puts "Invalid guess!" play(turn-1, knowledge, incorrect_guesses) 
+def evaluate_guess(guess, knowledge)
+	r = 0
+	@word.each_with_index do |l, i|
+		if l == guess
+			knowledge[i] = l
+			r += 1
+		end
+	end
+	if r == 0 
+			@incorrect_guesses.push(guess)
+	end
 end
 
-def show_gamestate(misses, knowledge, incorrect_guesses)
-	puts Array.new(misses, "\e[0;31;49mX\e[0m ")
+def show_gamestate(knowledge)
+	man = Array.new(@incorrect_guesses.length, "\e[0;31;49mX\e[0m ")
+	puts man.join("")
 	puts knowledge
-	puts incorrect_guesses
+	puts @incorrect_guesses
 end
 
 def gameover?
 
 end
 
-def play(turn, knowledge, incorrect_guesses)
+def play(turn, knowledge)
 	turn += 1
-	show_gamestate(misses, knowledge, incorrect_guesses)
-	player_guess
-
+	show_gamestate(knowledge)
+	evaluate_guess(player_guess, knowledge)
+	play(turn, knowledge)
 end
 
 Game.new
