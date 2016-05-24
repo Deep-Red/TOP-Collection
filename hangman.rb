@@ -14,6 +14,28 @@ def initialize
 end
 end
 
+def choose_word
+
+end
+
+def player_guess
+
+end
+
+def evaluate_guess
+
+end
+
+def display_gamestate
+
+end
+
+def gameover?
+
+end
+
+
+
 Game.new
 
 end
