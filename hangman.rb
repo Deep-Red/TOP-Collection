@@ -15,7 +15,7 @@ def initialize
 	end
 	choose_word(possible_words, wordcount)
 	@incorrect_guesses = []
-	knowledge = Array.new(@word.length, "_").join(" ")
+	knowledge = Array.new(@word.length, "_")
 	play(0, knowledge)
 end
 end
@@ -23,7 +23,7 @@ end
 def choose_word(possible_words, wordcount)
 	word_num = rand(wordcount-1)
 	@word = possible_words[word_num].downcase.split("")
-	puts @word.inspect
+#	puts @word.inspect
 end
 
 def player_guess
@@ -46,21 +46,30 @@ def evaluate_guess(guess, knowledge)
 end
 
 def show_gamestate(knowledge)
-	man = Array.new(@incorrect_guesses.length, "\e[0;31;49mX\e[0m ")
-	puts man.join("")
-	puts knowledge
-	puts @incorrect_guesses
+	man = Array.new(@incorrect_guesses.length, "X")
+#	puts man.join("").inspect
+	puts knowledge.join(" ")
+	puts @incorrect_guesses.join(" ")
 end
 
-def gameover?
-
+def gameover?(turn, knowledge)
+	if knowledge == @word
+		puts "Congratulations, you won!"
+		show_gamestate(knowledge)
+	elsif @incorrect_guesses.length == 7
+		puts "Sorry, you lose."
+		show_gamestate(knowledge)
+		puts "The word was \n #{@word}"
+	else 
+		play(turn, knowledge)
+	end
 end
 
 def play(turn, knowledge)
 	turn += 1
 	show_gamestate(knowledge)
 	evaluate_guess(player_guess, knowledge)
-	play(turn, knowledge)
+	gameover?(turn, knowledge)
 end
 
 Game.new
