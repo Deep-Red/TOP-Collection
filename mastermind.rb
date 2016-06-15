@@ -4,28 +4,35 @@ class Gameboard
 
 def initialize
 	@board = Array.new
+	choose_role
 	difficulty?
 	@codekey = Array.new($level, 0)
 	$role == "BREAK" ? @codekey.map!{rand(1..6)} : playerset
+	play(0)
 	#	puts @codekey.inspect
 end
 
 def difficulty?
 	puts "What level would you like to play?"
+	if $role == "BREAK" 
+		puts "How long a sequence would you like to guess against?"
+	else
+		puts "How smart should the computer player be choose '1' for easy or '2' for medium?"
+	end
 	$level = gets.chomp.to_i
+	return $level
 end
 
 def playerset
 	puts "Enter a four digit number to represent your code:"
 	code = gets.chomp.split("")
 	code.map!{|d| d.to_i}
-#	puts code.inspect
 	if code.each {|digit| 
 		[1..6].include?(digit)
 	}
 	puts "Valid Code!"
 	@codekey = code.dup
-#	puts @codekey.inspect
+	play(0)
 	else
 	puts "Invalid Code!" 
 	end
@@ -33,7 +40,8 @@ end
 
 def show_gamestate()
 	puts @@colormap.join(" ")
-	puts "\e[1;30;49m\n X X X X \n\e[0m"
+	black_x = Array.new($level, "\e[1;30;49mX\e[0m")
+	puts " #{black_x.join(" ")}"
 	puts @board
 #	puts @board.inspect
 end
@@ -64,25 +72,22 @@ def evaluate_guess(guess, turn)
 	feedback2 = guess.dup
 	pegs = Array.new($level, "\e[0;31;49m|\e[0m") #, "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m", "\e[0;31;49m|\e[0m"]
 
-#	puts feedback.inspect
-#	puts feedback2.inspect
-
-	feedback2.each_with_index{|f, i|
+	feedback2.each_with_index do |f, i|
 		if feedback[i] == feedback2[i]
 			pegs[i] = "\e[0;32;49m|\e[0m"
 			feedback[i] = 0 #eliminates bulls from feedback
 			feedback2[i] = 0.5
 		end
-	}
+	end
 
-	feedback2.each_with_index{|g, i|
+	feedback2.each_with_index do |g, i|
 		g2 = feedback.find_index(g)
 		if	g2
 			feedback[g2] = 0
 			feedback2[i] = 0.5
 			pegs[i] = "\e[0;33;49m|\e[0m"
 		end
-	}
+	end
 
 	evaluate_return = "#{display_guess(guess)}" + " " + pegs.join("")
 	@board[(turn - 1)] = evaluate_return
@@ -129,16 +134,8 @@ def computer_guess_randomish(turn)
 	guess = Array.new(4, 0)
 	puts guess.inspect
 	puts @guess_temp.inspect
-#	guess.map!{rand(1..6)}
-#	puts guess.inspect
-#	puts "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
-#	puts @board[-1].inspect
-#	puts @board[-1].to_s[69..70].inspect
 	prev_peg_colors = [@board[-1].to_s[69..70], @board[-1].to_s[84..85], @board[-1].to_s[99..100], @board[-1].to_s[114..115]]
-#	puts prev_peg_colors.inspect
-
-	guess.each_with_index{|g, i|
-#		g = i
+	guess.each_with_index do |g, i|
 		if prev_peg_colors[i] == "32"
 			puts "G!"
 			guess[i] = @guess_temp[i]
@@ -149,7 +146,7 @@ def computer_guess_randomish(turn)
 			guess[i] = rand(1..6)
 			puts "NotG!"
 		end
-	}
+	end
 
 	puts guess.inspect
 	@guess_temp = guess.dup
@@ -168,12 +165,11 @@ def play(turn)
 
 end
 
-end
-
 def role_valid
 	if $role == "SET" || $role == "BREAK" 
-		x = Gameboard.new
-		x.play(0) 
+#		x = Gameboard.new
+#		x.play(0) 
+		play(0)
 	else 
 		choose_role
 	end
@@ -183,11 +179,20 @@ end
 def choose_role
 	puts "Would you prefer to SET the code or BREAK the code?"
 	$role = gets.upcase.chomp
-	role_valid
+	if $role == "BREAK" || $role == "SET"
+		return $role
+	else
+		puts "That isn't a valid role."
+		choose_role
+	end
+
+#	role_valid
 end
 
+end
 
 puts "Hello, welcome to Mastermind!"
 puts "A colorful game of codebreaking!"
-choose_role
+x = Gameboard.new
+#x.choose_role
 
