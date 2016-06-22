@@ -1,10 +1,27 @@
 require 'socket'
+require 'json'
 
-host = 'www.google.com'
-port = 80
-path = "/search.html"
+host = 'localhost'
+port = 2000
+params = Hash.new
 
-request = "GET #{path} HTTP/1.0\r\n\r\n"
+puts "Which type of request would you like to send? GET or POST?"
+input = gets.chomp
+
+if input.upcase == "GET"
+	request = "GET index.html HTTP/1.0\r\n\r\n"
+elsif input.upcase == "POST"
+
+	puts "What is your name?"
+	name = gets.chomp
+	puts "What is your email address?"
+	email = gets.chomp
+
+	params = {:viking => {:name=>name, :email=>email}}
+	body = params.to_json
+
+	request = "Post thanks.html HTTP/1.0\nContent-Length: #{body.length}\r\n\r\n#{body}"
+end
 
 socket = TCPSocket.open(host,port)
 socket.print(request)
