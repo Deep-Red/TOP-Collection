@@ -14,8 +14,8 @@ end
 
 def merge(arr_1, arr_2)
 #	puts "Hi"
-	puts arr_1.inspect
-	puts arr_2.inspect
+#	puts arr_1.inspect
+#	puts arr_2.inspect
 	result = []
 	until arr_1.length == 0 || arr_2.length == 0
 		result << (arr_1[0] <= arr_2[0] ? arr_1.shift : arr_2.shift)
