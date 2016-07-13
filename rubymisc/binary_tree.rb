@@ -23,8 +23,8 @@ def class Tree
 
 	def build_tree(array) # iterative, assumes sorted list
 		item = array.length / 2
-		root = Node.new(array[item])
-		last = root
+		@root = Node.new(array[item])
+		last = @root
 		array.delete_at(item)
 		array.each do |value|
 			set = nil
@@ -47,6 +47,14 @@ def class Tree
 	end
 
 	def breadth_first_search(target)
+		queue = []
+		visited = []
+		current = @root
+		until current == nil
+			queue << current
+			return current if current.value == target
+			queue << current.left
+				
 
 	end
 
@@ -56,6 +64,13 @@ def class Tree
 
 	def dfs_rec(target)
 
+	end
+
+	def get_sorted_tree(node = @root, result = [])
+		get_sorted_tree(node.left, result) if node.left
+		result << node.value
+		get_sorted_tree(node.right, result) if node.right
+		return result
 	end
 
 end

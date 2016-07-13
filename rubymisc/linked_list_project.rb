@@ -1,6 +1,6 @@
-def LinkedList
+class LinkedList
 
-att_reader :head, :tail, :size
+attr_reader :head, :tail, :size
 
 def initialize
 	@head = nil
@@ -49,7 +49,7 @@ end
 
 def at(index)
 	return nil if index < 0 || index > @size
-	if index = 0
+	if index == 0
 		puts @head
 	else
 		i = index
@@ -61,8 +61,6 @@ def at(index)
 		here.value
 	end
 end		
-
-end
 
 def pop
 	@tail = nil
@@ -86,18 +84,16 @@ def find(data, temp = @head, i = 0)
 	return nil if i > @size
 	i += 1
 	temp = node.next_node
-	find (data, temp, i)
-end
-
-
+	find(data, temp, i)
 end
 
 def to_s
 	temp = @head
-	until temp = nil
-		print "( #{node} ) "
-		temp = node.next_node
+	until temp == nil
+		print "( #{temp.value} ) => "
+		temp = temp.next_node
 	end
+	puts "nil"
 end
 
 def insert_at(index)
@@ -111,7 +107,7 @@ end
 end
 
 
-def Node
+class Node
 attr_accessor :value, :next_node
 
 def initialize(value = nil)
@@ -120,3 +116,9 @@ def initialize(value = nil)
 end
 
 end
+
+my_list = LinkedList.new
+my_list.append(87)
+my_list.append(25)
+
+my_list.to_s
