@@ -10,6 +10,8 @@ end
 
 def append(value)
 	new_node = Node.new(value)
+	puts value
+	puts new_node.value
 	
 	if @head.nil?
 		@head = new_node
@@ -90,7 +92,7 @@ end
 def display_list
 	temp = @head
 	until temp == nil
-		print "( #{temp.value} ) => "
+		print "( #{temp.value.inspect} ) => "
 		temp = temp.next_node
 	end
 	puts "nil"
@@ -110,8 +112,10 @@ end
 class Node
 attr_accessor :value, :next_node
 
-def initialize(value = nil)
-	value = value
+def initialize(value)
+	puts value
+	@value = value
+	puts @value
 	next_node = nil
 end
 
