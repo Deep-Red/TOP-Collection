@@ -10,8 +10,6 @@ end
 
 def append(value)
 	new_node = Node.new(value)
-	puts value
-	puts new_node.value
 	
 	if @head.nil?
 		@head = new_node
@@ -82,10 +80,10 @@ end
 
 
 def find(data, temp = @head, i = 0)
-	return i if temp = data
-	return nil if i > @size
+	return "#{data} is located at index #{i}." if temp.value == data
+	return "#{data} not found in list." if i >= @size
 	i += 1
-	temp = node.next_node
+	temp = temp.next_node
 	find(data, temp, i)
 end
 
@@ -113,9 +111,7 @@ class Node
 attr_accessor :value, :next_node
 
 def initialize(value)
-	puts value
 	@value = value
-	puts @value
 	next_node = nil
 end
 
@@ -128,5 +124,12 @@ end
 my_list = LinkedList.new
 my_list.append(87)
 my_list.append(25)
+my_list.append(7)
+my_list.append(5)
+my_list.append(8)
+my_list.prepend(2)
 puts my_list.size
 my_list.display_list
+puts my_list.find(8)
+puts my_list.find(2)
+puts my_list.find(25)
