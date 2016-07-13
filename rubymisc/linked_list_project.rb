@@ -36,15 +36,15 @@ def prepend(value)
 end
 
 def size
-	@size.value
+	@size
 end
 
 def head
-	@head.value
+	@head
 end
 
 def tail
-	@tail.value
+	@tail
 end
 
 def at(index)
@@ -90,7 +90,7 @@ end
 def to_s
 	temp = @head
 	until temp == nil
-		print "( #{temp.value} ) => "
+		print "( #{temp} ) => "
 		temp = temp.next_node
 	end
 	puts "nil"
@@ -120,5 +120,5 @@ end
 my_list = LinkedList.new
 my_list.append(87)
 my_list.append(25)
-
+puts my_list.size
 my_list.to_s
