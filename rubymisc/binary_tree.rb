@@ -1,4 +1,4 @@
-def class Node
+class Node
 
 	attr_accessor :left, :right, :parent, :value
 
@@ -9,11 +9,9 @@ def class Node
 		@right = nil
 	end
 
-	def 
-
 end
 
-def class Tree
+class Tree
 	attr_accessor :root
 
 	def initialize(array)
@@ -25,19 +23,24 @@ def class Tree
 		item = array.length / 2
 		@root = Node.new(array[item])
 		last = @root
+#		puts array.inspect
+#		puts last.value
 		array.delete_at(item)
-		array.each do |value|
+#		puts array.inspect
+#		puts last.value
+		array.each do |v|
 			set = nil
-			if value > last.value
-				if last.right = nil
-					last.right = Node.new(value, last)
+			puts last
+			if last == nil || v > last.value 
+				if last.right == nil
+					last.right = Node.new(v, last)
 					set = true
 				else
 					last = last.right
 				end
 			else
 				if last.left == nil
-					last.left = Node.new(value, last)
+					last.left = Node.new(v, last)
 					set = true
 				else
 					last = last.left
@@ -71,6 +74,7 @@ def class Tree
 	end
 
 	def get_sorted_tree(node = @root, result = [])
+#		result << @root.value
 		get_sorted_tree(node.left, result) if node.left
 		result << node.value
 		get_sorted_tree(node.right, result) if node.right
@@ -78,3 +82,7 @@ def class Tree
 	end
 
 end
+
+myarray = [2, 3, 6, 8, 99, 7, 5, 33, 21, 1, 3]
+mytree = Tree.new(myarray)
+puts mytree.get_sorted_tree.inspect
