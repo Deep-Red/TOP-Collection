@@ -81,14 +81,23 @@ def contains?(value)
 end
 
 
-def find(data)
-	
-	contains?(data)
+def find(data, temp = @head, i = 0)
+	return i if temp = data
+	return nil if i > @size
+	i += 1
+	temp = node.next_node
+	find (data, temp, i)
+end
 
 
 end
 
 def to_s
+	temp = @head
+	until temp = nil
+		print "( #{node} ) "
+		temp = node.next_node
+	end
 end
 
 def insert_at(index)
