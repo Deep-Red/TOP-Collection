@@ -63,16 +63,23 @@ def at(index)
 end		
 
 def pop
-	@tail = nil
+	@size -= 1
+	i = @size
+	temp = @head
+	(i-1).times do 
+		temp = temp.next_node
+	end
+	temp.next_node = nil
+
 end
 
-def contains?(value)
-	temp = @head
+def contains?(value, temp = @head)
 	until temp == nil
-		if temp == value
+		if temp.value == value
 			return true
 		else 
-			temp == temp.next_node
+			temp = temp.next_node
+			contains?(value, temp)
 		end
 	end
 	return false
@@ -81,7 +88,7 @@ end
 
 def find(data, temp = @head, i = 0)
 	return "#{data} is located at index #{i}." if temp.value == data
-	return "#{data} not found in list." if i >= @size
+	return "#{data} not found in list." if i >= (@size - 1)
 	i += 1
 	temp = temp.next_node
 	find(data, temp, i)
@@ -130,6 +137,12 @@ my_list.append(8)
 my_list.prepend(2)
 puts my_list.size
 my_list.display_list
+my_list.pop
+my_list.display_list
+puts my_list.size
 puts my_list.find(8)
 puts my_list.find(2)
 puts my_list.find(25)
+puts my_list.contains?(8)
+puts my_list.contains?(2)
+puts my_list.contains?(25)
