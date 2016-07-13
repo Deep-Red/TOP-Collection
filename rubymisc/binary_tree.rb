@@ -53,8 +53,12 @@ def class Tree
 		until current == nil
 			queue << current
 			return current if current.value == target
-			queue << current.left
-				
+			return current.right if current.right == target
+			return current.left if current.left == target
+			visited << current
+			current = current.left
+		end
+
 
 	end
 

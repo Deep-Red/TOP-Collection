@@ -58,7 +58,7 @@ def at(index)
 			here =  here.next_node
 			i -= 1
 		end
-		here.value
+		here
 	end
 end		
 
@@ -87,10 +87,10 @@ def find(data, temp = @head, i = 0)
 	find(data, temp, i)
 end
 
-def to_s
+def display_list
 	temp = @head
 	until temp == nil
-		print "( #{temp} ) => "
+		print "( #{temp.value} ) => "
 		temp = temp.next_node
 	end
 	puts "nil"
@@ -115,10 +115,14 @@ def initialize(value = nil)
 	next_node = nil
 end
 
+def name
+	value
+end
+
 end
 
 my_list = LinkedList.new
 my_list.append(87)
 my_list.append(25)
 puts my_list.size
-my_list.to_s
+my_list.display_list
