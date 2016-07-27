@@ -27,9 +27,9 @@ def add_node(new_node, position = @root)
 #	puts x
 #	puts new_node
 	if new_node < x
-		position.left.nil? ? position.left = Node.new(new_node) : position.left.add_node(new_node, position.left)
+		position.left.nil? ? position.left = Node.new(new_node) : add_node(new_node, position.left)
 	else
-		position.right.nil? ? position.right = Node.new(new_node) : position.right.add_node(new_node, position.right)
+		position.right.nil? ? position.right = Node.new(new_node) : add_node(new_node, position.right)
 	end
 end
 
