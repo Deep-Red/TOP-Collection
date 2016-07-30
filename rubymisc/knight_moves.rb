@@ -21,20 +21,27 @@ class Knight
 
 	def potential_squares()
 		moves = []
-		@paths.each_with_index { |x, i| moves[i] = [x[0] + @position[0], x[1] + @position[1]] }
+		temp = []
+		@paths.each_with_index { |x, i| temp[i] = [x[0] + @position[0], x[1] + @position[1]] }
 
-		puts moves.inspect
-		moves = moves.each { |x| valid_square?(x) }
+		puts temp.inspect
+		temp.each do |x| 
+			moves << x if valid_square?(x)
+		end
+
+
 		puts moves.inspect
 	end
 
 	def valid_square?(target)
 		puts target.inspect
-		target.each{ |x| x < 8 && x > -1 }
+		a = target[0]
+		b = target[1] 
+		if a < 8 && a > -1 
 			puts "hi"
-			return target 
+			b < 8 && b > -1 ? true : false
 		else
-			return nil
+			return false
 		end
 	end
 
@@ -45,7 +52,7 @@ end
 
 
 my_board = Board.new(8)
-my_knight = Knight.new([0,0])
+my_knight = Knight.new()
 puts my_knight.position.inspect
 puts my_knight.paths.inspect
 my_knight.potential_squares
