@@ -8,8 +8,7 @@ end
 class Knight
 	attr_accessor :position, :paths, :target, :legal_routes
 
-	def initialize(b, a = [7,1])
-		@target = b
+	def initialize(a = [7,1])
 		@position = a
 		@legal_routes = [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]
 		@paths
@@ -30,7 +29,7 @@ class Knight
 		temp.each do |x| 
 			moves << x if valid_square?(x)
 		end
-		puts moves.inspect
+#		puts moves.inspect
 		return moves
 	end
 
@@ -44,35 +43,51 @@ class Knight
 		end
 	end
 
-	def find_path(target)
-		current = @position
+#	def find_path(target, current = @position)
+#		current = current
+#		target = target
+#		queue = [current]
+#		visited = [current]
+#		path = []
+#		puts "Tracing path from #{current.inspect} to #{target.inspect}"
+#
+#
+#		while queue != []
+#			if current == target
+#				path << current.unshift
+#				return path
+#			elsif current != nil
+#				visited << current
+##				puts "current is #{current}"
+#				self.potential_squares(current).each{ |x| queue << x }
+#				current = queue.shift
+#			else 
+#				current = queue.shift
+#			end
+#		end
+#	end
+
+	def find_path(target, start = @position)
+		position = start
+		queue = position
 		target = target
-		queue = [current]
-		visited = [current]
 
-		while queue != []
-			if current == target
-				return current
-			elsif current != nil
-				visited << current
-				puts "current is #{current}"
-				self.potential_squares(current).each{ |x| queue << x }
-				current = queue.shift
-			else 
-				current = queue.shift
-			end
+		queue.unshift(position)
+
+		until position == target
+			self.potential_squares(position).each{ |x| queue << x }
+			position == queue.unshift
 		end
-
 	end
+
+
 end
 
 
 my_board = Board.new(8)
 my_knight = Knight.new([3, 3])
-puts "Tracing path from #{my_knight.position.inspect} to #{my_knight.target.inspect}"
+puts my_knight.find_path([7,1])
+
 #puts my_knight.legal_routes.inspect
 #my_knight.potential_squares
-my_knight.find_path([4,5])
-my_knight.potential_squares([4,5])
-my_knight.potential_squares([3,3])
-my_knight.potential_squares([7,1])
+
