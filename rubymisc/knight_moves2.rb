@@ -53,21 +53,38 @@ class Knight
 #		puts "yolo"
 		while queue != []
 #			puts "you know #{current}"
-			return current if current == target
+			if current.coord == target
+				display_path(current) 
+				exit
+			else
 			potential_squares(current).each do |x|
-				visited.include?(x.coord) ? break : queue << x
+				visited.include?(x.coord) ? next : queue << x
 			end
 			visited << current.coord
 			current = queue.shift
 
 #			puts queue.inspect
+			end
 		end
 	end
+
+	def display_path(dest)
+		path = [dest]
+		current = dest
+		while current != @position
+#			puts "WAAA"
+			current = current.parent
+			path.unshift current
+		end
+		puts "The following moves will get your knight from its current position (#{@position.coord.inspect}) to the target square (#{dest.coord.inspect})."
+		path.each {|x| puts x.coord.inspect }
+	end
+
 
 end
 
 my_knight = Knight.new([1, 2])
-my_knight.find_path([2, 2])
+puts my_knight.find_path([0, 7])
 
 
 
