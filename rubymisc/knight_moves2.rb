@@ -43,21 +43,21 @@ class Knight
 	end
 
 	def find_path(to)
-		puts "hi"
+#		puts "hi"
 		target = to
 		current = @position
 		queue = []
 		visited = []
 		queue << current
 		visited << current.coord
-		puts "yolo"
+#		puts "yolo"
 		while queue != []
-			puts "you know #{current}"
+#			puts "you know #{current}"
 			return current if current == target
 			potential_squares(current).each do |x|
 				visited.include?(x.coord) ? break : queue << x
 			end
-			visited << current
+			visited << current.coord
 			current = queue.shift
 
 #			puts queue.inspect
