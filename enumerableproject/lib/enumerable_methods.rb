@@ -2,7 +2,7 @@ module Enumerable
 
 def my_each
 	for i in self
-		yield(i)
+		yield(self[i])
 	end
 
 end
@@ -29,7 +29,7 @@ def my_any?
 end
 
 def my_none?
-	my_each {|incl| return false yeild(incl)}
+	my_each {|incl| return false if yeild(incl)}
 end
 
 def my_count
@@ -45,7 +45,7 @@ end
 
 def my_inject(num = nil)
 	accumulator = num.nil ? first : num
-	my_each{|i| accumulator += yeild(accumulator, i)}
+	my_each {|i| accumulator += yeild(accumulator, i)}
 end
 
 def multipy_els(list)
