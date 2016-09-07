@@ -1,5 +1,5 @@
 class Board
-	attr_accessor :square, :grid
+	attr_accessor :square, :grid, :turn
 
 	def initialize
 		@grid = Array.new(8){ |i|
@@ -27,25 +27,70 @@ class Board
 		@grid[7][4] = Piece.new(7, 4, King, 2)
 
 #		puts @grid[0].inspect
+
+		@turn = 0
 	end
 
 	def display
 		disp = []
 		@grid.each{|i| i.each {|j| j == nil ? disp << "_" : disp << j.icon }}
-		puts disp[0..7].inspect
-		puts disp[8..15].inspect
-		puts disp[16..23].inspect
-		puts disp[24..31].inspect
-		puts disp[32..39].inspect
-		puts disp[40..47].inspect
-		puts disp[48..55].inspect
-		puts disp[56..63].inspect
+		puts "   a  b  c  d  e  f  g  h  "
+		puts "8  #{disp[0..7].join("  ")}"
+		puts "7  #{disp[8..15].join("  ")}"
+		puts "6  #{disp[16..23].join("  ")}"
+		puts "5  #{disp[24..31].join("  ")}"
+		puts "4  #{disp[32..39].join("  ")}"
+		puts "3  #{disp[40..47].join("  ")}"
+		puts "2  #{disp[48..55].join("  ")}"
+		puts "1  #{disp[56..63].join("  ")}"
+	end
+
+	def on_board?(square)
+		square.each do |c| 
+			if c >= 0 && c <= 7
+				true
+			else
+				false
+			end
+		end
+
+	end
+
+	def invalid_square_selected
+		puts "That square isn't on the board! Try again."
+		play_turn
+	end
+
+	def name_square
+		name_piece = []
+		name_piece = gets.chomp.split("")
+		name_piece[0] = name_piece[0].downcase.bytes.pop
+		name_piece[0] -= 97
+		name_piece[1] = name_piece[1].to_i - 1
+		if on_board?(name_piece)
+			name_piece  
+		else 
+			invalid_square_selected
+		end
+	end
+
+	def play_turn
+		from = []
+		to = []
+		puts "What piece would you like to move?"
+		from = name_square
+		puts "To where would you like it to move?"
+		to = name_square
+		valid_move?
+	end
+
+	def valid_move?
+
 	end
 end
 
-
 class Piece
-	attr_accessor :position, :type, :player, :piece, :icon, :legal_route?
+	attr_accessor :position, :type, :player, :piece, :icon#, :square_exists
 
 	def initialize(x, y, type, player)
 		@position = [x,y]
@@ -60,10 +105,10 @@ class Piece
 		self.type.legal_routes
 	end
 
-	def square_exists?(destination)
-		8 >= destination[0] >= 0 ? next : return false
-		8 >= destination[1] >= 0 ? next : return false
-	end
+#	def square_exists?(destination)
+#		8 >= destination[0] && destination[0] >= 0 ? true : false
+#		8 >= destination[1] && destination[1] >= 0 ? true : false
+#	end
 end
 
 class Pawn < Piece
@@ -83,13 +128,13 @@ class Pawn < Piece
 end
 
 class Rook < Piece
-	attr_accessor :icon, :legal_route?
+	attr_accessor :icon, :legal_route
 	def initialize(player)
 		@player = player
 		@icon = @player == 1 ? "\u2655" : "\u265C"
 	end
 
-	def legal_route?(destination)
+	def legal_route(destination)
 		if destination[0] == self.position[0] && destination[1] == self.position[1]
 			return false
 		elsif destination[0] != self.position[0] && destination[1] != self.position[1]
@@ -138,5 +183,5 @@ end
 
 game = Board.new
 game.display
-puts "\u2659 \u265F \u2655 \u265C"
-puts game.grid[0][0].legal_routes
+
+game.play_turn
