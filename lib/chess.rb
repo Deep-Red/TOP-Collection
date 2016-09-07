@@ -64,12 +64,12 @@ class Board
 	def name_square
 		name_piece = []
 		n_p = gets.chomp.split("")
-		puts n_p.inspect
+#		puts n_p.inspect
 		name_piece[1] = n_p[0].downcase.bytes.pop
 		name_piece[1] -= 97
 		reversing_array = ["Error", 7, 6, 5, 4, 3, 2, 1, 0]
 		name_piece[0] = reversing_array[n_p[1].to_i]
-		puts name_piece.inspect
+#		puts name_piece.inspect
 		if on_board?(name_piece)
 			name_piece  
 		else 
@@ -96,6 +96,10 @@ class Board
 	def move_piece(from, to)
 		tomove = grid[from[0]][from[1]]
 		puts tomove.inspect
+		destination = grid[to[0]][to[1]]
+		grid[to[0]][to[1]] = tomove
+		grid[from[0]][from[1]] = nil
+		display
 
 
 	end
@@ -197,4 +201,4 @@ game = Board.new
 game.display
 
 game.play_turn
-puts "\u2659 \u265F \u2655 \u265C"
+#puts "\u2659 \u265F \u2655 \u265C"
