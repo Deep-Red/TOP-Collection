@@ -1,5 +1,5 @@
 class Board
-	attr_accessor :square
+	attr_accessor :square, :grid
 
 	def initialize
 		@grid = Array.new(8){ |i|
@@ -45,7 +45,7 @@ end
 
 
 class Piece
-	attr_accessor :position, :type, :player, :piece, :icon
+	attr_accessor :position, :type, :player, :piece, :icon, :legal_route?
 
 	def initialize(x, y, type, player)
 		@position = [x,y]
@@ -53,6 +53,16 @@ class Piece
 		@player = player
 		@piece = @type.new(@player)
 		@icon = @piece.icon
+	end
+
+	def move
+		self.square_exists?
+		self.type.legal_routes
+	end
+
+	def square_exists?(destination)
+		8 >= destination[0] >= 0 ? next : return false
+		8 >= destination[1] >= 0 ? next : return false
 	end
 end
 
@@ -62,13 +72,31 @@ class Pawn < Piece
 		@player = player
 		@icon = @player == 1 ? "\u2659" : "\u265F"
 	end
+
+	def legal_routes
+		if @player == 1
+			[[1, 1], [-1, 1]]
+		else
+			[[1, -1], [-1, -1]]
+		end
+	end
 end
 
 class Rook < Piece
-	attr_accessor :icon
+	attr_accessor :icon, :legal_route?
 	def initialize(player)
 		@player = player
 		@icon = @player == 1 ? "\u2655" : "\u265C"
+	end
+
+	def legal_route?(destination)
+		if destination[0] == self.position[0] && destination[1] == self.position[1]
+			return false
+		elsif destination[0] != self.position[0] && destination[1] != self.position[1]
+			return false
+		else 
+			return true
+		end
 	end
 end
 
@@ -111,3 +139,4 @@ end
 game = Board.new
 game.display
 puts "\u2659 \u265F \u2655 \u265C"
+puts game.grid[0][0].legal_routes
