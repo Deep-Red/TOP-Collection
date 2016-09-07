@@ -7,24 +7,24 @@ class Board
 				j = nil
 			} }
 #		puts @grid[0].inspect
-		@grid[1].map! { |i| i = Piece.new(i, 0, Pawn, 1) }
-		@grid[6].map! { |i| i = Piece.new(i, 7, Pawn, 2) }
-		@grid[0][0] = Piece.new(0, 0, Rook, 1)
-		@grid[0][7] = Piece.new(0, 7, Rook, 1)
-		@grid[7][0] = Piece.new(7, 0, Rook, 2)
-		@grid[7][7] = Piece.new(7, 7, Rook, 2)
-		@grid[0][1] = Piece.new(0, 1, Knight, 1)
-		@grid[0][6] = Piece.new(0, 6, Knight, 1)
-		@grid[7][1] = Piece.new(7, 1, Knight, 2)
-		@grid[7][6] = Piece.new(7, 6, Knight, 2)
-		@grid[0][2] = Piece.new(0, 2, Bishop, 1)
-		@grid[0][5] = Piece.new(0, 5, Bishop, 1)
-		@grid[7][2] = Piece.new(7, 2, Bishop, 2)
-		@grid[7][5] = Piece.new(7, 5, Bishop, 2)
-		@grid[0][3] = Piece.new(0, 3, Queen, 1)
-		@grid[7][3] = Piece.new(7, 3, Queen, 2)
-		@grid[0][4] = Piece.new(0, 4, King, 1)
-		@grid[7][4] = Piece.new(7, 4, King, 2)
+		@grid[6].map! { |i| i = Piece.new(i, 6, Pawn, 1) }
+		@grid[1].map! { |i| i = Piece.new(i, 1, Pawn, 2) }
+		@grid[7][0] = Piece.new(7, 0, Rook, 1)
+		@grid[7][7] = Piece.new(7, 7, Rook, 1)
+		@grid[0][0] = Piece.new(0, 0, Rook, 2)
+		@grid[0][7] = Piece.new(0, 7, Rook, 2)
+		@grid[7][1] = Piece.new(7, 1, Knight, 1)
+		@grid[7][6] = Piece.new(7, 6, Knight, 1)
+		@grid[0][1] = Piece.new(0, 1, Knight, 2)
+		@grid[0][6] = Piece.new(0, 6, Knight, 2)
+		@grid[7][2] = Piece.new(7, 2, Bishop, 1)
+		@grid[7][5] = Piece.new(7, 5, Bishop, 1)
+		@grid[0][2] = Piece.new(0, 2, Bishop, 2)
+		@grid[0][5] = Piece.new(0, 5, Bishop, 2)
+		@grid[7][3] = Piece.new(7, 3, Queen, 1)
+		@grid[0][3] = Piece.new(0, 3, Queen, 2)
+		@grid[7][4] = Piece.new(7, 4, King, 1)
+		@grid[0][4] = Piece.new(0, 4, King, 2)
 
 #		puts @grid[0].inspect
 
@@ -63,10 +63,13 @@ class Board
 
 	def name_square
 		name_piece = []
-		name_piece = gets.chomp.split("")
-		name_piece[0] = name_piece[0].downcase.bytes.pop
-		name_piece[0] -= 97
-		name_piece[1] = name_piece[1].to_i - 1
+		n_p = gets.chomp.split("")
+		puts n_p.inspect
+		name_piece[1] = n_p[0].downcase.bytes.pop
+		name_piece[1] -= 97
+		reversing_array = ["Error", 7, 6, 5, 4, 3, 2, 1, 0]
+		name_piece[0] = reversing_array[n_p[1].to_i]
+		puts name_piece.inspect
 		if on_board?(name_piece)
 			name_piece  
 		else 
@@ -79,12 +82,21 @@ class Board
 		to = []
 		puts "What piece would you like to move?"
 		from = name_square
-		puts "To where would you like it to move?"
+		puts "To where would you like it moved?"
 		to = name_square
-		valid_move?
+#		valid_move?
+		move_piece(from, to)
+
 	end
 
 	def valid_move?
+
+	end
+
+	def move_piece(from, to)
+		tomove = grid[from[0]][from[1]]
+		puts tomove.inspect
+
 
 	end
 end
@@ -100,10 +112,10 @@ class Piece
 		@icon = @piece.icon
 	end
 
-	def move
-		self.square_exists?
-		self.type.legal_routes
-	end
+#	def move
+#		self.square_exists?
+#		self.type.legal_routes
+#	end
 
 #	def square_exists?(destination)
 #		8 >= destination[0] && destination[0] >= 0 ? true : false
@@ -115,7 +127,7 @@ class Pawn < Piece
 	attr_accessor :icon
 	def initialize(player)
 		@player = player
-		@icon = @player == 1 ? "\u2659" : "\u265F"
+		@icon = @player == 2 ? "\u2659" : "\u265F"
 	end
 
 	def legal_routes
@@ -131,7 +143,7 @@ class Rook < Piece
 	attr_accessor :icon, :legal_route
 	def initialize(player)
 		@player = player
-		@icon = @player == 1 ? "\u2655" : "\u265C"
+		@icon = @player == 2 ? "\u2655" : "\u265C"
 	end
 
 	def legal_route(destination)
@@ -149,7 +161,7 @@ class Knight < Piece
 	attr_accessor :icon
 	def initialize(player)
 		@player = player
-		@icon = @player == 1 ? "\u2658" : "\u265E"
+		@icon = @player == 2 ? "\u2658" : "\u265E"
 	end
 
 end
@@ -158,7 +170,7 @@ class Bishop < Piece
 	attr_accessor :icon
 	def initialize(player)
 		@player = player
-		@icon = @player == 1 ? "\u2657" : "\u265D"
+		@icon = @player == 2 ? "\u2657" : "\u265D"
 	end
 
 end
@@ -167,7 +179,7 @@ class Queen < Piece
 	attr_accessor :icon
 	def initialize(player)
 		@player = player
-		@icon = @player == 1 ? "\u2655" : "\u265B"
+		@icon = @player == 2 ? "\u2655" : "\u265B"
 	end
 
 end
@@ -176,7 +188,7 @@ class King < Piece
 	attr_accessor :icon
 	def initialize(player)
 		@player = player
-		@icon = @player == 1 ? "\u2654" : "\u265A"
+		@icon = @player == 2 ? "\u2654" : "\u265A"
 	end
 
 end
@@ -185,3 +197,4 @@ game = Board.new
 game.display
 
 game.play_turn
+puts "\u2659 \u265F \u2655 \u265C"
