@@ -1,5 +1,5 @@
 class Board
-	attr_accessor :square, :grid, :turn, :captured
+	attr_accessor :square, :grid, :turn, :captured, :check, :mate
 
 	def initialize
 		@grid = Array.new(8){ |i|
@@ -30,6 +30,8 @@ class Board
 
 		@turn = 0
 		@captured = []
+		@check = 0
+		@mate = 0
 	end
 
 	def display
@@ -44,21 +46,43 @@ class Board
 		puts "3  #{disp[40..47].join("  ")}"
 		puts "2  #{disp[48..55].join("  ")}"
 		puts "1  #{disp[56..63].join("  ")}"
+		puts ""
+		puts "Captured pieces: #{captured}"
+	end
+
+	def is_piece?(square)
+		false if square[0].nil?
+		false if square[1].nil?
+		grid[square[0]][square[1]] == nil ? false : true
 	end
 
 	def on_board?(square)
-		square.each do |c| 
-			if c >= 0 && c <= 7
-				true
-			else
-				false
-			end
+		if square[0] == nil || square[1] == nil
+			return false
+		elsif square[0].between?(0,7) && square[1].between?(0,7) 
+			return true 
+		else 
+			return false
 		end
-
 	end
 
 	def invalid_square_selected
 		puts "That square isn't on the board! Try again."
+		@turn -= 1
+		play_turn
+	end
+
+	def empty_square_selected
+		puts "You picked a square without a piece on it,"
+		puts "let's try again."
+		@turn -= 1
+		play_turn
+	end
+
+	def illegal_move(from)
+		puts "That isn't a legal move for #{grid[from[0]][from[1]]}!"
+		puts "Let's try again."
+		@turn -= 1
 		play_turn
 	end
 
@@ -68,47 +92,100 @@ class Board
 #		puts n_p.inspect
 		name_piece[1] = n_p[0].downcase.bytes.pop
 		name_piece[1] -= 97
-		reversing_array = ["Error", 7, 6, 5, 4, 3, 2, 1, 0]
-		name_piece[0] = reversing_array[n_p[1].to_i]
-#		puts name_piece.inspect
-		if on_board?(name_piece)
-			name_piece  
-		else 
-			invalid_square_selected
-		end
+		reversing_array = [7, 6, 5, 4, 3, 2, 1, 0]
+		name_piece[0] = reversing_array[n_p[1].to_i - 1]
+		puts name_piece.inspect
+		name_piece
 	end
 
 	def play_turn
+		@turn += 1
 		from = []
 		to = []
 		puts "What piece would you like to move?"
 		from = name_square
 		puts "To where would you like it moved?"
 		to = name_square
-#		valid_move?
-		move_piece(from, to)
+		if is_piece?(from)
+			if on_board?(to)
+				legal_route?(from, to) ? move_piece(from, to) : illegal_move(from)
+			else
+				empty_square_selected
+			end
+		else
+			invalid_square_selected
+		end
 
 	end
 
-	def valid_move?
+	def in_file?(from, to)
+		from[0] - to[0] == 0 ? true : false
+	end
 
+	def in_rank?(from, to)
+		from[1] - to[1] == 0 ? true : false
+	end
+
+	def on_diagonal?(from, to)
+		file = from[0] - to[0]
+		rank = from[1] - to[1]
+		file == rank ? true : false
+	end
+
+	def knight_move?(from, to)
+		legal_routes = [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]
+		move_route = []
+		puts "hi!"
+		puts move_route
+		move_route[0] = to[0] - from[0]
+		move_route[1] = to[1] - from[1]
+		puts move_route
+		legal_routes.include? move_route ? true : false
+	end
+
+	def only_one_step?(from, to)
+		file = from[0] - to[0]
+		rank = from[1] - to[0]
+		file.between?(-1,1) && rank.between?(-1,1) ? true : false
+	end
+
+	def legal_route?(from, to)
+		piece = grid[from[0]][from[1]]
+		case 
+		when piece.type == Rook
+			in_rank?(from, to) ^ in_file?(from, to) ? true : false
+		when piece.type == Knight
+			knight_move?(from, to) ? true : false
+		when piece.type == Bishop
+			on_diagonal?(from, to) ? true : false
+		when piece.type == Queen
+			on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
+		when piece.type == King
+			if only_one_step?(from, to)
+				on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
+			else
+				false
+			end
+		when piece.type == Pawn
+			pawn_move?(from, to) ? true : false
+		end
 	end
 
 	def move_piece(from, to)
 		tomove = grid[from[0]][from[1]]
-		puts tomove.inspect
+#		puts tomove.inspect
+		grid[from[0]][from[1]].special_move_eligible = false 
+#		puts tomove.inspect
 		destination = grid[to[0]][to[1]]
 		captured << destination if destination != nil
 		grid[to[0]][to[1]] = tomove
 		grid[from[0]][from[1]] = nil
 		display
-
-
 	end
 end
 
 class Piece
-	attr_accessor :position, :type, :player, :piece, :icon#, :square_exists
+	attr_accessor :position, :type, :player, :piece, :icon, :special_move_eligible #, :square_exists
 
 	def initialize(x, y, type, player)
 		@position = [x,y]
@@ -116,6 +193,7 @@ class Piece
 		@player = player
 		@piece = @type.new(@player)
 		@icon = @piece.icon
+		@special_move_eligible = true
 	end
 
 #	def move
@@ -130,10 +208,11 @@ class Piece
 end
 
 class Pawn < Piece
-	attr_accessor :icon
+	attr_accessor :icon#, :en_passant_eligible
 	def initialize(player)
 		@player = player
 		@icon = @player == 2 ? "\u2659" : "\u265F"
+#		@en_passant_eligible = true
 	end
 
 	def legal_routes
@@ -146,10 +225,11 @@ class Pawn < Piece
 end
 
 class Rook < Piece
-	attr_accessor :icon, :legal_route
+	attr_accessor :icon, :legal_route#, :castling_eligible
 	def initialize(player)
 		@player = player
 		@icon = @player == 2 ? "\u2655" : "\u265C"
+#		@castling_eligible = true
 	end
 
 	def legal_route(destination)
@@ -191,10 +271,11 @@ class Queen < Piece
 end
 
 class King < Piece
-	attr_accessor :icon
+	attr_accessor :icon#, :castling_eligible
 	def initialize(player)
 		@player = player
 		@icon = @player == 2 ? "\u2654" : "\u265A"
+#		@castling_eligible = true
 	end
 
 end
