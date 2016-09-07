@@ -136,11 +136,11 @@ class Board
 		legal_routes = [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]
 		move_route = []
 		puts "hi!"
-		puts move_route
+		puts move_route.inspect
 		move_route[0] = to[0] - from[0]
 		move_route[1] = to[1] - from[1]
-		puts move_route
-		legal_routes.include? move_route ? true : false
+		puts move_route.inspect
+		legal_routes.include?(move_route) ? true : false
 	end
 
 	def only_one_step?(from, to)
