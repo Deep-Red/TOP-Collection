@@ -1,5 +1,5 @@
 class Board
-	attr_accessor :square, :grid, :turn
+	attr_accessor :square, :grid, :turn, :captured
 
 	def initialize
 		@grid = Array.new(8){ |i|
@@ -29,6 +29,7 @@ class Board
 #		puts @grid[0].inspect
 
 		@turn = 0
+		@captured = []
 	end
 
 	def display
@@ -97,6 +98,7 @@ class Board
 		tomove = grid[from[0]][from[1]]
 		puts tomove.inspect
 		destination = grid[to[0]][to[1]]
+		captured << destination if destination != nil
 		grid[to[0]][to[1]] = tomove
 		grid[from[0]][from[1]] = nil
 		display
