@@ -36,7 +36,10 @@ class Board
 
 	def display
 		disp = []
+		cap_disp = []
 		@grid.each{|i| i.each {|j| j == nil ? disp << "_" : disp << j.icon }}
+		@captured.each{|i| cap_disp << i.icon }
+		
 		puts "   a  b  c  d  e  f  g  h  "
 		puts "8  #{disp[0..7].join("  ")}"
 		puts "7  #{disp[8..15].join("  ")}"
@@ -47,7 +50,7 @@ class Board
 		puts "2  #{disp[48..55].join("  ")}"
 		puts "1  #{disp[56..63].join("  ")}"
 		puts ""
-		puts "Captured pieces: #{captured}"
+		puts "Captured: #{captured == [] ? 'nothing' : cap_disp.join('')}"
 	end
 
 	def is_piece?(square)
@@ -86,6 +89,20 @@ class Board
 		play_turn
 	end
 
+	def square_occupied_by_self?(square)
+		allegiance = grid[square[0]][square[1]].player
+		puts allegiance
+		puts @current_player
+		allegiance == @current_player ? true : false
+	end
+
+	def suicide_attempt
+		puts "You can't take your own piece!"
+		puts "Give that another shot."
+		@turn -= 1
+		play_turn
+	end
+
 	def name_square
 		name_piece = []
 		n_p = gets.chomp.split("")
@@ -98,17 +115,29 @@ class Board
 		name_piece
 	end
 
+
 	def play_turn
 		@turn += 1
+		@current_player = 0
+		@turn % 2 == 0 ? @current_player = 1 : @current_player = 2
 		from = []
 		to = []
 		puts "What piece would you like to move?"
 		from = name_square
 		puts "To where would you like it moved?"
 		to = name_square
+
 		if is_piece?(from)
 			if on_board?(to)
-				legal_route?(from, to) ? move_piece(from, to) : illegal_move(from)
+				if legal_route?(from, to) 
+					if square_occupied_by_self?(to)
+						suicide_attempt
+					else
+						move_piece(from, to) 
+					end
+				else
+					illegal_move(from)
+				end
 			else
 				empty_square_selected
 			end
@@ -119,11 +148,11 @@ class Board
 	end
 
 	def in_file?(from, to)
-		from[0] - to[0] == 0 ? true : false
+		from[1] - to[1] == 0 ? true : false
 	end
 
 	def in_rank?(from, to)
-		from[1] - to[1] == 0 ? true : false
+		from[0] - to[0] == 0 ? true : false
 	end
 
 	def on_diagonal?(from, to)
@@ -142,26 +171,27 @@ class Board
 
 	def only_one_step?(from, to)
 		file = from[0] - to[0]
-		rank = from[1] - to[0]
+		rank = from[1] - to[1]
 		puts file
 		puts rank
 		file.between?(-1,1) && rank.between?(-1,1) ? true : false
 	end
 
+	def valid_en_passant?(from, to)
+		on_diagonal?(from, to) && only_one_step?(from, to)
+# => need to add a check to ensure that a piece is being captured 
+	end
+
 	def pawn_move?(from, to)
-		if on_diagonal?(from, to)
+		if in_file?(from, to)
 			if only_one_step?(from, to)
-				puts "A"
 				true
 			elsif grid[from[0]][from[1]].special_move_eligible 
-				puts "B"
-				valid_en_passant(from, to)
+				valid_en_passant?(from, to)
 			else
-				puts "C"
 				false
 			end
 		else
-			puts "D"
 			false
 		end			
 	end
@@ -232,13 +262,13 @@ class Pawn < Piece
 #		@en_passant_eligible = true
 	end
 
-	def legal_routes
-		if @player == 1
-			[[1, 1], [-1, 1]]
-		else
-			[[1, -1], [-1, -1]]
-		end
-	end
+#	def legal_routes
+#		if @player == 1
+#			[[1, 1], [-1, 1]]
+#		else
+#			[[1, -1], [-1, -1]]
+#		end
+#	end
 end
 
 class Rook < Piece
@@ -249,15 +279,15 @@ class Rook < Piece
 #		@castling_eligible = true
 	end
 
-	def legal_route(destination)
-		if destination[0] == self.position[0] && destination[1] == self.position[1]
-			return false
-		elsif destination[0] != self.position[0] && destination[1] != self.position[1]
-			return false
-		else 
-			return true
-		end
-	end
+#	def legal_route(destination)
+#		if destination[0] == self.position[0] && destination[1] == self.position[1]
+#			return false
+#		elsif destination[0] != self.position[0] && destination[1] != self.position[1]
+#			return false
+#		else 
+#			return true
+#		end
+#	end
 end
 
 class Knight < Piece
@@ -293,6 +323,7 @@ class King < Piece
 		@player = player
 		@icon = @player == 2 ? "\u2654" : "\u265A"
 #		@castling_eligible = true
+		@in_check = 0
 	end
 
 end
@@ -301,4 +332,5 @@ game = Board.new
 game.display
 
 game.play_turn
+#game.move_piece([0,0], [6,0])
 #puts "\u2659 \u265F \u2655 \u265C"

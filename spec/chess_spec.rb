@@ -9,7 +9,8 @@ describe 'board' do
 
 	describe 'display' do
 		context "given a board in the starting position"
-		it "returns" 
+		it "returns a board setup"
+
 	end
 
 	describe 'move_piece' do
