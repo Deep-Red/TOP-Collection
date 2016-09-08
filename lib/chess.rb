@@ -129,24 +129,41 @@ class Board
 	def on_diagonal?(from, to)
 		file = from[0] - to[0]
 		rank = from[1] - to[1]
-		file == rank ? true : false
+		file.abs == rank.abs ? true : false
 	end
 
 	def knight_move?(from, to)
 		legal_routes = [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]
 		move_route = []
-		puts "hi!"
-		puts move_route.inspect
 		move_route[0] = to[0] - from[0]
 		move_route[1] = to[1] - from[1]
-		puts move_route.inspect
 		legal_routes.include?(move_route) ? true : false
 	end
 
 	def only_one_step?(from, to)
 		file = from[0] - to[0]
 		rank = from[1] - to[0]
+		puts file
+		puts rank
 		file.between?(-1,1) && rank.between?(-1,1) ? true : false
+	end
+
+	def pawn_move?(from, to)
+		if on_diagonal?(from, to)
+			if only_one_step?(from, to)
+				puts "A"
+				true
+			elsif grid[from[0]][from[1]].special_move_eligible 
+				puts "B"
+				valid_en_passant(from, to)
+			else
+				puts "C"
+				false
+			end
+		else
+			puts "D"
+			false
+		end			
 	end
 
 	def legal_route?(from, to)
