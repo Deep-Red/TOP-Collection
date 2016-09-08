@@ -90,6 +90,7 @@ class Board
 	end
 
 	def square_occupied_by_self?(square)
+		return false if grid[square[0]][square[1]].nil?
 		allegiance = grid[square[0]][square[1]].player
 		puts allegiance
 		puts @current_player
@@ -119,7 +120,7 @@ class Board
 	def play_turn
 		@turn += 1
 		@current_player = 0
-		@turn % 2 == 0 ? @current_player = 1 : @current_player = 2
+		@turn % 2 == 1 ? @current_player = 1 : @current_player = 2
 		from = []
 		to = []
 		puts "What piece would you like to move?"
@@ -177,25 +178,38 @@ class Board
 		file.between?(-1,1) && rank.between?(-1,1) ? true : false
 	end
 
+	def forward_move?(from, to)
+		progress = to[0] - from[0]
+		case @current_player
+		when 1
+			progress <= 0 ? true : false
+		when 2
+			progress >= 0 ? false : true
+		end
+	end
+
 	def valid_en_passant?(from, to)
 		on_diagonal?(from, to) && only_one_step?(from, to)
 # => need to add a check to ensure that a piece is being captured 
 	end
 
 	def pawn_move?(from, to)
-		if in_file?(from, to)
-			if only_one_step?(from, to)
-				true
-			elsif grid[from[0]][from[1]].special_move_eligible 
-				valid_en_passant?(from, to)
+		if forward_move?(from, to)
+			if in_file?(from, to)
+				if only_one_step?(from, to)
+					true
+				elsif grid[from[0]][from[1]].special_move_eligible 
+					valid_en_passant?(from, to)
+				else
+					false
+				end
 			else
 				false
-			end
+			end			
 		else
 			false
-		end			
+		end
 	end
-
 	def legal_route?(from, to)
 		piece = grid[from[0]][from[1]]
 		case 
