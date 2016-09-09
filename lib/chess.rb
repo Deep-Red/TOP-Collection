@@ -93,7 +93,7 @@ class Board
 		return false if grid[square[0]][square[1]].nil?
 		allegiance = grid[square[0]][square[1]].player
 		puts allegiance
-		puts @current_player
+		puts "Current: #{@current_player}"
 		allegiance == @current_player ? true : false
 	end
 
@@ -128,7 +128,7 @@ class Board
 		puts "To where would you like it moved?"
 		to = name_square
 
-		if is_piece?(from)
+		if is_piece?(from) && square_occupied_by_self?(from)
 			if on_board?(to)
 				if legal_route?(from, to) 
 					if square_occupied_by_self?(to)
