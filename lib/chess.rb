@@ -107,8 +107,10 @@ class Board
 	def name_square
 		name_piece = []
 		n_p = gets.chomp.split("")
+#		resign if n_p == ["r", "e", "s", "i", "g", "n"]
 #		puts n_p.inspect
 		name_piece[1] = n_p[0].downcase.bytes.pop
+
 		name_piece[1] -= 97
 		reversing_array = [7, 6, 5, 4, 3, 2, 1, 0]
 		name_piece[0] = reversing_array[n_p[1].to_i - 1]
@@ -118,6 +120,7 @@ class Board
 
 
 	def play_turn
+		display
 		@turn += 1
 		@current_player = 0
 		@turn % 2 == 1 ? @current_player = 1 : @current_player = 2
@@ -125,8 +128,12 @@ class Board
 		to = []
 		puts "What piece would you like to move?"
 		from = name_square
+
+
+
 		puts "To where would you like it moved?"
 		to = name_square
+
 
 		if is_piece?(from) && square_occupied_by_self?(from)
 			if on_board?(to)
@@ -145,6 +152,7 @@ class Board
 		else
 			invalid_square_selected
 		end
+		game_over? ? game_over_report : play_turn
 
 	end
 
@@ -184,7 +192,7 @@ class Board
 		when 1
 			progress <= 0 ? true : false
 		when 2
-			progress >= 0 ? false : true
+			progress <= 0 ? false : true
 		end
 	end
 
@@ -241,9 +249,30 @@ class Board
 		captured << destination if destination != nil
 		grid[to[0]][to[1]] = tomove
 		grid[from[0]][from[1]] = nil
-		display
+#		play_turn
+	end
+
+	def game_over?
+		@checkmate == 1 ? true : false
+	end
+
+	def game_over_report
+		puts "Game Over"
+		puts "Player #{@current_player} has won!"
+	end
+
+	def resign
+		who = @current_player == 1 ? "White" : "Black"
+		puts "The #{who} player has resigned."
+		return false
 	end
 end
+
+#class Player
+#	def initialize
+#
+#	end
+#end
 
 class Piece
 	attr_accessor :position, :type, :player, :piece, :icon, :special_move_eligible #, :square_exists
@@ -342,9 +371,10 @@ class King < Piece
 
 end
 
-game = Board.new
-game.display
 
-game.play_turn
+#game = Board.new
+#game.display
+
+#game.play_turn
 #game.move_piece([0,0], [6,0])
 #puts "\u2659 \u265F \u2655 \u265C"
