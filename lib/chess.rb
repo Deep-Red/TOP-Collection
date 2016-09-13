@@ -202,22 +202,46 @@ class Board
 	end
 
 	def pawn_move?(from, to)
-		if forward_move?(from, to)
-			if in_file?(from, to)
+		rank = from[0] - to[0]
+		file = from[1] - to[1]
+		case file
+		when 0
+			if 	forward_move?(from, to)
 				if only_one_step?(from, to)
 					true
-				elsif grid[from[0]][from[1]].special_move_eligible 
-					valid_en_passant?(from, to)
+				elsif grid[from[0]][from[1]].has_moved == false && (from[0] - to[0] == 2 || from[0] - to[0] == -2)
+					true
 				else
 					false
 				end
 			else
 				false
-			end			
-		else
-			false
+			end
+		when 1
+			valid_en_passant?(from, to) ? true : false
 		end
 	end
+
+					
+
+
+
+#		if forward_move?(from, to)
+#			if in_file?(from, to)
+#				if only_one_step?(from, to)
+#					true
+#				elsif grid[from[0]][from[1]].has_moved? 
+#					valid_en_passant?(from, to)
+#				else
+#					false
+#				end
+#			else
+#				false
+#			end			
+#		else
+#			false
+#		end
+#	end
 	def legal_route?(from, to)
 		piece = grid[from[0]][from[1]]
 		case 
@@ -243,12 +267,12 @@ class Board
 	def move_piece(from, to)
 		tomove = grid[from[0]][from[1]]
 #		puts tomove.inspect
-		grid[from[0]][from[1]].special_move_eligible = false 
 #		puts tomove.inspect
 		destination = grid[to[0]][to[1]]
 		captured << destination if destination != nil
 		grid[to[0]][to[1]] = tomove
 		grid[from[0]][from[1]] = nil
+		grid[to[0]][to[1]].has_moved = true 
 #		play_turn
 	end
 
@@ -275,7 +299,7 @@ end
 #end
 
 class Piece
-	attr_accessor :position, :type, :player, :piece, :icon, :special_move_eligible #, :square_exists
+	attr_accessor :position, :type, :player, :piece, :icon, :has_moved #, :square_exists
 
 	def initialize(x, y, type, player)
 		@position = [x,y]
@@ -283,7 +307,7 @@ class Piece
 		@player = player
 		@piece = @type.new(@player)
 		@icon = @piece.icon
-		@special_move_eligible = true
+		@has_moved = false
 	end
 
 #	def move
@@ -372,9 +396,9 @@ class King < Piece
 end
 
 
-#game = Board.new
+game = Board.new
 #game.display
 
-#game.play_turn
+game.play_turn
 #game.move_piece([0,0], [6,0])
 #puts "\u2659 \u265F \u2655 \u265C"

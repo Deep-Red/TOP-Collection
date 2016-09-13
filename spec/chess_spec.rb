@@ -20,5 +20,12 @@ describe 'board' do
 				expect(@test_game.grid[1][1]).to eq nil
 			end
 		end
+
+		context "when a pawn makes it's first move" do
+			it "can move two spaces" do
+				@test_game.move_piece([6,2],[4,2])
+				expect(@test_game.grid[4][2].type).to eq Pawn
+			end
+		end
 	end
 end
