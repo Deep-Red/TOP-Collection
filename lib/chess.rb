@@ -197,8 +197,9 @@ class Board
 	end
 
 	def valid_en_passant?(from, to)
-		on_diagonal?(from, to) && only_one_step?(from, to)
-# => need to add a check to ensure that a piece is being captured 
+		return false unless on_diagonal?(from, to) && only_one_step?(from, to)
+		return false if grid[from[0]][to[1]].nil?
+		return true
 	end
 
 	def pawn_move?(from, to)
