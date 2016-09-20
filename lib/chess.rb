@@ -92,7 +92,7 @@ class Board
 	def square_occupied_by_self?(square)
 		return false if grid[square[0]][square[1]].nil?
 		allegiance = grid[square[0]][square[1]].player
-		puts allegiance
+#		puts allegiance
 		puts "Current: #{@current_player}"
 		allegiance == @current_player ? true : false
 	end
@@ -199,18 +199,22 @@ class Board
 	def valid_en_passant?(from, to)
 		return false unless on_diagonal?(from, to) && only_one_step?(from, to)
 		return false if grid[from[0]][to[1]].nil?
+		return false if grid[from[0]][to[0]].en_passant_eligible = false
 		return true
 	end
 
 	def pawn_move?(from, to)
 		rank = from[0] - to[0]
 		file = from[1] - to[1]
-		case file
-		when 0
+#		puts "File is: #{file}"
+		if file == 0
+#			puts "No Capture"
 			if 	forward_move?(from, to)
 				if only_one_step?(from, to)
+					grid[from[0]][from[1]].en_passant_eligible = false
 					true
 				elsif grid[from[0]][from[1]].has_moved == false && (from[0] - to[0] == 2 || from[0] - to[0] == -2)
+					grid[from[0]][from[1]].en_passant_eligible = true
 					true
 				else
 					false
@@ -218,8 +222,14 @@ class Board
 			else
 				false
 			end
-		when 1
-			valid_en_passant?(from, to) ? true : false
+		else
+#			puts "Capture? #{grid[to[0]][to[1]]}"
+			return true unless grid[to[0]][to[1]] == nil
+#			puts "LINE 228ish"
+#			return true
+			#
+			#grid[from[0]][from[1]].en_passant_eligible = false
+			#valid_en_passant?(from, to) ? true : false
 		end
 	end
 
@@ -261,7 +271,10 @@ class Board
 				false
 			end
 		when piece.type == Pawn
+#			puts "Line 274ish: "
 			pawn_move?(from, to) ? true : false
+#			puts "#{h}"
+#			return h
 		end
 	end
 
@@ -300,7 +313,7 @@ end
 #end
 
 class Piece
-	attr_accessor :position, :type, :player, :piece, :icon, :has_moved #, :square_exists
+	attr_accessor :position, :type, :player, :piece, :icon, :has_moved, :en_passant_eligible#, :square_exists
 
 	def initialize(x, y, type, player)
 		@position = [x,y]
@@ -309,6 +322,7 @@ class Piece
 		@piece = @type.new(@player)
 		@icon = @piece.icon
 		@has_moved = false
+		@en_passant_eligible = false
 	end
 
 #	def move
@@ -327,7 +341,7 @@ class Pawn < Piece
 	def initialize(player)
 		@player = player
 		@icon = @player == 2 ? "\u2659" : "\u265F"
-#		@en_passant_eligible = true
+#		@en_passant_eligible = false
 	end
 
 #	def legal_routes
