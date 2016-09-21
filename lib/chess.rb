@@ -54,6 +54,8 @@ class Board
 	end
 
 	def is_piece?(square)
+		puts "the square is: #{square.inspect}"
+		false if square.nil?
 		false if square[0].nil?
 		false if square[1].nil?
 		grid[square[0]][square[1]] == nil ? false : true
@@ -104,9 +106,9 @@ class Board
 		play_turn
 	end
 
-	def name_square
+	def name_square(input)
 		name_piece = []
-		n_p = gets.chomp.split("")
+		n_p = input.split("")
 #		resign if n_p == ["r", "e", "s", "i", "g", "n"]
 #		puts n_p.inspect
 		name_piece[1] = n_p[0].downcase.bytes.pop
@@ -118,6 +120,19 @@ class Board
 		name_piece
 	end
 
+	def get_input
+		input = gets.chomp
+		handle_input(input)
+	end
+
+	def handle_input(input)
+		case input
+		when "r"
+			resign
+		else
+			name_square(input)
+		end
+	end
 
 	def play_turn
 		display
@@ -127,17 +142,17 @@ class Board
 		from = []
 		to = []
 		puts "What piece would you like to move?"
-		from = name_square
+		from = get_input
 
 
 
 		puts "To where would you like it moved?"
-		to = name_square
+		to = get_input
 
 
 		if is_piece?(from) && square_occupied_by_self?(from)
 			if on_board?(to)
-				if legal_route?(from, to) 
+				if (legal_route?(from, to) && trace_route(from, to))
 					if square_occupied_by_self?(to)
 						suicide_attempt
 					else
@@ -276,6 +291,48 @@ class Board
 #			puts "#{h}"
 #			return h
 		end
+	end
+
+#	def obstructed?(from, to)
+#
+#	end
+
+	def trace_route(from, to)
+		rank_direction = to[0] <=> from[0]
+		file_direction = to[1] <=> from[1]
+		rank_change = from[0] - to[0]
+		file_change = from[1] - to[1]
+		rank_direction != 1 ? (a,b = to[0],from[0]) : (a,b = from[0],to[0])
+		file_direction != 1 ? (c,d = to[1],from[1]) : (c,d = from[1],to[1])
+		puts "Variables assigned: \n a = #{a} b = #{b} c = #{c} d = #{d}"
+		square_status = []
+		if rank_change != 0 && file_change != 0
+			puts "Diagonal Move!"
+
+		elsif rank_change != 0
+			puts "310ish"
+			for i in a+1...b do
+				puts "i = #{i}"
+				is_piece?([i,c]) ? square_status << false : square_status << true
+			end
+		elsif file_change != 0
+			puts "316ish"
+			for i in c+1...d do
+				puts "i = #{i}"
+				is_piece?([a,i]) ? square_status << false : square_status << true
+			end
+		else
+			illegal_move
+		end
+		puts "square status: #{square_status.inspect}"
+		if square_status.include?(false)
+			puts "returning FALSE"
+			return false
+		else
+			puts "returning TRUE"
+			return true
+		end
+
 	end
 
 	def move_piece(from, to)
