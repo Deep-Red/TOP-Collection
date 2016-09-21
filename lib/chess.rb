@@ -302,13 +302,38 @@ class Board
 		file_direction = to[1] <=> from[1]
 		rank_change = from[0] - to[0]
 		file_change = from[1] - to[1]
-		rank_direction != 1 ? (a,b = to[0],from[0]) : (a,b = from[0],to[0])
-		file_direction != 1 ? (c,d = to[1],from[1]) : (c,d = from[1],to[1])
+		adder = []
+		check_square = from
+		if rank_direction == 1
+			(a,b = from[0],to[0])
+			adder[0] = 1
+		else
+			(a,b = to[0],from[0])
+			adder[0] = -1
+		end
+		if file_direction == 1
+			(c,d = from[1],to[1])
+			adder[1] = 1
+		else
+			(c,d = to[1],from[1])
+			adder[1] = -1
+		end
 		puts "Variables assigned: \n a = #{a} b = #{b} c = #{c} d = #{d}"
 		square_status = []
 		if rank_change != 0 && file_change != 0
 			puts "Diagonal Move!"
-
+			for i in a...b-1
+				puts "i = #{i}"
+				check_square = [check_square, adder].transpose.map {|x| x.reduce(:+)} 
+				is_piece?(check_square) ? square_status << false : square_status << true
+			end
+#			i = a+1
+#			j = c+1
+#			while i < b
+#				i += 1
+#				j += 1
+#				is_piece?([i,j]) ? square_status << false : square_status << true
+#			end
 		elsif rank_change != 0
 			puts "310ish"
 			for i in a+1...b do
