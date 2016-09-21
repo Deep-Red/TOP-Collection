@@ -318,12 +318,12 @@ class Board
 			(c,d = to[1],from[1])
 			adder[1] = -1
 		end
-		puts "Variables assigned: \n a = #{a} b = #{b} c = #{c} d = #{d}"
+#		puts "Variables assigned: \n a = #{a} b = #{b} c = #{c} d = #{d}"
 		square_status = []
 		if rank_change != 0 && file_change != 0
-			puts "Diagonal Move!"
+#			puts "Diagonal Move!"
 			for i in a...b-1
-				puts "i = #{i}"
+#				puts "i = #{i}"
 				check_square = [check_square, adder].transpose.map {|x| x.reduce(:+)} 
 				is_piece?(check_square) ? square_status << false : square_status << true
 			end
@@ -335,26 +335,26 @@ class Board
 #				is_piece?([i,j]) ? square_status << false : square_status << true
 #			end
 		elsif rank_change != 0
-			puts "310ish"
+#			puts "310ish"
 			for i in a+1...b do
-				puts "i = #{i}"
+#				puts "i = #{i}"
 				is_piece?([i,c]) ? square_status << false : square_status << true
 			end
 		elsif file_change != 0
-			puts "316ish"
+#			puts "316ish"
 			for i in c+1...d do
-				puts "i = #{i}"
+#				puts "i = #{i}"
 				is_piece?([a,i]) ? square_status << false : square_status << true
 			end
 		else
 			illegal_move
 		end
-		puts "square status: #{square_status.inspect}"
+#		puts "square status: #{square_status.inspect}"
 		if square_status.include?(false)
-			puts "returning FALSE"
+#			puts "returning FALSE"
 			return false
 		else
-			puts "returning TRUE"
+#			puts "returning TRUE"
 			return true
 		end
 
