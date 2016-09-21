@@ -214,7 +214,9 @@ class Board
 	def valid_en_passant?(from, to)
 		return false unless on_diagonal?(from, to) && only_one_step?(from, to)
 		return false if grid[from[0]][to[1]].nil?
-		return false if grid[from[0]][to[0]].en_passant_eligible = false
+		return false if grid[from[0]][from[1]].en_passant_eligible = false
+		captured << grid[from[0]][to[1]]
+		grid[from[0]][to[1]] = nil
 		return true
 	end
 
@@ -263,7 +265,7 @@ class Board
 #			return true
 			#
 			#grid[from[0]][from[1]].en_passant_eligible = false
-			#valid_en_passant?(from, to) ? true : false
+			valid_en_passant?(from, to) ? true : false
 		end
 	end
 
