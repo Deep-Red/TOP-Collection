@@ -218,6 +218,25 @@ class Board
 		return true
 	end
 
+#The castle method has not been tested. 
+#Anticipate possible problem of rook attempting to take the king after castling is complete.
+	def castle(from, to)
+		if from.has_moved == false && trace_route == true
+			rook_from = 7 if to[1] == 6
+			rook_from = 0 if to[1] == 1
+			
+			kingtomove = grid[from[0]][from[1]]
+			rooktomove = grid[7][to[1]]
+			destination = grid[to[0]][to[1]]
+			grid[to[0]][to[1]] = kingtomove
+			grid[from[0]][from[1]] = rooktomove
+			grid[7][to[1]] = nil
+			grid[to[0]][to[1]].has_moved = true
+		else
+			false
+		end
+	end
+
 	def pawn_move?(from, to)
 		rank = from[0] - to[0]
 		file = from[1] - to[1]
@@ -282,6 +301,8 @@ class Board
 		when piece.type == King
 			if only_one_step?(from, to)
 				on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
+			elsif from[1] - to[1] == -2 || from[1] - to[1] == -3
+				castle(from, to) ? true : false
 			else
 				false
 			end
@@ -298,6 +319,8 @@ class Board
 #	end
 
 	def trace_route(from, to)
+		puts "#{grid[from[0]][from[1]].type}"
+		return true if grid[from[0]][from[1]].type == Knight
 		rank_direction = to[0] <=> from[0]
 		file_direction = to[1] <=> from[1]
 		rank_change = from[0] - to[0]
@@ -335,13 +358,13 @@ class Board
 #				is_piece?([i,j]) ? square_status << false : square_status << true
 #			end
 		elsif rank_change != 0
-#			puts "310ish"
+			puts "310ish"
 			for i in a+1...b do
 #				puts "i = #{i}"
 				is_piece?([i,c]) ? square_status << false : square_status << true
 			end
 		elsif file_change != 0
-#			puts "316ish"
+			puts "316ish"
 			for i in c+1...d do
 #				puts "i = #{i}"
 				is_piece?([a,i]) ? square_status << false : square_status << true
@@ -357,7 +380,6 @@ class Board
 #			puts "returning TRUE"
 			return true
 		end
-
 	end
 
 	def move_piece(from, to)
