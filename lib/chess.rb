@@ -155,9 +155,17 @@ class Board
 	end
 
 	def checkmate?(threatening_pieces, king_pos)
-		test_board = grid.dup
 		agressor = threatening_pieces[0].player
 		agressor == 2 ? player = 1 : player = 2
+		if threatening_pieces.length == 2
+
+		else
+			for i in -1..1
+				for j in -1..1
+			test_board = grid.dup
+			test_board.move_piece(king_pos)
+
+
 
 
 	end
@@ -206,13 +214,19 @@ class Board
 		to = get_input
 
 
+		move_piece(from, to) if can_it_move?(from, to)
+		game_over? ? game_over_report : play_turn
+
+	end
+
+	def can_it_move?(from, to)
 		if is_piece?(from) && square_occupied_by_self?(from)
 			if on_board?(to)
 				if (legal_route?(from, to) && trace_route(from, to))
 					if square_occupied_by_self?(to)
 						suicide_attempt
 					else
-						move_piece(from, to)
+						true
 					end
 				else
 					illegal_move(from)
@@ -223,8 +237,6 @@ class Board
 		else
 			invalid_square_selected
 		end
-		game_over? ? game_over_report : play_turn
-
 	end
 
 	def in_file?(from, to)
