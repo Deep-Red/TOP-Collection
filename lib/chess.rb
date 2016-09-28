@@ -106,7 +106,7 @@ class Board
 		play_turn
 	end
 
-	def check?(player)
+	def find_king(player)
 		agressor = 0
 		player == 2 ? agressor = 1 : agressor = 2
 		grid.each_with_index do |x, i|
@@ -122,10 +122,15 @@ class Board
 						puts "Player #{player}s King is at:"
 						puts king_pos
 						puts "\n"
+						return king_pos
 					end
 				end
 			end
 		end
+	end
+
+	def check?(player)
+		king_pos = find_king(player)
 		threatening_pieces = []
 		for i in 0..7
 			for j in 0..7
@@ -162,12 +167,15 @@ class Board
 		else
 			for i in -1..1
 				for j in -1..1
-			test_board = grid.dup
-			test_board.move_piece(king_pos)
+					a = king_pos[0]+i
+					b = king_pos[1]+j
+		#			test_board = grid.dup
+		#			test_board.
+					can_it_move?(king_pos, [a,b])
 
-
-
-
+				end
+			end
+		end
 	end
 
 	def name_square(input)
@@ -588,9 +596,9 @@ end
 
 game = Board.new
 #game.display
-game.check?(1)
+#game.check?(1)
 #puts game.inspect
-#game.play_turn
+game.play_turn
 
 #game.move_piece([0,0], [6,0])
 #puts "\u2659 \u265F \u2655 \u265C"
