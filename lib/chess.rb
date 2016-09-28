@@ -107,8 +107,8 @@ class Board
 	end
 
 	def find_king(player)
-		agressor = 0
-		player == 2 ? agressor = 1 : agressor = 2
+#		agressor = 0
+#		player == 2 ? agressor = 1 : agressor = 2
 		grid.each_with_index do |x, i|
 #			puts x
 #			puts i
@@ -129,8 +129,8 @@ class Board
 		end
 	end
 
-	def check?(player)
-		king_pos = find_king(player)
+	def check?(king_pos)
+#		king_pos = find_king(player)
 		threatening_pieces = []
 		for i in 0..7
 			for j in 0..7
@@ -160,9 +160,10 @@ class Board
 	end
 
 	def checkmate?(threatening_pieces, king_pos)
-		agressor = threatening_pieces[0].player
-		agressor == 2 ? player = 1 : player = 2
-		if threatening_pieces.length == 2
+#		agressor = threatening_pieces[0].player
+#		agressor == 2 ? player = 1 : player = 2
+		check_spots = []
+		if threatening_pieces.length == 1
 
 		else
 			for i in -1..1
@@ -171,11 +172,15 @@ class Board
 					b = king_pos[1]+j
 		#			test_board = grid.dup
 		#			test_board.
-					can_it_move?(king_pos, [a,b])
-
+					if can_it_move?(king_pos, [a,b]) 
+						check?([a,b]) ? check_spots << true : check_spots << false
+					else
+						check_spots << true
+					end
 				end
 			end
 		end
+		check_spots.include?(false) ? false : true
 	end
 
 	def name_square(input)
@@ -377,6 +382,7 @@ class Board
 		when piece.type == Queen
 			on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
 		when piece.type == King
+			return false if check?(to)
 			if only_one_step?(from, to)
 				on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
 			elsif from[1] - to[1] == -2 || from[1] - to[1] == -3
