@@ -54,7 +54,7 @@ class Board
 	end
 
 	def is_piece?(square)
-		puts "the square is: #{square.inspect}"
+#		puts "the square is: #{square.inspect}"
 		false if square.nil?
 		false if square[0].nil?
 		false if square[1].nil?
@@ -95,7 +95,7 @@ class Board
 		return false if grid[square[0]][square[1]].nil?
 		allegiance = grid[square[0]][square[1]].player
 #		puts allegiance
-		puts "Current: #{@current_player}"
+#		puts "Current: #{@current_player}"
 		allegiance == @current_player ? true : false
 	end
 
@@ -104,6 +104,62 @@ class Board
 		puts "Give that another shot."
 		@turn -= 1
 		play_turn
+	end
+
+	def check?(player)
+		agressor = 0
+		player == 2 ? agressor = 1 : agressor = 2
+		grid.each_with_index do |x, i|
+#			puts x
+#			puts i
+#			puts "Once"
+			x.each_with_index do |y, j|
+#				puts "y: #{y}"
+#				puts "j: #{j}"
+				if y != nil
+					if y.type == King && y.player == player
+						king_pos = [i,j]
+						puts "Player #{player}s King is at:"
+						puts king_pos
+						puts "\n"
+					end
+				end
+			end
+		end
+		threatening_pieces = []
+		for i in 0..7
+			for j in 0..7
+#				puts "Line 132ish #{i}, #{j}"
+				target = grid[i][j]
+				if is_piece?([i,j]) && square_occupied_by_self?([i,j])
+					if on_board?(to)
+						if (legal_route?([i,j], [king_pos]) && trace_route([i,j], [king_pos]))
+							if square_occupied_by_self?([king_pos])
+								suicide_attempt
+							else
+								threatening_pieces << [i,j] 
+							end
+						else
+							false
+						end
+					else
+						false
+					end
+				else
+					false
+				end
+			end
+		end
+		puts "and is threatened by #{threatening_pieces.inspect}"
+		threatening_pieces == [] ? false : checkmate?(thretening_piece, king_pos)
+	end
+
+	def checkmate?(threatening_pieces, king_pos)
+		test_board = grid.dup
+		agressor = threatening_pieces[0].player
+		agressor == 2 ? player = 1 : player = 2
+
+
 	end
 
 	def name_square(input)
@@ -156,7 +212,7 @@ class Board
 					if square_occupied_by_self?(to)
 						suicide_attempt
 					else
-						move_piece(from, to) 
+						move_piece(from, to)
 					end
 				else
 					illegal_move(from)
@@ -392,7 +448,8 @@ class Board
 		captured << destination if destination != nil
 		grid[to[0]][to[1]] = tomove
 		grid[from[0]][from[1]] = nil
-		grid[to[0]][to[1]].has_moved = true 
+		grid[to[0]][to[1]].has_moved = true
+		grid[to[0]][to[1]].position = to
 #		play_turn
 	end
 
@@ -519,7 +576,9 @@ end
 
 game = Board.new
 #game.display
+game.check?(1)
+#puts game.inspect
+#game.play_turn
 
-game.play_turn
 #game.move_piece([0,0], [6,0])
 #puts "\u2659 \u265F \u2655 \u265C"
