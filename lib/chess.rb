@@ -71,6 +71,12 @@ class Board
 		end
 	end
 
+	def tried_to_move_opponent_piece
+		puts "That piece doesn't belong to you!"
+		@turn -= 1
+		play_turn
+	end
+
 	def invalid_square_selected
 		puts "That square isn't on the board! Try again."
 		@turn -= 1
@@ -97,6 +103,17 @@ class Board
 #		puts allegiance
 #		puts "Current: #{@current_player}"
 		allegiance == @current_player ? true : false
+	end
+
+	def attempt_to_move_into_check?(from, to)
+		grid[from[0]][from[1]].type == King ? king_pos = to : king_pos = find_king(grid[from[0]][from[1]].player)
+		if check?(king_pos, grid[from[0]][from[1]].player)
+			puts "YOU CANT MOVE INTO CHECK"
+			@turn -= 1
+			play_turn	
+		else
+			true
+		end
 	end
 
 	def suicide_attempt
@@ -129,57 +146,82 @@ class Board
 		end
 	end
 
-	def check?(king_pos)
-#		king_pos = find_king(player)
-		threatening_pieces = []
+	def find_pieces(player)
+		player_pieces = []
 		for i in 0..7
 			for j in 0..7
-#				puts "Line 132ish #{i}, #{j}"
-				target = grid[i][j]
-				if is_piece?([i,j]) && square_occupied_by_self?([i,j])
-					if on_board?(to)
-						if (legal_route?([i,j], [king_pos]) && trace_route([i,j], [king_pos]))
-							if square_occupied_by_self?([king_pos])
-								suicide_attempt
-							else
-								threatening_pieces << [i,j] 
-							end
-						else
-							false
-						end
-					else
-						false
-					end
-				else
-					false
+				unless grid[i][j].nil?
+					player_pieces << [i,j] if grid[i][j].player == player
 				end
 			end
 		end
+		return player_pieces
+	end
+
+	def check?(king_pos, player)
+#		king_pos = find_king(player)
+		opponent = 0
+		player == 1 ? opponent = 2 : opponent = 1
+#		grid[king_pos[0]][king_pos[1]].player == 1 ? opponent = 2 : opponent = 1
+		opponent_pieces = []
+		threatening_pieces = []
+		opponent_pieces = find_pieces(opponent)
+		puts "The opponent's pieces are: #{opponent_pieces}"
+		
+		opponent_pieces.each do |pt|
+			unless grid[pt[0]][pt[1]].type == King
+				puts "Checking #{pt.inspect} to see if it can reach the king at #{king_pos}"
+				if can_it_move?(pt, king_pos)
+					puts "#{pt.inspect} can reach the king at #{king_pos.inspect}"
+					threatening_pieces << pt 
+				end
+			end
+		end
+#		threatening_pieces << [i,j] if can_it_move?([i,j], king_pos)
+#				puts "Line 132ish #{i}, #{j}"
+#				possible_threat = grid[i][j]
+#				if is_piece?([i,j]) && square_occupied_by_self?([i,j])
+#					if on_board?(to)
+#						if (legal_route?([i,j], king_pos) && trace_route([i,j], king_pos))
+#							if square_occupied_by_self?(king_pos)
+#								false
+#							else
+#								threatening_pieces << [i,j] 
+#							end
+#						else
+#							false
+#						end
+#					else
+#						false
+#					end
+#				else
+#					false
+#				end
+#			end
+#		end
 		puts "and is threatened by #{threatening_pieces.inspect}"
-		threatening_pieces == [] ? false : checkmate?(thretening_piece, king_pos)
+		threatening_pieces == [] ? false : true
 	end
 
 	def checkmate?(threatening_pieces, king_pos)
 #		agressor = threatening_pieces[0].player
 #		agressor == 2 ? player = 1 : player = 2
+		player = grid[king_pos[0]][king_pos[1]].player
 		check_spots = []
-		if threatening_pieces.length == 1
-
-		else
-			for i in -1..1
-				for j in -1..1
-					a = king_pos[0]+i
-					b = king_pos[1]+j
-		#			test_board = grid.dup
-		#			test_board.
-					if can_it_move?(king_pos, [a,b]) 
-						check?([a,b]) ? check_spots << true : check_spots << false
-					else
-						check_spots << true
-					end
+		for i in -1..1
+			for j in -1..1
+				a = king_pos[0]+i
+				b = king_pos[1]+j
+	#			test_board = grid.dup
+	#			test_board.
+				if can_it_move?(king_pos, [a,b]) 
+					check?([a,b], player) ? check_spots << true : check_spots << false
+				else
+					check_spots << true
 				end
 			end
 		end
+
 		check_spots.include?(false) ? false : true
 	end
 
@@ -220,35 +262,46 @@ class Board
 		to = []
 		puts "What piece would you like to move?"
 		from = get_input
-
-
+		tried_to_move_opponent_piece unless square_occupied_by_self?(from)
 
 		puts "To where would you like it moved?"
 		to = get_input
 
+		attempt_to_move_into_check?(from, to)
 
-		move_piece(from, to) if can_it_move?(from, to)
+		can_it_move?(from, to) ? move_piece(from, to) : illegal_move(from)
+
 		game_over? ? game_over_report : play_turn
 
 	end
 
 	def can_it_move?(from, to)
-		if is_piece?(from) && square_occupied_by_self?(from)
+		print "A"
+		if is_piece?(from)
+			print "B"
 			if on_board?(to)
+				print "C"
 				if (legal_route?(from, to) && trace_route(from, to))
+					print "D"
 					if square_occupied_by_self?(to)
-						suicide_attempt
+					print "E"
+						false
+#						suicide_attempt
 					else
+					print "F"
 						true
 					end
 				else
-					illegal_move(from)
+					false	
+#					illegal_move(from)
 				end
 			else
-				empty_square_selected
+				false
+#				empty_square_selected
 			end
 		else
-			invalid_square_selected
+			false
+#			invalid_square_selected
 		end
 	end
 
@@ -267,11 +320,11 @@ class Board
 	end
 
 	def knight_move?(from, to)
-		legal_routes = [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]
+		knight_routes = [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]
 		move_route = []
 		move_route[0] = to[0] - from[0]
 		move_route[1] = to[1] - from[1]
-		legal_routes.include?(move_route) ? true : false
+		knight_routes.include?(move_route) ? true : false
 	end
 
 	def only_one_step?(from, to)
@@ -293,6 +346,7 @@ class Board
 	end
 
 	def valid_en_passant?(from, to)
+# bug in en_passant allows capturing of own pieces at least from starting position
 		return false unless on_diagonal?(from, to) && only_one_step?(from, to)
 		return false if grid[from[0]][to[1]].nil?
 		return false if grid[from[0]][from[1]].en_passant_eligible = false
@@ -301,8 +355,9 @@ class Board
 		return true
 	end
 
-#The castle method has not been tested. 
+#Problem with #has_moved method being called on an array needs correcting. 
 #Anticipate possible problem of rook attempting to take the king after castling is complete.
+
 	def castle(from, to)
 		if from.has_moved == false && trace_route == true
 			rook_from = 7 if to[1] == 6
@@ -382,7 +437,7 @@ class Board
 		when piece.type == Queen
 			on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
 		when piece.type == King
-			return false if check?(to)
+			return false if check?(to, grid[from[0]][from[1]].player)
 			if only_one_step?(from, to)
 				on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
 			elsif from[1] - to[1] == -2 || from[1] - to[1] == -3
@@ -403,7 +458,7 @@ class Board
 #	end
 
 	def trace_route(from, to)
-		puts "#{grid[from[0]][from[1]].type}"
+#		puts "#{grid[from[0]][from[1]].type}"
 		return true if grid[from[0]][from[1]].type == Knight
 		rank_direction = to[0] <=> from[0]
 		file_direction = to[1] <=> from[1]
@@ -601,10 +656,10 @@ end
 
 
 game = Board.new
-#game.display
-#game.check?(1)
+game.display
+#game.check?(1, 1)
 #puts game.inspect
-game.play_turn
+#game.play_turn
 
 #game.move_piece([0,0], [6,0])
 #puts "\u2659 \u265F \u2655 \u265C"
