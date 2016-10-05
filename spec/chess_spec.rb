@@ -23,8 +23,8 @@ describe 'board' do
 
 		context "when a pawn makes it's first move" do
 			it "can move two spaces" do
-				@test_game.move_piece([6,2],[4,2])
-				expect(@test_game.grid[4][2].type).to eq Pawn
+				@test_game.move_piece([6,3],[4,3])
+				expect(@test_game.grid[4][3].type).to eq Pawn
 			end
 		end
 
@@ -35,13 +35,30 @@ describe 'board' do
 			end
 		end
 		
-		context "when a bishop moves" do
+		context "when a piece other than a knight moves" do
 			it "cannot 'jump' other pieces" do
-				expect { @test_game.move_piece([7][2],[5,0]) }.to raise_error(NoMethodError)
-	#			expect(@test_game.grid[7][2].type).to eq bishop
-	#			expect(@test_game.grid[5][0]).to eq nil
+				@test_game.move_piece([7,2],[5,0])
+	#			expect { @test_game.move_piece([7,2],[5,0]) }.to raise_error(NoMethodError)
+				expect(@test_game.grid[5][0]).to eq nil
+				expect(@test_game.grid[7][2].type).to eq Bishop
 			end
 		end
+
+		context "when a king moves" do
+			it "cannot move more than one space" do
+				@test_game.move_piece([7,4],[5,2])
+				expect(test_game.grid[5][2]).to eq nil
+				expect(test_game.grid[7][4].type).to eq King
+			end
+		end
+
+		context "when a king moves" do
+			it "can move diagonally" do
+				@test_game.move_piece([7,4],[6,3])
+				expect(@test_game.grid[6][3].type).to eq King
+			end
+		end
+
 	end
 
 	describe 'display' do
