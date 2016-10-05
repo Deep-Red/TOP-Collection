@@ -112,7 +112,7 @@ class Board
 		to_temp = grid[to[0]][to[1]]
 		grid[from[0]][from[1]] = nil
 
-		if check?(king_pos, from_temp.player)
+		if check?(king_pos, from_temp.player) != []
 			grid[from[0]][from[1]] = from_temp
 			grid[to[0]][to[1]] = to_temp
 			puts "YOU CANT MOVE INTO CHECK"
@@ -210,27 +210,48 @@ class Board
 #			end
 #		end
 		puts "and is threatened by #{threatening_pieces.inspect}"
-		threatening_pieces == [] ? false : true
+		return threatening_pieces
 	end
 
-	def checkmate?(threatening_pieces, king_pos)
+	def checkmate?
+		mate_1 = false
+		mate_2 = false
 #		agressor = threatening_pieces[0].player
 #		agressor == 2 ? player = 1 : player = 2
-		player = grid[king_pos[0]][king_pos[1]].player
+		king_1 = find_king(1)
+		king_2 = find_king(2)
+		threaten_1 = check?(king_1, 1)
+		threaten_2 = check?(king_2, 2)
+		puts "threaten_1.length is #{threaten_1.length}"
+		puts "threaten_2.length is #{threaten_2.length}"
+		player_in_check = threaten_1.length <=> threaten_2.length
+		player_in_check = 2 if player_in_check == -1
+		if player_in_check == 2 
+			king_in_check = king_2 
+			threatening_pieces = threaten_2
+		else
+			king_in_check = king_1
+			threatening_pieces = threaten_1
+		end
+		
 		check_spots = []
+		if player_in_check == 0
+			return false
+		elsif threaten_1.length + threaten_2.length == 1
+			find_pieces(player_in_check).each do |defender|
+				threatening_pieces.each do |tp|
+					return false if can_it_move?(defender, tp) && !attempt_to_move_into_check(defender, tp)
+				end
+			end
+		else
 		for i in -1..1
 			for j in -1..1
 				a = king_pos[0]+i
 				b = king_pos[1]+j
-	#			test_board = grid.dup
-	#			test_board.
-				if can_it_move?(king_pos, [a,b]) 
-					check?([a,b], player) ? check_spots << true : check_spots << false
-				else
-					check_spots << true
-				end
+				check_spots << check?([a,b], player_in_check)
 			end
 		end
+
 
 		check_spots.include?(false) ? false : true
 	end
@@ -451,7 +472,7 @@ class Board
 		when piece.type == Queen
 			on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
 		when piece.type == King
-			return false if check?(to, grid[from[0]][from[1]].player)
+			return false if check?(to, grid[from[0]][from[1]].player) != []
 			if only_one_step?(from, to)
 				on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
 			elsif from[1] - to[1] == -2 || from[1] - to[1] == -3
