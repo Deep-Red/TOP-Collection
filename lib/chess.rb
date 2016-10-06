@@ -144,9 +144,9 @@ class Board
 				if y != nil
 					if y.type == King && y.player == player
 						king_pos = [i,j]
-						puts "Player #{player}s King is at:"
-						puts king_pos
-						puts "\n"
+#						puts "Player #{player}s King is at:"
+#						puts king_pos
+#						puts "\n"
 						return king_pos
 					end
 				end
@@ -179,7 +179,7 @@ class Board
 
 		opponent_pieces.each do |pt|
 			unless grid[pt[0]][pt[1]].type == King
-				puts "Checking #{pt.inspect} to see if it can reach the king at #{king_pos}"
+#				puts "Checking #{pt.inspect} to see if it can reach the king at #{king_pos}"
 				if can_it_move?(pt, king_pos)
 					puts "#{pt.inspect} can reach the king at #{king_pos.inspect}"
 					threatening_pieces << pt 
@@ -208,7 +208,7 @@ class Board
 #				end
 #			end
 #		end
-		puts "and is threatened by #{threatening_pieces.inspect}"
+#		puts "and is threatened by #{threatening_pieces.inspect}"
 		return threatening_pieces
 	end
 
@@ -246,29 +246,40 @@ class Board
 #			return false
 #		elsif threaten_1.length + threaten_2.length == 1
 		if threatening_pieces.length == 1
+			puts "249ish"
 			defenders_pieces.each do |defender|
 				threatening_pieces.each do |tp|
-					return false if can_it_move?(defender, tp) && !attempt_to_move_into_check?(defender, tp)
+#					return false if can_it_move?(defender, tp) && !attempt_to_move_into_check?(defender, tp)
+					check_spots << (can_it_move?(defender, tp) && !attempt_to_move_into_check?(defender, tp))
+					puts "1 #{defender.inspect} to #{tp.inspect} should negate check" if check_spots.last == true
 				end
 			end
 			intervening_squares = threatening_pieces.each { |tp| trace_route(tp, king_pos) }
 			puts "the intervening squares are #{intervening_squares.inspect}"
 			defenders_pieces.each do |defender|
 				intervening_squares.each do |is|
-					return false if can_it_move?(defender, is) && !attempt_to_move_into_check?(defender, is)
+#					return false if can_it_move?(defender, is) && !attempt_to_move_into_check?(defender, is)
+					check_spots << (can_it_move?(defender, is) && !attempt_to_move_into_check?(defender, is))
+					puts "2 #{defender.inspect} to #{is.inspect} should negate check" if check_spots.last == true
 				end
 			end
 		else
+			puts "263ish"
 			for i in -1..1
 				for j in -1..1
 					a = king_pos[0]+i
 					b = king_pos[1]+j
-					check_spots << check?([a,b], player_in_check)
+					check_spots << (can_it_move?(king_pos, [a,b]) && !attempt_to_move_into_check?(king_pos, [a,b]))
+					puts "3 King to [a,b] should negate check" if check_spots.last == true
 				end
 			end
 		end
-		puts "SET CHECKMATE"
-		@mate = 1
+		no_mate_yet = check_spots.include?(true)
+		puts "no_mate_yet is set to #{no_mate_yet}"
+		
+		puts "if #{check_spots.inspect} includes true then no mate"
+		no_mate_yet == false ? true : false
+#		puts "SET CHECKMATE"
 #		check_spots.include?(false) ? false : true
 	end
 
@@ -333,25 +344,25 @@ class Board
 			end
 		end
 #		checkmate?(2) if check?(find_king(2),2)
-			puts "@mate = #{@mate}"
+		puts "@mate = #{@mate}"
 		game_over? ? game_over_report : play_turn
 
 	end
 
 	def can_it_move?(from, to)
-		print "A"
+#		print "A"
 		if is_piece?(from)
-			print "B"
+#			print "B"
 			if on_board?(to)
-				print "C"
+#				print "C"
 				if (legal_route?(from, to) && !trace_route(from, to).include?(false))
-					print "D"
+#					print "D"
 					if (is_piece?(to) && grid[from[0]][from[1]].player == grid[to[0]][to[1]].player)
-					print "E"
+#					print "E"
 						false
 #						suicide_attempt
 					else
-					print "F"
+#					print "F"
 						true
 					end
 				else
@@ -410,9 +421,10 @@ class Board
 
 	def valid_en_passant?(from, to)
 # bug in en_passant allows capturing of own pieces at least from starting position
+# => possibly corrected by changing assignment operator to equivalency test
 		return false unless on_diagonal?(from, to) && only_one_step?(from, to)
 		return false if grid[from[0]][to[1]].nil?
-		return false if grid[from[0]][from[1]].en_passant_eligible = false
+		return false if grid[from[0]][from[1]].en_passant_eligible == false
 		captured << grid[from[0]][to[1]]
 		grid[from[0]][to[1]] = nil
 		return true
@@ -439,7 +451,7 @@ class Board
 	end
 
 	def pawn_move?(from, to)
-		puts "381ish"
+#		puts "381ish"
 		rank = from[0] - to[0]
 		file = from[1] - to[1]
 #		puts "File is: #{file}"
@@ -460,7 +472,7 @@ class Board
 			end
 		elsif only_one_step?(from, to)
 #			puts "Capture? #{grid[to[0]][to[1]]}"
-			return true unless grid[to[0]][to[1]] == nil
+			return false if grid[to[0]][to[1]] == nil
 #			puts "LINE 228ish"
 #			return true
 			#
@@ -492,7 +504,7 @@ class Board
 #		end
 #	end
 	def legal_route?(from, to)
-		puts "431ish"
+#		puts "431ish"
 		piece = grid[from[0]][from[1]]
 		case 
 		when piece.type == Rook
@@ -525,7 +537,7 @@ class Board
 #	end
 
 	def trace_route(from, to)
-		puts "464ish"
+#		puts "464ish"
 #		puts "#{grid[from[0]][from[1]].type}"
 		rank_direction = to[0] <=> from[0]
 		file_direction = to[1] <=> from[1]
@@ -551,18 +563,18 @@ class Board
 		end
 #		puts "Variables assigned: \n a = #{a} b = #{b} c = #{c} d = #{d}"
 		if rank_change != 0 && file_change != 0
-			puts "Diagonal Move!"
+#			puts "Diagonal Move!"
 			for i in a...b-1
 				if a == b-1
-					puts "491ish"
+#					puts "491ish"
 					square_status << false
 				else
 #					puts "i = #{i}"
-					puts "495ish"
-					puts square_status.inspect
+#					puts "495ish"
+#					puts square_status.inspect
 					check_square = [check_square, adder].transpose.map {|x| x.reduce(:+)} 
 					is_piece?(check_square) ? square_status << false : square_status << check_square
-					puts "After: #{square_status.inspect}"
+#					puts "After: #{square_status.inspect}"
 				end
 			end
 #			i = a+1
@@ -573,7 +585,7 @@ class Board
 #				is_piece?([i,j]) ? square_status << false : square_status << true
 #			end
 		elsif rank_change != 0
-			puts "502ish"
+#			puts "502ish"
 			for i in a+1...b do
 #				puts "i = #{i}"
 				if a+1 == b 
@@ -583,7 +595,7 @@ class Board
 				end
 			end
 		elsif file_change != 0
-			puts "508ish"
+#			puts "508ish"
 			for i in c+1...d do
 				if c+1 == d 
 					square_status << false
@@ -595,7 +607,7 @@ class Board
 		else
 			return square_status
 		end
-		puts "square status: #{square_status.inspect}"
+#		puts "square status: #{square_status.inspect}"
 		return square_status
 #		if square_status.include?(false)
 #			puts "returning FALSE"
