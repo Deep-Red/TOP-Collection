@@ -111,7 +111,7 @@ class Board
 		from_temp = grid[from[0]][from[1]]
 		to_temp = grid[to[0]][to[1]]
 		grid[from[0]][from[1]] = nil
-		grid[to[0]][to[1]] = grid[from[0]][from[1]]
+		grid[to[0]][to[1]] = from_temp
 
 		if check?(king_pos, from_temp.player) != []
 			grid[from[0]][from[1]] = from_temp
@@ -267,7 +267,8 @@ class Board
 				end
 			end
 		end
-		checkmate = 1
+		puts "SET CHECKMATE"
+		@mate = 1
 #		check_spots.include?(false) ? false : true
 	end
 
@@ -324,9 +325,15 @@ class Board
 		
 		can_it_move?(from, to) ? move_piece(from, to) : illegal_move(from)
 
-		checkmate?(opponent) if check?(find_king(opponent),opponent) 
+		if check?(find_king(opponent),opponent).length > 0
+			puts "328ish IiiiiiiiiiiiiiiiiiiiiiiiieIIIIIIIIIIIIIIIIIIIIIIIIIIII"
+			if checkmate?(opponent)
+				@mate = 1
+				puts "OLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIO"
+			end
+		end
 #		checkmate?(2) if check?(find_king(2),2)
-
+			puts "@mate = #{@mate}"
 		game_over? ? game_over_report : play_turn
 
 	end
@@ -613,7 +620,7 @@ class Board
 	end
 
 	def game_over?
-		@checkmate == 1 ? true : false
+		@mate == 1 ? true : false
 	end
 
 	def game_over_report
