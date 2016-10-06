@@ -213,47 +213,63 @@ class Board
 		return threatening_pieces
 	end
 
-	def checkmate?
-		mate_1 = false
-		mate_2 = false
+	def checkmate?(player)
+#		mate_1 = false
+#		mate_2 = false
 #		agressor = threatening_pieces[0].player
 #		agressor == 2 ? player = 1 : player = 2
-		king_1 = find_king(1)
-		king_2 = find_king(2)
-		threaten_1 = check?(king_1, 1)
-		threaten_2 = check?(king_2, 2)
-		puts "threaten_1.length is #{threaten_1.length}"
-		puts "threaten_2.length is #{threaten_2.length}"
-		player_in_check = threaten_1.length <=> threaten_2.length
-		player_in_check = 2 if player_in_check == -1
-		if player_in_check == 2 
-			king_in_check = king_2 
-			threatening_pieces = threaten_2
-		else
-			king_in_check = king_1
-			threatening_pieces = threaten_1
-		end
-		
+#		king_1 = find_king(1)
+#		king_2 = find_king(2)
+		player_king = find_king(player)
+#		threaten_1 = check?(king_1, 1)
+#		threaten_2 = check?(king_2, 2)
+		threatened_by = check?(player_king, player)
+#		puts "threaten_1.length is #{threaten_1.length}"
+#		puts "threaten_2.length is #{threaten_2.length}"
+		puts "threatened_by.length is #{threatened_by.length}"
+#		player_in_check = threaten_1.length <=> threaten_2.length
+#		player_in_check = 2 if player_in_check == -1
+		player_in_check = player
+#		defenders_pieces = find_pieces(player_in_check)
+		defenders_pieces = find_pieces(player)
+#		if player_in_check == 2 
+#			king_in_check = king_2 
+#			threatening_pieces = threaten_2
+#		else
+#			king_in_check = king_1
+#			threatening_pieces = threaten_1
+#		end
+		king_in_check = player_king
+		threatening_pieces = threatened_by - [false]
+		king_pos = king_in_check
 		check_spots = []
-		if player_in_check == 0
-			return false
-		elsif threaten_1.length + threaten_2.length == 1
-			find_pieces(player_in_check).each do |defender|
+#		if player_in_check == 0
+#			return false
+#		elsif threaten_1.length + threaten_2.length == 1
+		if threatening_pieces.length == 1
+			defenders_pieces.each do |defender|
 				threatening_pieces.each do |tp|
-					return false if can_it_move?(defender, tp) && !attempt_to_move_into_check(defender, tp)
+					return false if can_it_move?(defender, tp) && !attempt_to_move_into_check?(defender, tp)
 				end
 			end
 		else
-		for i in -1..1
-			for j in -1..1
-				a = king_pos[0]+i
-				b = king_pos[1]+j
-				check_spots << check?([a,b], player_in_check)
+			for i in -1..1
+				for j in -1..1
+					a = king_pos[0]+i
+					b = king_pos[1]+j
+					check_spots << check?([a,b], player_in_check)
+				end
+			end
+			intervening_squares = threatening_pieces.each { |tp| trace_route(tp, king_pos) }
+			puts "the intervening squares are #{intervening_squares.inspect}"
+			defenders_pieces.each do |defender|
+				intervening_squares.each do |is|
+					return false if can_it_move(defender, is) && !attempt_to_move_into_check(defender, is)
+				end
 			end
 		end
-
-
-		check_spots.include?(false) ? false : true
+		checkmate = 1
+#		check_spots.include?(false) ? false : true
 	end
 
 	def name_square(input)
@@ -289,6 +305,7 @@ class Board
 		@turn += 1
 		@current_player = 0
 		@turn % 2 == 1 ? @current_player = 1 : @current_player = 2
+		@current_player == 1 ? opponent = 2 : opponent = 1
 		from = []
 		to = []
 		puts "What piece would you like to move?"
@@ -302,6 +319,9 @@ class Board
 
 		can_it_move?(from, to) ? move_piece(from, to) : illegal_move(from)
 
+		checkmate?(opponent) if check?(find_king(opponent),opponent) 
+#		checkmate?(2) if check?(find_king(2),2)
+
 		game_over? ? game_over_report : play_turn
 
 	end
@@ -312,7 +332,7 @@ class Board
 			print "B"
 			if on_board?(to)
 				print "C"
-				if (legal_route?(from, to) && trace_route(from, to))
+				if (legal_route?(from, to) && !trace_route(from, to).include?(false))
 					print "D"
 					if (is_piece?(to) && grid[from[0]][from[1]].player == grid[to[0]][to[1]].player)
 					print "E"
@@ -495,13 +515,14 @@ class Board
 	def trace_route(from, to)
 		puts "464ish"
 #		puts "#{grid[from[0]][from[1]].type}"
-		return true if grid[from[0]][from[1]].type == Knight
 		rank_direction = to[0] <=> from[0]
 		file_direction = to[1] <=> from[1]
 		rank_change = from[0] - to[0]
 		file_change = from[1] - to[1]
 		adder = []
 		check_square = from
+		square_status = []
+		return square_status if grid[from[0]][from[1]].type == Knight
 		if rank_direction == 1
 			(a,b = from[0],to[0])
 			adder[0] = 1
@@ -517,7 +538,6 @@ class Board
 			adder[1] = -1
 		end
 #		puts "Variables assigned: \n a = #{a} b = #{b} c = #{c} d = #{d}"
-		square_status = []
 		if rank_change != 0 && file_change != 0
 			puts "Diagonal Move!"
 			for i in a...b-1
@@ -529,7 +549,7 @@ class Board
 					puts "495ish"
 					puts square_status.inspect
 					check_square = [check_square, adder].transpose.map {|x| x.reduce(:+)} 
-					is_piece?(check_square) ? square_status << false : square_status << true
+					is_piece?(check_square) ? square_status << false : square_status << check_square
 					puts "After: #{square_status.inspect}"
 				end
 			end
@@ -547,7 +567,7 @@ class Board
 				if a+1 == b 
 					square_status << false
 				else
-					is_piece?([i,c]) ? square_status << false : square_status << true
+					is_piece?([i,c]) ? square_status << false : square_status << [i,c]
 				end
 			end
 		elsif file_change != 0
@@ -557,20 +577,21 @@ class Board
 					square_status << false
 				else
 #					puts "i = #{i}"
-					is_piece?([a,i]) ? square_status << false : square_status << true
+					is_piece?([a,i]) ? square_status << false : square_status << [a,i]
 				end
 			end
 		else
-			illegal_move
+			return square_status
 		end
-#		puts "square status: #{square_status.inspect}"
-		if square_status.include?(false)
+		puts "square status: #{square_status.inspect}"
+		return square_status
+#		if square_status.include?(false)
 #			puts "returning FALSE"
-			return false
-		else
+#			return false
+#		else
 #			puts "returning TRUE"
-			return true
-		end
+#			return true
+#		end
 	end
 
 	def move_piece(from, to)
