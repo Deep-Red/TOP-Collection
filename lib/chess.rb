@@ -111,17 +111,16 @@ class Board
 		from_temp = grid[from[0]][from[1]]
 		to_temp = grid[to[0]][to[1]]
 		grid[from[0]][from[1]] = nil
+		grid[to[0]][to[1]] = grid[from[0]][from[1]]
 
 		if check?(king_pos, from_temp.player) != []
 			grid[from[0]][from[1]] = from_temp
 			grid[to[0]][to[1]] = to_temp
-			puts "YOU CANT MOVE INTO CHECK"
-			@turn -= 1
-			play_turn	
+			true
 		else
 			grid[from[0]][from[1]] = from_temp
 			grid[to[0]][to[1]] = to_temp
-			true
+			false
 		end
 	end
 
@@ -252,19 +251,19 @@ class Board
 					return false if can_it_move?(defender, tp) && !attempt_to_move_into_check?(defender, tp)
 				end
 			end
+			intervening_squares = threatening_pieces.each { |tp| trace_route(tp, king_pos) }
+			puts "the intervening squares are #{intervening_squares.inspect}"
+			defenders_pieces.each do |defender|
+				intervening_squares.each do |is|
+					return false if can_it_move?(defender, is) && !attempt_to_move_into_check?(defender, is)
+				end
+			end
 		else
 			for i in -1..1
 				for j in -1..1
 					a = king_pos[0]+i
 					b = king_pos[1]+j
 					check_spots << check?([a,b], player_in_check)
-				end
-			end
-			intervening_squares = threatening_pieces.each { |tp| trace_route(tp, king_pos) }
-			puts "the intervening squares are #{intervening_squares.inspect}"
-			defenders_pieces.each do |defender|
-				intervening_squares.each do |is|
-					return false if can_it_move(defender, is) && !attempt_to_move_into_check(defender, is)
 				end
 			end
 		end
@@ -300,6 +299,12 @@ class Board
 		end
 	end
 
+	def dont_move_into_check
+		puts "YOU CANT MOVE INTO CHECK"
+		@turn -= 1
+		play_turn
+	end
+
 	def play_turn
 		display
 		@turn += 1
@@ -315,8 +320,8 @@ class Board
 		puts "To where would you like it moved?"
 		to = get_input
 
-		attempt_to_move_into_check?(from, to)
-
+		dont_move_into_check if attempt_to_move_into_check?(from, to)
+		
 		can_it_move?(from, to) ? move_piece(from, to) : illegal_move(from)
 
 		checkmate?(opponent) if check?(find_king(opponent),opponent) 
