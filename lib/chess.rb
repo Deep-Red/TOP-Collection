@@ -1,3 +1,5 @@
+require 'msgpack'
+
 class Board
 	attr_accessor :square, :grid, :turn, :captured, :check, :mate
 
@@ -7,24 +9,24 @@ class Board
 				j = nil
 			} }
 #		puts @grid[0].inspect
-		@grid[6].map! { |i| i = Piece.new(i, 6, Pawn, 1) }
-		@grid[1].map! { |i| i = Piece.new(i, 1, Pawn, 2) }
-		@grid[7][0] = Piece.new(7, 0, Rook, 1)
-		@grid[7][7] = Piece.new(7, 7, Rook, 1)
-		@grid[0][0] = Piece.new(0, 0, Rook, 2)
-		@grid[0][7] = Piece.new(0, 7, Rook, 2)
-		@grid[7][1] = Piece.new(7, 1, Knight, 1)
-		@grid[7][6] = Piece.new(7, 6, Knight, 1)
-		@grid[0][1] = Piece.new(0, 1, Knight, 2)
-		@grid[0][6] = Piece.new(0, 6, Knight, 2)
-		@grid[7][2] = Piece.new(7, 2, Bishop, 1)
-		@grid[7][5] = Piece.new(7, 5, Bishop, 1)
-		@grid[0][2] = Piece.new(0, 2, Bishop, 2)
-		@grid[0][5] = Piece.new(0, 5, Bishop, 2)
-		@grid[7][3] = Piece.new(7, 3, Queen, 1)
-		@grid[0][3] = Piece.new(0, 3, Queen, 2)
-		@grid[7][4] = Piece.new(7, 4, King, 1)
-		@grid[0][4] = Piece.new(0, 4, King, 2)
+		@grid[6].map! { |i| i = Piece.new(i, 6, Pawn, 2) }
+		@grid[1].map! { |i| i = Piece.new(i, 1, Pawn, 1) }
+		@grid[7][0] = Piece.new(7, 0, Rook, 2)
+		@grid[7][7] = Piece.new(7, 7, Rook, 2)
+		@grid[0][0] = Piece.new(0, 0, Rook, 1)
+		@grid[0][7] = Piece.new(0, 7, Rook, 1)
+		@grid[7][1] = Piece.new(7, 1, Knight, 2)
+		@grid[7][6] = Piece.new(7, 6, Knight, 2)
+		@grid[0][1] = Piece.new(0, 1, Knight, 1)
+		@grid[0][6] = Piece.new(0, 6, Knight, 1)
+		@grid[7][2] = Piece.new(7, 2, Bishop, 2)
+		@grid[7][5] = Piece.new(7, 5, Bishop, 2)
+		@grid[0][2] = Piece.new(0, 2, Bishop, 1)
+		@grid[0][5] = Piece.new(0, 5, Bishop, 1)
+		@grid[7][3] = Piece.new(7, 3, Queen, 2)
+		@grid[0][3] = Piece.new(0, 3, Queen, 1)
+		@grid[7][4] = Piece.new(7, 4, King, 2)
+		@grid[0][4] = Piece.new(0, 4, King, 1)
 
 #		puts @grid[0].inspect
 
@@ -306,6 +308,8 @@ class Board
 		case input
 		when "r"
 			resign
+		when "s"
+			save_game
 		else
 			name_square(input)
 		end
@@ -321,7 +325,7 @@ class Board
 		display
 		@turn += 1
 		@current_player = 0
-		@turn % 2 == 1 ? @current_player = 1 : @current_player = 2
+		@turn % 2 == 0 ? @current_player = 1 : @current_player = 2
 		@current_player == 1 ? opponent = 2 : opponent = 1
 		from = []
 		to = []
@@ -412,9 +416,9 @@ class Board
 	def forward_move?(from, to)
 		progress = to[0] - from[0]
 		case @current_player
-		when 1
-			progress <= 0 ? true : false
 		when 2
+			progress <= 0 ? true : false
+		when 1
 			progress <= 0 ? false : true
 		end
 	end
@@ -645,6 +649,16 @@ class Board
 		puts "The #{who} player has resigned."
 		return false
 	end
+
+	def save_game
+		grid_to_save = grid.to_msgpack
+		variable_status = [turn, captured, check, mate].to_msgpack
+		save_file = File.open("Saved Game", "w")
+		save_file.puts grid_to_save
+		save_file.puts variable_status.to_msgpack
+		save_file.close
+		return false
+	end
 end
 
 #class Player
@@ -660,10 +674,47 @@ class Piece
 		@position = [x,y]
 		@type = type
 		@player = player
-		@piece = @type.new(@player)
-		@icon = @piece.icon
+#		@piece = #@type.new(@player)
+		@icon = assign_icon(type, player)#@piece.icon
 		@has_moved = false
 		@en_passant_eligible = false
+	end
+
+	def assign_icon(type, player)
+		puts type.inspect
+		puts player.class
+		puts 1.class
+		if player == 1
+			case
+			when type == Pawn
+				"\u2659"
+			when type == King
+				"\u2654"
+			when type == Queen
+				"\u2655"
+			when type == Rook
+				"\u2656"
+			when type == Bishop
+				"\u2657"
+			when type == Knight
+				"\u2658"
+			end
+		else
+			case
+			when type == Pawn
+				"\u265F"
+			when type == King
+				"\u265A"
+			when type == Queen
+				"\u265B"
+			when type == Rook
+				"\u265C"
+			when type == Bishop
+				"\u265D"
+			when type == Knight
+				"\u265E"
+			end
+		end
 	end
 
 #	def move
@@ -675,12 +726,19 @@ class Piece
 #		8 >= destination[0] && destination[0] >= 0 ? true : false
 #		8 >= destination[1] && destination[1] >= 0 ? true : false
 #	end
+
+	def to_msgpack
+		MessagePack.dump({
+
+			})
+	end
+
 end
 
 class Pawn < Piece
 	attr_accessor :icon#, :en_passant_eligible
 	def initialize(player)
-		@player = player
+#		@player = player
 		@icon = @player == 2 ? "\u2659" : "\u265F"
 #		@en_passant_eligible = false
 	end
@@ -697,8 +755,8 @@ end
 class Rook < Piece
 	attr_accessor :icon, :legal_route#, :castling_eligible
 	def initialize(player)
-		@player = player
-		@icon = @player == 2 ? "\u2655" : "\u265C"
+#		@player = player
+		@icon = player == 2 ? "\u2656" : "\u265C"
 #		@castling_eligible = true
 	end
 
@@ -716,7 +774,7 @@ end
 class Knight < Piece
 	attr_accessor :icon
 	def initialize(player)
-		@player = player
+#		@player = player
 		@icon = @player == 2 ? "\u2658" : "\u265E"
 	end
 
@@ -725,7 +783,7 @@ end
 class Bishop < Piece
 	attr_accessor :icon
 	def initialize(player)
-		@player = player
+#		@player = player
 		@icon = @player == 2 ? "\u2657" : "\u265D"
 	end
 
@@ -734,7 +792,7 @@ end
 class Queen < Piece
 	attr_accessor :icon
 	def initialize(player)
-		@player = player
+#		@player = player
 		@icon = @player == 2 ? "\u2655" : "\u265B"
 	end
 
@@ -743,7 +801,7 @@ end
 class King < Piece
 	attr_accessor :icon#, :castling_eligible
 	def initialize(player)
-		@player = player
+#		@player = player
 		@icon = @player == 2 ? "\u2654" : "\u265A"
 #		@castling_eligible = true
 		@in_check = 0
