@@ -8,7 +8,6 @@ class Board
 			i = Array.new(8){ |j|
 				j = nil
 			} }
-#		puts @grid[0].inspect
 		@grid[6].map! { |x, i| x = Piece.new(i.to_i, 6, "pawn", 2) }
 		@grid[1].map! { |x, i| x = Piece.new(i.to_i, 1, "pawn", 1) }
 		@grid[7][0] = Piece.new(7, 0, "rook", 2)
@@ -27,8 +26,6 @@ class Board
 		@grid[0][3] = Piece.new(0, 3, "queen", 1)
 		@grid[7][4] = Piece.new(7, 4, "king", 2)
 		@grid[0][4] = Piece.new(0, 4, "king", 1)
-
-#		puts @grid[0].inspect
 
 		@turn = 0
 		@check = 0
@@ -56,7 +53,6 @@ class Board
 	end
 
 	def is_piece?(square)
-#		puts "the square is: #{square.inspect}"
 		false if square.nil?
 		false if square[0].nil?
 		false if square[1].nil?
@@ -134,21 +130,11 @@ class Board
 	end
 
 	def find_king(player)
-#		agressor = 0
-#		player == 2 ? agressor = 1 : agressor = 2
 		grid.each_with_index do |x, i|
-#			puts x
-#			puts i
-#			puts "Once"
 			x.each_with_index do |y, j|
-#				puts "y: #{y}"
-#				puts "j: #{j}"
 				if y != nil
 					if y.type == "king" && y.player == player
 						king_pos = [i,j]
-#						puts "Player #{player}s king is at:"
-#						puts king_pos
-#						puts "\n"
 						return king_pos
 					end
 				end
@@ -172,126 +158,59 @@ class Board
 
 	def check?(king_pos, player)
 
-#		king_pos = find_king(player)
 		opponent = 0
 		player == 1 ? opponent = 2 : opponent = 1
-#		grid[king_pos[0]][king_pos[1]].player == 1 ? opponent = 2 : opponent = 1
 		opponent_pieces = []
 		threatening_pieces = []
 		opponent_pieces = find_pieces(opponent)
-#		puts "The opponent's pieces are: #{opponent_pieces}"
 
 		opponent_pieces.each do |pt|
 			unless grid[pt[0]][pt[1]].type == "king"
-#				puts "Checking #{pt.inspect} to see if it can reach the king at #{king_pos}"
 				if can_it_move?(pt, king_pos)
-#					puts "#{pt.inspect} can reach the king at #{king_pos.inspect}"
 					threatening_pieces << pt 
 				end
 			end
 		end
-#		threatening_pieces << [i,j] if can_it_move?([i,j], king_pos)
-#				puts "Line 132ish #{i}, #{j}"
-#				possible_threat = grid[i][j]
-#				if is_piece?([i,j]) && square_occupied_by_self?([i,j])
-#					if on_board?(to)
-#						if (legal_route?([i,j], king_pos) && trace_route([i,j], king_pos))
-#							if square_occupied_by_self?(king_pos)
-#								false
-#							else
-#								threatening_pieces << [i,j] 
-#							end
-#						else
-#							false
-#						end
-#					else
-#						false
-#					end
-#				else
-#					false
-#				end
-#			end
-#		end
-#		puts "and is threatened by #{threatening_pieces.inspect}"
 		return threatening_pieces
 	end
 
 	def checkmate?(player)
-#		mate_1 = false
-#		mate_2 = false
-#		agressor = threatening_pieces[0].player
-#		agressor == 2 ? player = 1 : player = 2
-#		king_1 = find_king(1)
-#		king_2 = find_king(2)
 		player_king = find_king(player)
-#		threaten_1 = check?(king_1, 1)
-#		threaten_2 = check?(king_2, 2)
 		threatened_by = check?(player_king, player)
-#		puts "threaten_1.length is #{threaten_1.length}"
-#		puts "threaten_2.length is #{threaten_2.length}"
-#		puts "threatened_by.length is #{threatened_by.length}"
-#		player_in_check = threaten_1.length <=> threaten_2.length
-#		player_in_check = 2 if player_in_check == -1
 		player_in_check = player
-#		defenders_pieces = find_pieces(player_in_check)
 		defenders_pieces = find_pieces(player)
-#		if player_in_check == 2 
-#			king_in_check = king_2 
-#			threatening_pieces = threaten_2
-#		else
-#			king_in_check = king_1
-#			threatening_pieces = threaten_1
-#		end
 		king_in_check = player_king
 		threatening_pieces = threatened_by - [false]
 		king_pos = king_in_check
 		check_spots = []
-#		if player_in_check == 0
-#			return false
-#		elsif threaten_1.length + threaten_2.length == 1
 		if threatening_pieces.length == 1
-#			puts "249ish"
 			defenders_pieces.each do |defender|
 				threatening_pieces.each do |tp|
-#					return false if can_it_move?(defender, tp) && !attempt_to_move_into_check?(defender, tp)
 					check_spots << (can_it_move?(defender, tp) && !attempt_to_move_into_check?(defender, tp))
-#					puts "1 #{defender.inspect} to #{tp.inspect} should negate check" if check_spots.last == true
 				end
 			end
 			intervening_squares = threatening_pieces.each { |tp| trace_route(tp, king_pos) }
-#			puts "the intervening squares are #{intervening_squares.inspect}"
 			defenders_pieces.each do |defender|
 				intervening_squares.each do |is|
-#					return false if can_it_move?(defender, is) && !attempt_to_move_into_check?(defender, is)
 					check_spots << (can_it_move?(defender, is) && !attempt_to_move_into_check?(defender, is))
-#					puts "2 #{defender.inspect} to #{is.inspect} should negate check" if check_spots.last == true
 				end
 			end
 		else
-#			puts "263ish"
 			for i in -1..1
 				for j in -1..1
 					a = king_pos[0]+i
 					b = king_pos[1]+j
 					check_spots << (can_it_move?(king_pos, [a,b]) && !attempt_to_move_into_check?(king_pos, [a,b]))
-#					puts "3 king to [a,b] should negate check" if check_spots.last == true
 				end
 			end
 		end
 		no_mate_yet = check_spots.include?(true)
-#		puts "no_mate_yet is set to #{no_mate_yet}"
-		
-#		puts "if #{check_spots.inspect} includes true then no mate"
 		no_mate_yet == false ? true : false
-#		puts "SET CHECKMATE"
-#		check_spots.include?(false) ? false : true
 	end
 
 	def name_square(input)
 		name_piece = []
 		n_p = input.split("")
-#		resign if n_p == ["r", "e", "s", "i", "g", "n"]
-#		puts n_p.inspect
 		name_piece[1] = n_p[0].downcase.bytes.pop
 
 		name_piece[1] -= 97
@@ -345,45 +264,31 @@ class Board
 		can_it_move?(from, to) ? move_piece(from, to) : illegal_move(from)
 
 		if check?(find_king(opponent),opponent).length > 0
-#			puts "328ish IiiiiiiiiiiiiiiiiiiiiiiiieIIIIIIIIIIIIIIIIIIIIIIIIIIII"
 			if checkmate?(opponent)
 				@mate = 1
-#				puts "OLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIOLIO"
 			end
 		end
-#		checkmate?(2) if check?(find_king(2),2)
-		puts "@mate = #{@mate}"
 		game_over? ? game_over_report : play_turn
 
 	end
 
 	def can_it_move?(from, to)
-#		print "A"
 		if is_piece?(from)
-#			print "B"
 			if on_board?(to)
-#				print "C"
 				if (legal_route?(from, to) && !trace_route(from, to).include?(false))
-#					print "D"
 					if (is_piece?(to) && grid[from[0]][from[1]].player == grid[to[0]][to[1]].player)
-#					print "E"
 						false
-#						suicide_attempt
 					else
-#					print "F"
 						true
 					end
 				else
 					false	
-#					illegal_move(from)
 				end
 			else
 				false
-#				empty_square_selected
 			end
 		else
 			false
-#			invalid_square_selected
 		end
 	end
 
@@ -412,8 +317,6 @@ class Board
 	def only_one_step?(from, to)
 		file = from[0] - to[0]
 		rank = from[1] - to[1]
-		puts file
-		puts rank
 		file.between?(-1,1) && rank.between?(-1,1) ? true : false
 	end
 
@@ -430,6 +333,7 @@ class Board
 	def valid_en_passant?(from, to)
 # bug in en_passant allows capturing of own pieces at least from starting position
 # => possibly corrected by changing assignment operator to equivalency test
+# now pawns cannot capture properly again, may neet to rewrite this entirely
 		return false unless on_diagonal?(from, to) && only_one_step?(from, to)
 		return false if grid[from[0]][to[1]].nil?
 		return false if grid[from[0]][from[1]].en_passant_eligible == false
@@ -459,13 +363,9 @@ class Board
 	end
 
 	def pawn_move?(from, to)
-# Pawn captures not allowed, need to rewrite.
-#		puts "381ish"
 		rank = from[0] - to[0]
 		file = from[1] - to[1]
-#		puts "File is: #{file}"
 		if file == 0
-#			puts "No Capture"
 			if 	forward_move?(from, to)
 				if only_one_step?(from, to)
 					grid[from[0]][from[1]].en_passant_eligible = false
@@ -480,40 +380,14 @@ class Board
 				false
 			end
 		elsif only_one_step?(from, to)
-#			puts "Capture? #{grid[to[0]][to[1]]}"
 			return false if grid[to[0]][to[1]] == nil
-#			puts "LINE 228ish"
-#			return true
-			#
-			#grid[from[0]][from[1]].en_passant_eligible = false
 			valid_en_passant?(from, to) ? true : false
 		else
 			false
 		end
 	end
 
-					
-
-
-
-#		if forward_move?(from, to)
-#			if in_file?(from, to)
-#				if only_one_step?(from, to)
-#					true
-#				elsif grid[from[0]][from[1]].has_moved? 
-#					valid_en_passant?(from, to)
-#				else
-#					false
-#				end
-#			else
-#				false
-#			end			
-#		else
-#			false
-#		end
-#	end
 	def legal_route?(from, to)
-#		puts "431ish"
 		piece = grid[from[0]][from[1]]
 		case 
 		when piece.type == "rook"
@@ -534,20 +408,12 @@ class Board
 				false
 			end
 		when piece.type == "pawn"
-#			puts "Line 274ish: "
 			pawn_move?(from, to) ? true : false
-#			puts "#{h}"
-#			return h
 		end
 	end
 
-#	def obstructed?(from, to)
-#
-#	end
 
 	def trace_route(from, to)
-#		puts "464ish"
-#		puts "#{grid[from[0]][from[1]].type}"
 		rank_direction = to[0] <=> from[0]
 		file_direction = to[1] <=> from[1]
 		rank_change = from[0] - to[0]
@@ -570,33 +436,17 @@ class Board
 			(c,d = to[1],from[1])
 			adder[1] = -1
 		end
-#		puts "Variables assigned: \n a = #{a} b = #{b} c = #{c} d = #{d}"
 		if rank_change != 0 && file_change != 0
-#			puts "Diagonal Move!"
 			for i in a...b-1
 				if a == b-1
-#					puts "491ish"
 					square_status << false
 				else
-#					puts "i = #{i}"
-#					puts "495ish"
-#					puts square_status.inspect
 					check_square = [check_square, adder].transpose.map {|x| x.reduce(:+)} 
 					is_piece?(check_square) ? square_status << false : square_status << check_square
-#					puts "After: #{square_status.inspect}"
 				end
 			end
-#			i = a+1
-#			j = c+1
-#			while i < b
-#				i += 1
-#				j += 1
-#				is_piece?([i,j]) ? square_status << false : square_status << true
-#			end
 		elsif rank_change != 0
-#			puts "502ish"
 			for i in a+1...b do
-#				puts "i = #{i}"
 				if a+1 == b 
 					square_status << false
 				else
@@ -604,41 +454,27 @@ class Board
 				end
 			end
 		elsif file_change != 0
-#			puts "508ish"
 			for i in c+1...d do
 				if c+1 == d 
 					square_status << false
 				else
-#					puts "i = #{i}"
 					is_piece?([a,i]) ? square_status << false : square_status << [a,i]
 				end
 			end
 		else
 			return square_status
 		end
-#		puts "square status: #{square_status.inspect}"
 		return square_status
-#		if square_status.include?(false)
-#			puts "returning FALSE"
-#			return false
-#		else
-#			puts "returning TRUE"
-#			return true
-#		end
 	end
 
 	def move_piece(from, to)
 		tomove = grid[from[0]][from[1]]
-#		puts tomove.inspect
-#		puts tomove.inspect
 		destination = grid[to[0]][to[1]]
 		captured << destination if destination != nil
 		grid[to[0]][to[1]] = tomove
 		grid[from[0]][from[1]] = nil
 		grid[to[0]][to[1]].has_moved = true
 		grid[to[0]][to[1]].position = [to[0], to[1]]
-#		grid[to[0]][to[1]] = to
-#		play_turn
 	end
 
 	def game_over?
@@ -657,10 +493,7 @@ class Board
 	end
 
 	def save_game
-#		grid_to_save = grid.to_msgpack
-		
-#		game_state << grid.each
-		vars = [turn, check, mate, captured]#.to_s
+		vars = [turn, check, mate, captured]
 		save_file = File.open("Saved Game", "w")
 			p_a =[]
 			grid_data = []
@@ -676,11 +509,9 @@ class Board
 					end
 					grid_data << p_a 
 				end
-#				p_a = []
 			end
 			save_file.puts  p_a
-#			save_file.puts grid#.to_msgpack
-			save_file.puts vars#.to_msgpack
+			save_file.puts vars
 		save_file.close
 		puts "Game saved!"
 		@turn -= 1
@@ -689,67 +520,33 @@ class Board
 	end
 
 	def load_game
-#		junk = []
 		game_data = []
 		load_file = File.open("Saved Game")
-#		load_file_packed = ""
 		while !load_file.eof?
 			game_data << load_file.readline
 		end
-#		puts load_file_packed
-#		puts load_file_packed.inspect
-#		puts load_file_packed.class
-#		puts load_file_packed.length
-	#	l_f_p_2 = load_file_packed[0..-4]
-	#	puts l_f_p_2.inspect
-#		load_file_data = MessagePack.load load_file_packed
-#		puts load_file_data
-#		processed_game_data = game_data.split ","
-#		puts processed_game_data
-		puts game_data.inspect
-		puts game_data.length
-		puts game_data[0].length
 		64.times do |i|
 			a = (i/8).floor
 			b = (i%8)
-			print "SQUARE [#{a},#{b}] BEING POPULATED "
 			if game_data[0] == "\n"
 				game_data.shift
 				@grid[a][b] = nil
-				puts "as nil"
 			else
 				@grid[a][b] = Piece.new(game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp)
-				puts "with a new piece: #{@grid[a][b].inspect}"
 			end
-#			@grid[i] = game_data[i]
 		end
-#		@grid[0..63] = game_data[0..63]
-		puts game_data.inspect
 		@turn = game_data.shift.chomp.to_i
 		@check = game_data.shift.chomp.to_i
 		@mate = game_data.shift.chomp.to_i
-		puts game_data.inspect
 		until game_data.length == 0
 			@captured << Piece.new(game_data.shift.chomp.to_i, game_data.shift.chomp.to_i, game_data.shift.chomp, game_data.shift.chomp.to_i)
 		end
-		puts "turn: #{@turn.inspect}"
-		puts "captured: #{@captured.inspect}"
-#		puts @grid[0]
-#		puts @grid[0].class
-#	puts @grid[0].inspect
 		load_file.close
-#		display
 		@turn -= 1
 		play_turn
 		return false
 	end
 end
-
-#class Player
-#	def initialize
-#
-#	end
-#end
 
 class Piece
 	attr_accessor :position, :type, :player, :piece, :icon, :has_moved, :en_passant_eligible#, :square_exists
@@ -758,16 +555,12 @@ class Piece
 		@position = [x.to_i,y.to_i]
 		@type = type
 		@player = player.to_i
-#		@piece = #@type.new(@player)
-		@icon = assign_icon(type, player)#@piece.icon
+		@icon = assign_icon(type, player)
 		@has_moved = false
 		@en_passant_eligible = false
 	end
 
 	def assign_icon(type, player)
-#		puts type.inspect
-#		puts player.class
-#		puts 1.class
 		if player == 1
 			case
 			when type == "pawn"
@@ -801,16 +594,6 @@ class Piece
 		end
 	end
 
-#	def move
-#		self.square_exists?
-#		self.type.legal_routes
-#	end
-
-#	def square_exists?(destination)
-#		8 >= destination[0] && destination[0] >= 0 ? true : false
-#		8 >= destination[1] && destination[1] >= 0 ? true : false
-#	end
-
 	def to_msgpack(piece)
 		MessagePack.dump ({
 		:position => @position,
@@ -829,90 +612,7 @@ class Piece
 
 end
 
-#class pawn < Piece
-#	attr_accessor :icon#, :en_passant_eligible
-#	def initialize(player)
-#		@player = player
-#		@icon = @player == 2 ? "\u2659" : "\u265F"
-#		@en_passant_eligible = false
-#	end
-
-#	def legal_routes
-#		if @player == 1
-#			[[1, 1], [-1, 1]]
-#		else
-#			[[1, -1], [-1, -1]]
-#		end
-#	end
-#end
-
-#class rook < Piece
-#	attr_accessor :icon, :legal_route#, :castling_eligible
-#	def initialize(player)
-#		@player = player
-#		@icon = player == 2 ? "\u2656" : "\u265C"
-#		@castling_eligible = true
-#	end
-
-#	def legal_route(destination)
-#		if destination[0] == self.position[0] && destination[1] == self.position[1]
-#			return false
-#		elsif destination[0] != self.position[0] && destination[1] != self.position[1]
-#			return false
-#		else 
-#			return true
-#		end
-#	end
-#end
-
-#class knight < Piece
-#	attr_accessor :icon
-#	def initialize(player)
-#		@player = player
-#		@icon = @player == 2 ? "\u2658" : "\u265E"
-#	end
-
-#end
-
-#class bishop < Piece
-#	attr_accessor :icon
-#	def initialize(player)
-#		@player = player
-#		@icon = @player == 2 ? "\u2657" : "\u265D"
-#	end
-#
-#end
-
-#class queen < Piece
-#	attr_accessor :icon
-#	def initialize(player)
-#		@player = player
-#		@icon = @player == 2 ? "\u2655" : "\u265B"
-#	end
-
-#end
-#
-#class king < Piece
-#	attr_accessor :icon#, :castling_eligible
-#	def initialize(player)
-#		@player = player
-#		@icon = @player == 2 ? "\u2654" : "\u265A"
-#		@castling_eligible = true
-#		@in_check = 0
-#	end
-
-#end
-
 
 game = Board.new
-#game.display
-#game.check?(1, 1)
-#puts "game: \n#{game.inspect}"
-#puts "grid: \n#{game.grid.inspect}"
-#puts "grid.each: \n#{game.grid.each.inspect}"
-#puts game.grid[0][0].class
+
 game.play_turn
-#puts game.grid[0][0].type
-#puts game.grid[0][0].player
-#game.move_piece([0,0], [6,0])
-#puts "\u2659 \u265F \u2655 \u265C"
