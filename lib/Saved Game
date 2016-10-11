@@ -2,7 +2,10 @@
 0
 rook
 1
-
+0
+1
+knight
+1
 0
 2
 bishop
@@ -27,42 +30,35 @@ knight
 7
 rook
 1
-0
-1
-pawn
-1
-0
-1
-pawn
-1
-0
-1
-pawn
-1
-0
-1
-pawn
-1
-0
-1
-pawn
-1
-0
-1
-pawn
-1
-0
-1
-pawn
-1
-0
-1
-pawn
-1
 
-
-
-
+0
+1
+pawn
+1
+0
+1
+pawn
+1
+0
+1
+pawn
+1
+0
+1
+pawn
+1
+0
+1
+pawn
+1
+0
+1
+pawn
+1
+0
+1
+pawn
+1
 
 
 
@@ -72,16 +68,8 @@ pawn
 
 
 3
-4
+0
 pawn
-2
-
-
-
-
-4
-1
-knight
 1
 
 
@@ -97,6 +85,33 @@ knight
 
 
 
+4
+7
+pawn
+2
+
+
+
+
+
+
+
+5
+7
+rook
+2
+0
+6
+pawn
+2
+0
+6
+pawn
+2
+0
+6
+pawn
+2
 0
 6
 pawn
@@ -114,18 +129,6 @@ pawn
 pawn
 2
 
-0
-6
-pawn
-2
-0
-6
-pawn
-2
-0
-6
-pawn
-2
 7
 0
 rook
@@ -154,10 +157,7 @@ bishop
 6
 knight
 2
-7
-7
-rook
-2
-5
+
+4
 0
 0

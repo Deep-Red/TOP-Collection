@@ -98,8 +98,6 @@ class Board
 	def square_occupied_by_self?(square)
 		return false if grid[square[0]][square[1]].nil?
 		allegiance = grid[square[0]][square[1]].player
-		puts allegiance.class
-		puts "Current: #{@current_player.class}"
 		allegiance == @current_player ? true : false
 	end
 
@@ -146,8 +144,6 @@ class Board
 		player_pieces = []
 		for i in 0..7
 			for j in 0..7
-				print grid[i][j].inspect
-				puts grid[i][j].nil?
 				unless grid[i][j].nil?
 					player_pieces << [i,j] if grid[i][j].player == player
 				end
@@ -157,13 +153,11 @@ class Board
 	end
 
 	def check?(king_pos, player)
-
 		opponent = 0
 		player == 1 ? opponent = 2 : opponent = 1
 		opponent_pieces = []
 		threatening_pieces = []
 		opponent_pieces = find_pieces(opponent)
-
 		opponent_pieces.each do |pt|
 			unless grid[pt[0]][pt[1]].type == "king"
 				if can_it_move?(pt, king_pos)
@@ -216,7 +210,6 @@ class Board
 		name_piece[1] -= 97
 		reversing_array = [7, 6, 5, 4, 3, 2, 1, 0]
 		name_piece[0] = reversing_array[n_p[1].to_i - 1]
-		puts name_piece.inspect
 		name_piece
 	end
 
@@ -363,27 +356,16 @@ class Board
 	end
 
 	def pawn_move?(from, to)
-		rank = from[0] - to[0]
-		file = from[1] - to[1]
-		if file == 0
-			if 	forward_move?(from, to)
-				if only_one_step?(from, to)
-					grid[from[0]][from[1]].en_passant_eligible = false
-					true
-				elsif (grid[from[0]][from[1]].has_moved == false && (from[0] - to[0] == 2 || from[0] - to[0] == -2))
-					grid[from[0]][from[1]].en_passant_eligible = true
-					true
-				else
-					false
-				end
-			else
-				false
+		return true if on_diagonal?(from, to) && only_one_step?(from, to) && forward_move?(from, to) && is_piece?(to)
+		return true if valid_en_passant?(from, to)
+		if in_file?(from, to) &&  forward_move?(from, to) && !is_piece?(to)
+			return true if only_one_step?(from, to)
+			if (grid[from[0]][from[1]].has_moved == false && (from[0] - to[0] == 2 || from[0] - to[0] == -2))
+				grid[from[0]][from[1]].en_passant_eligible = true
+				true
 			end
-		elsif only_one_step?(from, to)
-			return false if grid[to[0]][to[1]] == nil
-			valid_en_passant?(from, to) ? true : false
 		else
-			false
+			return false
 		end
 	end
 
@@ -532,7 +514,7 @@ class Board
 				game_data.shift
 				@grid[a][b] = nil
 			else
-				@grid[a][b] = Piece.new(game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp)
+				@grid[a][b] = Piece.new(game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp.to_i)
 			end
 		end
 		@turn = game_data.shift.chomp.to_i
