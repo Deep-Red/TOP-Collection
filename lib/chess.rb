@@ -356,9 +356,13 @@ class Board
 	end
 
 	def pawn_move?(from, to)
-		return true if on_diagonal?(from, to) && only_one_step?(from, to) && forward_move?(from, to) && is_piece?(to)
-		return true if valid_en_passant?(from, to)
-		if in_file?(from, to) &&  forward_move?(from, to) && !is_piece?(to)
+		if on_diagonal?(from, to) && only_one_step?(from, to) && forward_move?(from, to) && is_piece?(to)
+			grid[from[0]][from[1]].en_passant_eligible = false
+			true
+		elsif valid_en_passant?(from, to)
+			grid[from[0]][from[1]].en_passant_eligible = false
+			true
+		elsif in_file?(from, to) &&  forward_move?(from, to) && !is_piece?(to)
 			return true if only_one_step?(from, to)
 			if (grid[from[0]][from[1]].has_moved == false && (from[0] - to[0] == 2 || from[0] - to[0] == -2))
 				grid[from[0]][from[1]].en_passant_eligible = true
