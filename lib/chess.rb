@@ -9,8 +9,8 @@ class Board
 				j = nil
 			} }
 #		puts @grid[0].inspect
-		@grid[6].map! { |i| i = Piece.new(i, 6, "pawn", 2) }
-		@grid[1].map! { |i| i = Piece.new(i, 1, "pawn", 1) }
+		@grid[6].map! { |x, i| x = Piece.new(i.to_i, 6, "pawn", 2) }
+		@grid[1].map! { |x, i| x = Piece.new(i.to_i, 1, "pawn", 1) }
 		@grid[7][0] = Piece.new(7, 0, "rook", 2)
 		@grid[7][7] = Piece.new(7, 7, "rook", 2)
 		@grid[0][0] = Piece.new(0, 0, "rook", 1)
@@ -31,9 +31,9 @@ class Board
 #		puts @grid[0].inspect
 
 		@turn = 0
-		@captured = []
 		@check = 0
 		@mate = 0
+		@captured = []
 	end
 
 	def display
@@ -312,6 +312,8 @@ class Board
 			resign
 		when "s"
 			save_game
+		when "l"
+			load_game
 		else
 			name_square(input)
 		end
@@ -457,6 +459,7 @@ class Board
 	end
 
 	def pawn_move?(from, to)
+# Pawn captures not allowed, need to rewrite.
 #		puts "381ish"
 		rank = from[0] - to[0]
 		file = from[1] - to[1]
@@ -633,6 +636,7 @@ class Board
 		grid[to[0]][to[1]] = tomove
 		grid[from[0]][from[1]] = nil
 		grid[to[0]][to[1]].has_moved = true
+		grid[to[0]][to[1]].position = [to[0], to[1]]
 #		grid[to[0]][to[1]] = to
 #		play_turn
 	end
@@ -653,17 +657,87 @@ class Board
 	end
 
 	def save_game
-		grid_to_save = grid.to_msgpack
-		variable_status = [turn, captured, check, mate].to_msgpack
+#		grid_to_save = grid.to_msgpack
+		
+#		game_state << grid.each
+		vars = [turn, check, mate, captured]#.to_s
 		save_file = File.open("Saved Game", "w")
-		save_file.puts grid_to_save
-		save_file.puts variable_status.to_msgpack
+			p_a =[]
+			grid_data = []
+			grid.each do |l|
+				l.each do |p|
+					if p == nil
+						p_a << nil
+					else
+						p_a << p.position[0]
+						p_a << p.position[1]
+						p_a << p.type
+						p_a << p.player
+					end
+					grid_data << p_a 
+				end
+#				p_a = []
+			end
+			save_file.puts  p_a
+#			save_file.puts grid#.to_msgpack
+			save_file.puts vars#.to_msgpack
 		save_file.close
 		return false
 	end
 
 	def load_game
-
+#		junk = []
+		game_data = []
+		load_file = File.open("Saved Game")
+#		load_file_packed = ""
+		while !load_file.eof?
+			game_data << load_file.readline
+		end
+#		puts load_file_packed
+#		puts load_file_packed.inspect
+#		puts load_file_packed.class
+#		puts load_file_packed.length
+	#	l_f_p_2 = load_file_packed[0..-4]
+	#	puts l_f_p_2.inspect
+#		load_file_data = MessagePack.load load_file_packed
+#		puts load_file_data
+#		processed_game_data = game_data.split ","
+#		puts processed_game_data
+		puts game_data.inspect
+		puts game_data.length
+		puts game_data[0].length
+		64.times do |i|
+			a = (i/8).floor
+			b = (i%8)
+			print "SQUARE [#{a},#{b}] BEING POPULATED "
+			if game_data[0] == "\n"
+				game_data.shift
+				@grid[a][b] = nil
+				puts "as nil"
+			else
+				@grid[a][b] = Piece.new(game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp)
+				puts "with a new piece: #{@grid[a][b].inspect}"
+			end
+#			@grid[i] = game_data[i]
+		end
+#		@grid[0..63] = game_data[0..63]
+		puts game_data.inspect
+		@turn = game_data.shift.chomp.to_i
+		@check = game_data.shift.chomp.to_i
+		@mate = game_data.shift.chomp.to_i
+		puts game_data.inspect
+		until game_data.length == 0
+			@captured << Piece.new(game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp)
+		end
+		puts "turn: #{@turn.inspect}"
+		puts "captured: #{@captured.inspect}"
+		puts @grid[0]
+		puts @grid[0].class
+		puts @grid[0].inspect
+		load_file.close
+		display
+#		play_turn
+		return false
 	end
 end
 
@@ -742,6 +816,11 @@ class Piece
 		:has_moved => @has_moved,
 		:en_passant_eligible => @en_passant_eligible
 		})
+	end
+
+	def self.from_msgpack(piece)
+		data = MessagePack.load piece
+		self.new(data['position'], data['type'], data['player'], data['icon'], data['has_moved'], data['en_passant_eligible'])
 	end
 
 end
@@ -824,8 +903,10 @@ end
 game = Board.new
 #game.display
 #game.check?(1, 1)
-#puts game.inspect
-puts game.grid[0][0].class
+#puts "game: \n#{game.inspect}"
+#puts "grid: \n#{game.grid.inspect}"
+#puts "grid.each: \n#{game.grid.each.inspect}"
+#puts game.grid[0][0].class
 game.play_turn
 #puts game.grid[0][0].type
 #puts game.grid[0][0].player
