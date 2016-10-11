@@ -102,8 +102,8 @@ class Board
 	def square_occupied_by_self?(square)
 		return false if grid[square[0]][square[1]].nil?
 		allegiance = grid[square[0]][square[1]].player
-#		puts allegiance
-#		puts "Current: #{@current_player}"
+		puts allegiance.class
+		puts "Current: #{@current_player.class}"
 		allegiance == @current_player ? true : false
 	end
 
@@ -682,6 +682,9 @@ class Board
 #			save_file.puts grid#.to_msgpack
 			save_file.puts vars#.to_msgpack
 		save_file.close
+		puts "Game saved!"
+		@turn -= 1
+		play_turn
 		return false
 	end
 
@@ -727,16 +730,17 @@ class Board
 		@mate = game_data.shift.chomp.to_i
 		puts game_data.inspect
 		until game_data.length == 0
-			@captured << Piece.new(game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp, game_data.shift.chomp)
+			@captured << Piece.new(game_data.shift.chomp.to_i, game_data.shift.chomp.to_i, game_data.shift.chomp, game_data.shift.chomp.to_i)
 		end
 		puts "turn: #{@turn.inspect}"
 		puts "captured: #{@captured.inspect}"
-		puts @grid[0]
-		puts @grid[0].class
-		puts @grid[0].inspect
+#		puts @grid[0]
+#		puts @grid[0].class
+#	puts @grid[0].inspect
 		load_file.close
-		display
-#		play_turn
+#		display
+		@turn -= 1
+		play_turn
 		return false
 	end
 end
@@ -751,9 +755,9 @@ class Piece
 	attr_accessor :position, :type, :player, :piece, :icon, :has_moved, :en_passant_eligible#, :square_exists
 
 	def initialize(x, y, type, player)
-		@position = [x,y]
+		@position = [x.to_i,y.to_i]
 		@type = type
-		@player = player
+		@player = player.to_i
 #		@piece = #@type.new(@player)
 		@icon = assign_icon(type, player)#@piece.icon
 		@has_moved = false
