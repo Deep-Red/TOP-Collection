@@ -1,4 +1,4 @@
-require 'msgpack'
+#require 'msgpack'
 
 class Board
 	attr_accessor :square, :grid, :turn, :captured, :check, :mate
@@ -38,7 +38,7 @@ class Board
 		cap_disp = []
 		@grid.each{|i| i.each {|j| j == nil ? disp << "_" : disp << j.icon }}
 		@captured.each{|i| cap_disp << i.icon }
-		
+
 		puts "   a  b  c  d  e  f  g  h  "
 		puts "8  #{disp[0..7].join("  ")}"
 		puts "7  #{disp[8..15].join("  ")}"
@@ -62,9 +62,9 @@ class Board
 	def on_board?(square)
 		if square[0] == nil || square[1] == nil
 			return false
-		elsif square[0].between?(0,7) && square[1].between?(0,7) 
-			return true 
-		else 
+		elsif square[0].between?(0,7) && square[1].between?(0,7)
+			return true
+		else
 			return false
 		end
 	end
@@ -103,7 +103,7 @@ class Board
 
 	def attempt_to_move_into_check?(from, to)
 		grid[from[0]][from[1]].type == "king" ? king_pos = to : king_pos = find_king(grid[from[0]][from[1]].player)
-		
+
 		from_temp = grid[from[0]][from[1]]
 		to_temp = grid[to[0]][to[1]]
 		grid[from[0]][from[1]] = nil
@@ -161,7 +161,7 @@ class Board
 		opponent_pieces.each do |pt|
 			unless grid[pt[0]][pt[1]].type == "king"
 				if can_it_move?(pt, king_pos)
-					threatening_pieces << pt 
+					threatening_pieces << pt
 				end
 			end
 		end
@@ -253,7 +253,7 @@ class Board
 		to = get_input
 
 		dont_move_into_check if attempt_to_move_into_check?(from, to)
-		
+
 		can_it_move?(from, to) ? move_piece(from, to) : illegal_move(from)
 
 		if check?(find_king(opponent),opponent).length > 0
@@ -275,7 +275,7 @@ class Board
 						true
 					end
 				else
-					false	
+					false
 				end
 			else
 				false
@@ -324,9 +324,6 @@ class Board
 	end
 
 	def valid_en_passant?(from, to)
-# bug in en_passant allows capturing of own pieces at least from starting position
-# => possibly corrected by changing assignment operator to equivalency test
-# now pawns cannot capture properly again, may neet to rewrite this entirely
 		return false unless on_diagonal?(from, to) && only_one_step?(from, to)
 		return false if grid[from[0]][to[1]].nil?
 		return false if grid[from[0]][from[1]].en_passant_eligible == false
@@ -335,14 +332,14 @@ class Board
 		return true
 	end
 
-#Problem with #has_moved method being called on an array needs correcting. 
+#Problem with #has_moved method being called on an array needs correcting.
 #Anticipate possible problem of rook attempting to take the king after castling is complete.
 
 	def castle(from, to)
 		if from.has_moved == false && trace_route == true
 			rook_from = 7 if to[1] == 6
 			rook_from = 0 if to[1] == 1
-			
+
 			kingtomove = grid[from[0]][from[1]]
 			rooktomove = grid[7][to[1]]
 			destination = grid[to[0]][to[1]]
@@ -375,7 +372,7 @@ class Board
 
 	def legal_route?(from, to)
 		piece = grid[from[0]][from[1]]
-		case 
+		case
 		when piece.type == "rook"
 			in_rank?(from, to) ^ in_file?(from, to) ? true : false
 		when piece.type == "knight"
@@ -427,13 +424,13 @@ class Board
 				if a == b-1
 					square_status << false
 				else
-					check_square = [check_square, adder].transpose.map {|x| x.reduce(:+)} 
+					check_square = [check_square, adder].transpose.map {|x| x.reduce(:+)}
 					is_piece?(check_square) ? square_status << false : square_status << check_square
 				end
 			end
 		elsif rank_change != 0
 			for i in a+1...b do
-				if a+1 == b 
+				if a+1 == b
 					square_status << false
 				else
 					is_piece?([i,c]) ? square_status << false : square_status << [i,c]
@@ -441,7 +438,7 @@ class Board
 			end
 		elsif file_change != 0
 			for i in c+1...d do
-				if c+1 == d 
+				if c+1 == d
 					square_status << false
 				else
 					is_piece?([a,i]) ? square_status << false : square_status << [a,i]
@@ -493,7 +490,7 @@ class Board
 						p_a << p.type
 						p_a << p.player
 					end
-					grid_data << p_a 
+					grid_data << p_a
 				end
 			end
 			save_file.puts  p_a
@@ -580,25 +577,25 @@ class Piece
 		end
 	end
 
-	def to_msgpack(piece)
-		MessagePack.dump ({
-		:position => @position,
-		:type => @type,
-		:player => @player,
-		:icon => @icon,
-		:has_moved => @has_moved,
-		:en_passant_eligible => @en_passant_eligible
-		})
-	end
+#	def to_msgpack(piece)
+#		MessagePack.dump ({
+#		:position => @position,
+#		:type => @type,
+#		:player => @player,
+#		:icon => @icon,
+#		:has_moved => @has_moved,
+#		:en_passant_eligible => @en_passant_eligible
+#		})
+#	end
 
-	def self.from_msgpack(piece)
-		data = MessagePack.load piece
-		self.new(data['position'], data['type'], data['player'], data['icon'], data['has_moved'], data['en_passant_eligible'])
-	end
+#	def self.from_msgpack(piece)
+#		data = MessagePack.load piece
+#		self.new(data['position'], data['type'], data['player'], data['icon'], data['has_moved'], data['en_passant_eligible'])
+#	end
 
 end
 
 
-game = Board.new
+#game = Board.new
 
-game.play_turn
+#game.play_turn

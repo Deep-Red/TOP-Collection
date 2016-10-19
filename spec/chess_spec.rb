@@ -1,6 +1,6 @@
 require "chess"
 
-describe 'board' do 
+describe 'board' do
 
 	before :all do
 		@test_game = Board.new
@@ -24,38 +24,41 @@ describe 'board' do
 		context "when a pawn makes it's first move" do
 			it "can move two spaces" do
 				@test_game.move_piece([6,3],[4,3])
-				expect(@test_game.grid[4][3].type).to eq Pawn
+				expect(@test_game.grid[4][3].type).to eq "pawn"
 			end
 		end
 
 		context "when a knight moves" do
 			it "can 'jump' other pieces" do
 				@test_game.move_piece([0,1],[2,2])
-				expect(@test_game.grid[2][2].type).to eq Knight
+				expect(@test_game.grid[2][2].type).to eq "knight"
 			end
 		end
-		
+
 		context "when a piece other than a knight moves" do
 			it "cannot 'jump' other pieces" do
-				@test_game.move_piece([7,2],[5,0])
+				expect(@test_game.can_it_move?([7,2],[5,0])).to be false
+	#			@test_game.move_piece([7,2],[5,0])
 	#			expect { @test_game.move_piece([7,2],[5,0]) }.to raise_error(NoMethodError)
-				expect(@test_game.grid[5][0]).to eq nil
-				expect(@test_game.grid[7][2].type).to eq Bishop
+	#			expect(@test_game.grid[5][0]).to eq nil
+	#			expect(@test_game.grid[7][2].type).to eq "bishop"
 			end
 		end
 
 		context "when a king moves" do
 			it "cannot move more than one space" do
-				@test_game.move_piece([7,4],[5,2])
-				expect(test_game.grid[5][2]).to eq nil
-				expect(test_game.grid[7][4].type).to eq King
+				expect(@test_game.can_it_move?([7,4],[5,2])).to be false
+#				@test_game.move_piece([7,4],[5,2])
+#				expect(test_game.grid[5][2]).to eq nil
+#				expect(test_game.grid[7][4].type).to eq "king"
 			end
 		end
 
 		context "when a king moves" do
 			it "can move diagonally" do
-				@test_game.move_piece([7,4],[6,3])
-				expect(@test_game.grid[6][3].type).to eq King
+				expect(@test_game.can_it_move?([7,4],[6,3])).to be true
+#				@test_game.move_piece([7,4],[6,3])
+#				expect(@test_game.grid[6][3].type).to eq "king"
 			end
 		end
 
@@ -65,6 +68,7 @@ describe 'board' do
 		context "When \#display is called" do
 			it "displays the current board setup in a human readable format" do
 #				expect(STDOUT).to receive(:puts).with('   a  b  c  d  e  f  g  h  ')
+#				puts @test_game.display
 				expect{@test_game.display}.to output.to_stdout
 #				expect(output).to include '   a  b  c  d  e  f  g  h  '
 			end
