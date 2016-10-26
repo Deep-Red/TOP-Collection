@@ -1,5 +1,3 @@
-#require 'msgpack'
-
 class Board
 	attr_accessor :square, :grid, :turn, :captured, :check, :mate
 
@@ -98,7 +96,7 @@ class Board
 	def square_occupied_by_self?(square)
 		return false if grid[square[0]][square[1]].nil?
 		allegiance = grid[square[0]][square[1]].player
-		allegiance == @current_player ? true : false
+		allegiance == current_player ? true : false
 	end
 
 	def attempt_to_move_into_check?(from, to)
@@ -242,16 +240,18 @@ class Board
 		@turn += 1
 	end
 
-	def set_player
-		@current_player = 0
-		@turn % 2 == 0 ? @current_player = 1 : @current_player = 2
-		@current_player == 1 ? opponent = 2 : opponent = 1
+	def current_player
+		@turn % 2 == 0 ? 1 : 2
+	end
+
+	def opponent
+		current_player = 1 ? 2 : 1
 	end
 
 	def play_turn
 		display
 		increment_turn
-		set_player
+		current_player
 		from = []
 		to = []
 		puts "What piece would you like to move?"
@@ -324,7 +324,7 @@ class Board
 
 	def forward_move?(from, to)
 		progress = to[0] - from[0]
-		case set_player
+		case current_player
 		when 2
 			progress <= 0 ? true : false
 		when 1
@@ -585,26 +585,7 @@ class Piece
 			end
 		end
 	end
-
-#	def to_msgpack(piece)
-#		MessagePack.dump ({
-#		:position => @position,
-#		:type => @type,
-#		:player => @player,
-#		:icon => @icon,
-#		:has_moved => @has_moved,
-#		:en_passant_eligible => @en_passant_eligible
-#		})
-#	end
-
-#	def self.from_msgpack(piece)
-#		data = MessagePack.load piece
-#		self.new(data['position'], data['type'], data['player'], data['icon'], data['has_moved'], data['en_passant_eligible'])
-#	end
-
 end
 
-
-game = Board.new
-
+#game = Board.new
 #game.play_turn
