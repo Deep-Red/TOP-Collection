@@ -101,12 +101,10 @@ class Board
 
 	def attempt_to_move_into_check?(from, to)
 		grid[from[0]][from[1]].type == "king" ? king_pos = to : king_pos = find_king(grid[from[0]][from[1]].player)
-
 		from_temp = grid[from[0]][from[1]]
 		to_temp = grid[to[0]][to[1]]
 		grid[from[0]][from[1]] = nil
 		grid[to[0]][to[1]] = from_temp
-
 		if check?(king_pos, from_temp.player) != []
 			grid[from[0]][from[1]] = from_temp
 			grid[to[0]][to[1]] = to_temp
@@ -204,7 +202,6 @@ class Board
 		name_piece = []
 		n_p = input.split("")
 		name_piece[1] = n_p[0].downcase.bytes.pop
-
 		name_piece[1] -= 97
 		reversing_array = [7, 6, 5, 4, 3, 2, 1, 0]
 		name_piece[0] = reversing_array[n_p[1].to_i - 1]
@@ -271,7 +268,6 @@ class Board
 			end
 		end
 		game_over? ? game_over_report : play_turn
-
 	end
 
 	def can_it_move?(from, to)
@@ -341,27 +337,26 @@ class Board
 		return true
 	end
 
-# Problem with rook not moving during a castle needs to be addressed
 	def execute_castle(from, to)
-		rook_from = grid[from[0]][7] if to[1] == 6
-		rook_from = grid[from[0]][0] if to[1] == 1
-		rook_to = grid[from[0]][5] if to[1] == 6
-		rook_to = grid[from[0]][3] if to[1] == 1
-		rook_to = rook_from
-		rook_from = nil
+		rook_from = [from[0], 7] if to[1] == 6
+		rook_from = [from[0], 0] if to[1] == 2
+		rook_to = [from[0], 5] if to[1] == 6
+		rook_to = [from[0], 3] if to[1] == 2
 		grid[to[0]][to[1]] = grid[from[0]][from[1]]
 		grid[from[0]][from[1]] = nil
 		grid[to[0]][to[1]].has_moved = true
-		rook_to.has_moved = true
+		grid[rook_to[0]][rook_to[1]] = grid[rook_from[0]][rook_from[1]]
+		grid[rook_from[0]][rook_from[1]] = nil
+		grid[rook_to[0]][rook_to[1]].has_moved = true
 	end
 
 	def valid_castle(from, to)
 		return false unless grid[from[0]][from[1]].type == "king"
-		return false unless to[1] == 6 || to[1] == 1
+		return false unless to[1] == 6 || to[1] == 2
 		rook = [nil,nil]
 		rook[0] = from[0]
 		rook[1] = 7 if to[1] == 6
-		rook[1] = 0 if to[1] == 1
+		rook[1] = 0 if to[1] == 2
 		return false unless from[0] == to[0]
 		return false unless grid[from[0]][from[1]].has_moved == false
 		return false unless grid[rook[0]][rook[1]].has_moved == false

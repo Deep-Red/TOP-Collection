@@ -67,7 +67,7 @@ describe 'board' do
 
 		context "when a king castles" do
 			it "is interpreted as a legal move" do
-				expect(@test_game.can_it_move?([0,4],[0,1])).to be true
+				expect(@test_game.can_it_move?([0,4],[0,2])).to be true
 			end
 		end
 	end
