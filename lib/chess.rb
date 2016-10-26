@@ -210,6 +210,7 @@ class Board
 		name_piece[1] -= 97
 		reversing_array = [7, 6, 5, 4, 3, 2, 1, 0]
 		name_piece[0] = reversing_array[n_p[1].to_i - 1]
+		puts name_piece
 		name_piece
 	end
 
@@ -237,12 +238,20 @@ class Board
 		play_turn
 	end
 
-	def play_turn
-		display
+	def increment_turn
 		@turn += 1
+	end
+
+	def set_player
 		@current_player = 0
 		@turn % 2 == 0 ? @current_player = 1 : @current_player = 2
 		@current_player == 1 ? opponent = 2 : opponent = 1
+	end
+
+	def play_turn
+		display
+		increment_turn
+		set_player
 		from = []
 		to = []
 		puts "What piece would you like to move?"
@@ -268,7 +277,7 @@ class Board
 	def can_it_move?(from, to)
 		if is_piece?(from)
 			if on_board?(to)
-				if (legal_route?(from, to) && !trace_route(from, to).include?(false))
+				if (!trace_route(from, to).include?(false) && legal_route?(from, to))
 					if (is_piece?(to) && grid[from[0]][from[1]].player == grid[to[0]][to[1]].player)
 						false
 					else
@@ -315,7 +324,7 @@ class Board
 
 	def forward_move?(from, to)
 		progress = to[0] - from[0]
-		case @current_player
+		case set_player
 		when 2
 			progress <= 0 ? true : false
 		when 1
@@ -596,6 +605,6 @@ class Piece
 end
 
 
-#game = Board.new
+game = Board.new
 
 #game.play_turn
