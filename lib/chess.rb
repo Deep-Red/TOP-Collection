@@ -341,24 +341,31 @@ class Board
 		return true
 	end
 
-#Problem with #has_moved method being called on an array needs correcting.
-#Anticipate possible problem of rook attempting to take the king after castling is complete.
+# Problem with rook not moving during a castle needs to be addressed
+	def execute_castle(from, to)
+		rook_from = grid[from[0]][7] if to[1] == 6
+		rook_from = grid[from[0]][0] if to[1] == 1
+		rook_to = grid[from[0]][5] if to[1] == 6
+		rook_to = grid[from[0]][3] if to[1] == 1
+		rook_to = rook_from
+		rook_from = nil
+		grid[to[0]][to[1]] = grid[from[0]][from[1]]
+		grid[from[0]][from[1]] = nil
+		grid[to[0]][to[1]].has_moved = true
+		rook_to.has_moved = true
+	end
 
-	def castle(from, to)
-		if from.has_moved == false && trace_route == true
-			rook_from = 7 if to[1] == 6
-			rook_from = 0 if to[1] == 1
-
-			kingtomove = grid[from[0]][from[1]]
-			rooktomove = grid[7][to[1]]
-			destination = grid[to[0]][to[1]]
-			grid[to[0]][to[1]] = kingtomove
-			grid[from[0]][from[1]] = rooktomove
-			grid[7][to[1]] = nil
-			grid[to[0]][to[1]].has_moved = true
-		else
-			false
-		end
+	def valid_castle(from, to)
+		return false unless grid[from[0]][from[1]].type == "king"
+		return false unless to[1] == 6 || to[1] == 1
+		rook = [nil,nil]
+		rook[0] = from[0]
+		rook[1] = 7 if to[1] == 6
+		rook[1] = 0 if to[1] == 1
+		return false unless from[0] == to[0]
+		return false unless grid[from[0]][from[1]].has_moved == false
+		return false unless grid[rook[0]][rook[1]].has_moved == false
+		true
 	end
 
 	def pawn_move?(from, to)
@@ -394,8 +401,8 @@ class Board
 			return false if check?(to, grid[from[0]][from[1]].player) != []
 			if only_one_step?(from, to)
 				on_diagonal?(from, to) || in_file?(from, to) || in_rank?(from, to) ? true : false
-			elsif from[1] - to[1] == -2 || from[1] - to[1] == -3
-				castle(from, to) ? true : false
+			elsif valid_castle(from, to)
+				true
 			else
 				false
 			end
@@ -460,13 +467,17 @@ class Board
 	end
 
 	def move_piece(from, to)
-		tomove = grid[from[0]][from[1]]
-		destination = grid[to[0]][to[1]]
-		captured << destination if destination != nil
-		grid[to[0]][to[1]] = tomove
-		grid[from[0]][from[1]] = nil
-		grid[to[0]][to[1]].has_moved = true
-		grid[to[0]][to[1]].position = [to[0], to[1]]
+		if valid_castle(from, to)
+			execute_castle(from, to)
+		else
+			tomove = grid[from[0]][from[1]]
+			destination = grid[to[0]][to[1]]
+			captured << destination if destination != nil
+			grid[to[0]][to[1]] = tomove
+			grid[from[0]][from[1]] = nil
+			grid[to[0]][to[1]].has_moved = true
+			grid[to[0]][to[1]].position = [to[0], to[1]]
+		end
 	end
 
 	def game_over?

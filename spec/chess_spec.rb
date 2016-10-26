@@ -62,11 +62,12 @@ describe 'board' do
 		before :each do
 			@test_game.grid[0][1] = nil
 			@test_game.grid[0][2] = nil
+			@test_game.grid[0][3] = nil
 		end
 
 		context "when a king castles" do
-			it "occupies the proper square" do
-
+			it "is interpreted as a legal move" do
+				expect(@test_game.can_it_move?([0,4],[0,1])).to be true
 			end
 		end
 	end
