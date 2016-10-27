@@ -368,6 +368,26 @@ class Board
 		true
 	end
 
+	def promote(square)
+		puts "The pawn at #{square.inspect} is eligible for promotion."
+		puts "Would you like a Q, B, K, or R?"
+		choice = gets.downcase.chomp
+		case choice
+		when "q"
+			t = "queen"
+		when "b"
+			t = "bishop"
+		when "k"
+			t = "knight"
+		when "r"
+			t = "rook"
+		else
+			puts "Unexpected selection, try again."
+			promote(square)
+		end
+		grid[square[0]][square[1]] = Piece.new(square[0], square[1], t, current_player)
+	end
+
 	def pawn_move?(from, to)
 		if on_diagonal?(from, to) && only_one_step?(from, to) && forward_move?(from, to) && is_piece?(to)
 			grid[from[0]][from[1]].en_passant_eligible = false
@@ -477,6 +497,7 @@ class Board
 			grid[from[0]][from[1]] = nil
 			grid[to[0]][to[1]].has_moved = true
 			grid[to[0]][to[1]].position = [to[0], to[1]]
+			promote(to) if (to[1] == 0 || to[1] == 7) && grid[to[0]][to[1]].type == "pawn"
 		end
 	end
 
