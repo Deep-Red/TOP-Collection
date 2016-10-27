@@ -254,14 +254,11 @@ class Board
 		puts "What piece would you like to move?"
 		from = get_input
 		tried_to_move_opponent_piece unless square_occupied_by_self?(from)
-
 		puts "To where would you like it moved?"
 		to = get_input
-
 		dont_move_into_check if attempt_to_move_into_check?(from, to)
-
 		can_it_move?(from, to) ? move_piece(from, to) : illegal_move(from)
-
+#		promote(p_pawn) if promote?
 		if check?(find_king(opponent),opponent).length > 0
 			if checkmate?(opponent)
 				@mate = 1
@@ -353,10 +350,18 @@ class Board
 	def valid_castle(from, to)
 		return false unless grid[from[0]][from[1]].type == "king"
 		return false unless to[1] == 6 || to[1] == 2
+		x = current_player
+		return false if check?(from, x)
 		rook = [nil,nil]
 		rook[0] = from[0]
-		rook[1] = 7 if to[1] == 6
-		rook[1] = 0 if to[1] == 2
+		if to[1] == 6
+			rook[1] = 7
+			return false if check?([from[0], 5])
+		end
+		if to[1] == 2
+			rook[1] = 0
+			return false if check?([from[0], 3])
+		end
 		return false unless from[0] == to[0]
 		return false unless grid[from[0]][from[1]].has_moved == false
 		return false unless grid[rook[0]][rook[1]].has_moved == false
