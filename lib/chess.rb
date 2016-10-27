@@ -351,16 +351,16 @@ class Board
 		return false unless grid[from[0]][from[1]].type == "king"
 		return false unless to[1] == 6 || to[1] == 2
 		x = current_player
-		return false if check?(from, x)
+		return false if attempt_to_move_into_check?(from, from)
 		rook = [nil,nil]
 		rook[0] = from[0]
 		if to[1] == 6
 			rook[1] = 7
-			return false if check?([from[0], 5])
+			return false if attempt_to_move_into_check?(from, [from[0], 5])
 		end
 		if to[1] == 2
 			rook[1] = 0
-			return false if check?([from[0], 3])
+			return false if attempt_to_move_into_check?(from, [from[0], 3])
 		end
 		return false unless from[0] == to[0]
 		return false unless grid[from[0]][from[1]].has_moved == false
