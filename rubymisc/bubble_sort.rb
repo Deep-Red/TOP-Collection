@@ -1,5 +1,5 @@
 def bubble_sort(xar)
-	xar[0...-1].each_with_index{|val, key| 
+	xar[0...-1].each_with_index{|val, key|
 		i = 0
 		xv1 = xar[key]
 		xv2 = xar[key+1]
@@ -19,7 +19,7 @@ end
 
 bubble_sort([4,3,78,2,0,2])
 
-def bubble_sort_by({|left, right|
-	left <=> right
-
-		})
+#def bubble_sort_by({|left, right|
+#	left <=> right
+#
+#		})
