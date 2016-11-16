@@ -1,5 +1,11 @@
 <html>
-  <head></head>
+  <head>
+    <style>
+    body {
+      background: <%= bgc %>;
+    }
+    </style>
+  </head>
   <body>
     <form>
       <input type='text' name='guess' />
@@ -9,7 +15,7 @@
       <%= message %>
     </p>
     <p>
-      The SECRET NUMBER is <%= number %>
+      <%= "Cheat mode on! The secret number is #{number}" if cheat_mode == "true" %>
     </p>
   </body>
 </html>
