@@ -497,7 +497,7 @@ class Board
 			grid[from[0]][from[1]] = nil
 			grid[to[0]][to[1]].has_moved = true
 			grid[to[0]][to[1]].position = [to[0], to[1]]
-			promote(to) if (to[1] == 0 || to[1] == 7) && grid[to[0]][to[1]].type == "pawn"
+			promote(to) if (to[0] == 0 || to[0] == 7) && grid[to[0]][to[1]].type == "pawn"
 		end
 	end
 
@@ -619,5 +619,5 @@ class Piece
 	end
 end
 
-#game = Board.new
-#game.play_turn
+game = Board.new
+game.play_turn
