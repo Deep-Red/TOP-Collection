@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>New User</title>
+  <title>Edit User Information</title>
 </head>
 <body>
 <!-- #  <form accept-charset="UTF-8" action="/users" method="post">
@@ -25,7 +25,7 @@
     <%= submit_tag("Create!") %>
   <% end %>
 -->
-<%= form_for @user, url: {action: "create"} do |f| %>
+<%= form_for @user, url: {action: "update"} do |f| %>
   Desired Username: <%= f.text_field :username %><br />
   E-Mail Address: <%= f.text_field :email, placeholder: "example@fake.io" %><br />
   Password: <%= f.password_field :password %><br />
