@@ -1,6 +1,6 @@
-<% provide(@current.name) %>
+<% provide(current_user) %>
 <h1> THIS IS YOUR USER PAGE </h1>
-<%= "I'd like to show a name here, like: #{@user.name}" %>
+<%= current_user.nil? ? "I don't know who you are, log in." : "Hello! #{current_user.name}" %>
 
 <div class="col-md-6 col-md-offset-3">
   <%= link_to 'Log out', logout_path, method: :delete  %>
