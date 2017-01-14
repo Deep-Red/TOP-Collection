@@ -6,11 +6,11 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.save
-    redirect_to user_path
+    redirect_to root_path
   end
 
   def show
-    @user = User.find()
+    @user = User.find_by(user_params)
   end
 
   private
