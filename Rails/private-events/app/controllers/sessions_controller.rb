@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     user = User.find_by(name: params[:session][:name].downcase)
     if user
       # Log the user in and redirect to the user's show page
-      log_in user
+      log_in session
       redirect_to user
     else
       flash.now[:danger] = 'Invalid user'
@@ -16,6 +16,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    log_out
+    redirect_to root_path
   end
 
   private
