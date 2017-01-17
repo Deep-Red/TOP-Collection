@@ -1,4 +1,4 @@
-<% provide(@user.name) %>
-<h1>This is your profile page, <%= @user.name %></h1>
+<% provide(current_user) %>
+<h1>This is your profile page, <%= current_user.name %></h1>
 
 <%= link_to "Sign Out", logout_path %>

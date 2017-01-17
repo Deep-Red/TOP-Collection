@@ -2,7 +2,7 @@ module SessionsHelper
 
   # Logs in the given user.
   def log_in(user)
-    cookies.permanent.signed[:user_id] = user.id
+    cookies.signed[:user_id] = User.find_by(name: params[:session][:name]).id
     @user = current_user
   end
 
@@ -12,8 +12,7 @@ module SessionsHelper
   end
 
   def current_user
-    user_id = cookies.signed[:user_id]
-    user = User.find_by(id: user_id)
+    @current_user = User.find_by(id: cookies.signed[:user_id])
   end
 
 end
