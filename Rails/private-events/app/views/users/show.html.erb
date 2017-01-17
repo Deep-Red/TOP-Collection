@@ -2,3 +2,12 @@
 <h1>This is your profile page, <%= current_user.name %></h1>
 
 <%= link_to "Sign Out", logout_path %>
+
+<div class="col-md-8">
+  <% if current_user.events.any? %>
+  <h3>Events</h3>
+  <ol class="events">
+    <%= render @events %>
+  </ol>
+  <% end %>
+</div>
