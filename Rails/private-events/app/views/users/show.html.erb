@@ -10,4 +10,12 @@
     <%= render @events %>
   </ol>
   <% end %>
+  <% if current_user.invitations.any? %>
+  <ol class="invitations">
+    Previous Events
+    <%= render @prev_events %>
+    Upcoming Events
+    <%= render @upcoming_events %>
+  </ol>
+  <% end %>
 </div>

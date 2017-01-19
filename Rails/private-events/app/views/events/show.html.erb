@@ -1,2 +1,4 @@
-<h1>Events#show</h1>
-<p>Find me in app/views/events/show.html.erb</p>
+<h1><%= render @event %></h1>
+
+<%= render @invitations %>
+<%= link_to "Invite someone to this event", new_invitation_path %>

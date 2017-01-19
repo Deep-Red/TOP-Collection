@@ -12,6 +12,10 @@ class UsersController < ApplicationController
   def show
     @user = current_user
     @events = @user.events
+    @invitations = @user.invitations
+
+    @upcoming_events = @user.upcoming_events(@invitations)
+    @prev_events = @user.prev_events(@invitations)
   end
 
   private

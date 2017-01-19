@@ -1,0 +1,12 @@
+<li id="invitation-<%= invitation.id %>">
+  <span class="invitation">
+  <%= invitation.event.user.name %>
+  invited
+  <%= invitation.user.name %>
+  to
+  <%= link_to invitation.event.description, invitation.event %>
+  on
+  <%= invitation.event.date.strftime("%B %d, %Y") %>
+  </span>
+
+</li>

@@ -10,15 +10,19 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event = event.find_by_id(params[:event_id])
+    @event = Event.find_by_id(params[:id])
+    @invitations = @event.invitations.all
+
   end
 
   def index
     @events = Event.all
+    @past_events = @events.past
+    @future_events = @events - @past_events
   end
 
   private
     def event_params
-      params.require(:event).permit(:description)
+      params.require(:event).permit(:description, :id)
     end
 end
