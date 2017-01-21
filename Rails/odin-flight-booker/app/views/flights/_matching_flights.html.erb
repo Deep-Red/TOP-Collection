@@ -1,0 +1,6 @@
+<% unless @matching_flights.nil? %>
+<h3><%= pluralize(@matching_flights.count, "match") %>: </h3>
+  <ol class="matching_flights">
+    <%= render @matching_flights %>
+  </ol>
+<% end %>

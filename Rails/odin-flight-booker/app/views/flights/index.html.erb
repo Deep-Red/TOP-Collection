@@ -1,19 +1,28 @@
 <h1>Flights#index</h1>
 <p>Find me in app/views/flights/index.html.erb</p>
 
-<%= form_for @booking, html: {method: :get}, remote: true do |f| %>
+<%= form_for @flight, html: {method: :get}, remote: true do |f| %>
   <%= f.label(:origin) %>
   <%= f.select(:origin, @airports) %>
 
   <%= f.label(:destination) %>
   <%= f.select(:destination, @airports) %>
 
-  <%= f.label(:passengers) %>
-  <%= f.select(:passengers, (1..4)) %>
+  <label>Passengers</lablel>
+  <select id="passengers">
+    <option value = "1">1</option>
+    <option value = "2">2</option>
+    <option value = "3">3</option>
+    <option value = "4">4</option>
+  </select>
 
   <%= f.label(:date) %>
-  <%= f.select(:date, @dates) %>
+  <%= f.select(:start, @dates) %>
 
   <%= f.submit "Search", class: "btn" %>
 
 <% end %>
+
+<div id="matching_flights">
+  <%= render 'matching_flights' %>
+</div>

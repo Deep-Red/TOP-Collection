@@ -10,17 +10,21 @@ airport = Airport.create([{code: 'SFO'}, {code: 'JFK'}, {code: 'RDU'}, {code: 'L
 y = 1
 x = airport.length
 airports = Airport.order(:created_at).take(x)
-44.times do
+30.times do
   y += 1
   airports.each do |o|
     airports.each do |d|
       if o != d
-        flight = Flight.new
-        flight.origin_id = o.id
-        flight.destination_id = d.id
-        flight.start = (Time.now + (y * 86400))
-        flight.duration = "#{rand(4) + 1} Hours"
-        flight.save
+        c = 1
+        rand(5).times do
+          c += 2000
+          flight = Flight.new
+          flight.origin_id = o.id
+          flight.destination_id = d.id
+          flight.start = (Time.now + (y * 86400) + c)
+          flight.duration = "#{rand(4) + 1} Hours"
+          flight.save
+        end
       end
     end
   end
