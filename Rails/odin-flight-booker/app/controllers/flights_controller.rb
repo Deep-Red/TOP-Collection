@@ -5,14 +5,15 @@ class FlightsController < ApplicationController
     @passengers ||= 0
     @flights ||= Flight.all
     @airports ||= Airport.order(:code).all.map{ |a| [a.code, a.id] }
-    @dates ||= Flight.order(:start).all.map{ |f| [f.flight_date_formatted, f.start] }
+    @old_dates ||= Flight.order(:start).all.map{ |f| [f.flight_date_formatted, f.start] }
+    @dates = @old_dates.map(&:first).uniq
 
     if params[:flight].present? # flight_params[:flight].nil?
 
       @passengers = flight_params[:passengers]
     #  @search = params[:flight][:origin, :destination, :date]
 
-      selected_date = Date.parse(params[:flight][:start])
+      selected_date = Date.strptime(params[:flight][:start], "%m/%d/%Y")
 
       @matching_flights = Flight.where(:origin => params[:flight][:origin], :destination => params[:flight][:destination], :start => selected_date.beginning_of_day..selected_date.end_of_day)
 
