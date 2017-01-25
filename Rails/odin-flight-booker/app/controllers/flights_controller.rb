@@ -7,6 +7,7 @@ class FlightsController < ApplicationController
     @airports ||= Airport.order(:code).all.map{ |a| [a.code, a.id] }
     @old_dates ||= Flight.order(:start).all.map{ |f| [f.flight_date_formatted, f.start] }
     @dates = @old_dates.map(&:first).uniq
+    @matching_flight = Flight.new
 
     if params[:flight].present? # flight_params[:flight].nil?
 

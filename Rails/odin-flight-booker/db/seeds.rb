@@ -5,7 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-airport = Airport.create([{code: 'SFO'}, {code: 'JFK'}, {code: 'RDU'}, {code: 'LYH'}])
+airport = Airport.create([{code: 'SFO'}, {code: 'JFK'}, {code: 'RDU'}, {code: 'LYH'}, {code: 'LHR'}])
 
 y = 1
 x = airport.length
@@ -16,12 +16,12 @@ airports = Airport.order(:created_at).take(x)
     airports.each do |d|
       if o != d
         c = 1
-        rand(5).times do
-          c += 2000
+        (rand(5)+1).times do
+          c += 2586
           flight = Flight.new
           flight.origin_id = o.id
           flight.destination_id = d.id
-          flight.start = (Time.now + (y * 86400) + c)
+          flight.start = (Time.now + (y * 86868) + c)
           flight.duration = "#{rand(4) + 1} Hours"
           flight.save
         end

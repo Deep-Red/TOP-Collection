@@ -9,7 +9,7 @@
   <%= f.select(:destination, @airports) %>
 
   <label>Passengers</lablel>
-  <select id="passengers">
+  <select name="flight[passengers]" id="flight_passengers">
     <option value = "1">1</option>
     <option value = "2">2</option>
     <option value = "3">3</option>
@@ -19,7 +19,7 @@
   <%= f.label(:date) %>
   <%= f.select(:start, @dates) %>
 
-  <%= f.submit "Search", class: "btn" %>
+  <%= f.submit "Show Flights", class: "btn" %>
 
 <% end %>
 

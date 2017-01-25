@@ -1,6 +1,23 @@
 <% unless @matching_flights.nil? %>
 <h3><%= pluralize(@matching_flights.count, "match") %>: </h3>
-  <ol class="matching_flights">
+
+<%= form_tag 'new_booking_path', method: :get  do %>
+<table class="table">
+    <tr>
+      <th></th>
+      <th>Flight ID</th>
+      <th>Departure</th>
+      <th>Duration</th>
+      <th>Passengers</th>
+      <th>Origin</th>
+      <th>Destination</th>
+    </tr>
+  <tbody>
     <%= render @matching_flights %>
-  </ol>
+  </tbody>
+</table>
+    <%= hidden_field_tag :passenger_count, params[:flight][:passengers] %>
+    <%= submit_tag("Select", class: "btn", id:'order-btn') %>
+  <% end %>
+
 <% end %>

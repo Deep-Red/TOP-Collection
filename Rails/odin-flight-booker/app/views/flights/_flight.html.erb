@@ -1,3 +1,11 @@
-<li id="flight-<%= flight.id %>">
-  <%= " #{flight.origin.code} => #{flight.destination.code} on #{flight.flight_date_formatted}" %>
+<li style="list-style: none;" id="flight-<%= flight.id %>">
+  <tr>
+    <td><%= radio_button_tag(:flight_selected, flight.id, checked: false) %></td>
+    <td><%= flight.id %></td>
+    <td><%= flight.start.strftime("%H:%m") %></td>
+    <td><%= flight.duration %></td>
+    <td><%= @passengers %></td>
+    <td><%= flight.origin.code %></td>
+    <td><%= flight.destination.code %></td>
+  </tr>
 </li>
