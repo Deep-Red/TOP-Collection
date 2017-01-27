@@ -1,0 +1,18 @@
+<h1>Confirm your Booking</h1>
+
+<div id="flight">
+  <table class="table">
+    <tr>
+      <th>Date</th>
+      <th>Origin</th>
+      <th>Destination</th>
+      <th>Flight ID</th>
+    </tr>
+    <tr>
+      <td><%= @flight.flight_date_formatted %></td>
+      <td><%= @flight.origin.code %></td>
+      <td><%= @flight.destination.code %></td>
+      <td><%= @flight.id %></td>
+    </tr>
+  </table>
+</div>
