@@ -1,5 +1,6 @@
 <h1>Confirm your Booking</h1>
 
+<%= form_for(@booking, :html => {class: 'form-inline'}) do |f| %>
 <div id="flight">
   <table class="table">
     <tr>
@@ -16,3 +17,32 @@
     </tr>
   </table>
 </div>
+
+<div class="form">
+  <%= form_tag bookings_path do %>
+  <% count = 0 %>
+    <%= hidden_field_tag(:flight, params[:flight]) %>
+    <%= f.hidden_field :flight, value: params[:flight] %>
+    <% @passengers.each do |passenger| %>
+    <%= fields_for 'passengers[]', passenger do |p| %>
+
+      <div class="field">
+        <%= p.label "Passenger #{count += 1}" %>
+      </div>
+      <div class="field">
+        <%= p.label :name %><br />
+        <%= p.text_field :name %>
+      </div>
+      <div class="field">
+        <%= p.label :email %><br />
+        <%= p.text_field :email %>
+      </div>
+
+    <% end %>
+    <% end %>
+    <div class="actions">
+      <%= submit_tag %>
+    </div>
+  <% end %>
+</div>
+<% end %>
