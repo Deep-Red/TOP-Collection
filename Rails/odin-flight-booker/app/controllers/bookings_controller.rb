@@ -16,21 +16,21 @@ class BookingsController < ApplicationController
     @flight = Flight.find_by_id(params[:flight])
     @num_passengers = params[:booking][:passenger_count].to_i
     @count = 0
+    @booking = @flight.bookings.build
     @num_passengers.times do
         @count += 1
-        passenger = @flight.passengers.build
+        passenger = @booking.passengers.build
         passenger.name = params[:passengers]["#{@count}"][:name]
         passenger.email = params[:passengers]["#{@count}"][:email]
         passenger.save
-        booking = passenger.bookings.build
-        booking.flight = @flight
-        booking.save
     end
-    redirect_to show_booking_path
+    @booking.save
+    redirect_to @booking
   end
 
   def show
-    @flight = Flight.find_by_id(params[:flight])
+    @booking = Booking.find_by_id(params[:id])
+    @passengers = @booking.passengers.all
   end
 
   private
