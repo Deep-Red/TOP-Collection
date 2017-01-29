@@ -23,11 +23,13 @@
   <% count = 0 %>
     <%= hidden_field_tag(:flight, params[:flight]) %>
     <%= f.hidden_field :flight, value: params[:flight] %>
-    <% @passengers.each do |passenger| %>
-    <%= fields_for 'passengers[]', passenger do |p| %>
-
+    <%= f.hidden_field :passenger_count, value: params[:passenger_count] %>
+    <% @group.each do |passenger| %>
+    <% count += 1 %>
+<!-- The index: in the following line is what finally allowed data for multiple passengers. -->
+    <%= fields_for :passengers, passenger, index: count do |p| %>
       <div class="field">
-        <%= p.label "Passenger #{count += 1}" %>
+        <%= p.label "Passenger #{count}" %>
       </div>
       <div class="field">
         <%= p.label :name %><br />

@@ -6,26 +6,31 @@ class BookingsController < ApplicationController
     @booking ||= @flight.bookings.build
     @num_passengers = params[:passenger_count].to_i
 
-    @passengers = []
+    @group = []
     @num_passengers.times do |i|
-      @passengers << Passenger.new
+      @group << Passenger.new
     end
   end
 
   def create
-    if params.has_key?("passenger")
-      Passenger.create(passenger_params(params[:passenger]))
-    else
-      params["passengers"].each do |passenger|
-        if passenger["name"] != "" || passenger["email"] != ""
-          Passenger.create(name: params[:passengers][:name], email: params[:passengers][:email])
-        end
-      end
+    @flight = Flight.find_by_id(params[:flight])
+    @num_passengers = params[:booking][:passenger_count].to_i
+    @count = 0
+    @num_passengers.times do
+        @count += 1
+        passenger = @flight.passengers.build
+        passenger.name = params[:passengers]["#{@count}"][:name]
+        passenger.email = params[:passengers]["#{@count}"][:email]
+        passenger.save
+        booking = passenger.bookings.build
+        booking.flight = @flight
+        booking.save
     end
-    @booking = Booking.new
+    redirect_to show_booking_path
   end
 
   def show
+    @flight = Flight.find_by_id(params[:flight])
   end
 
   private
