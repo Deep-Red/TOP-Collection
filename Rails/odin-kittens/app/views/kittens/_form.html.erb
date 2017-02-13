@@ -1,0 +1,29 @@
+<%= form_for(kitten) do |f| %>
+  <% if kitten.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(kitten.errors.count, "error") %> prohibited this kitten from being saved:</h2>
+
+      <ul>
+      <% kitten.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+
+  <%= f.label :age %>
+  <%= f.number_field :age %>
+
+  <%= f.label :cuteness %>
+  <%= f.select :cuteness, 1..10 %>
+
+  <%= f.label :softness %>
+  <%= f.select :softness, 1..10 %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
