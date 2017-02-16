@@ -1,0 +1,9 @@
+<div class="flickr">
+  <ul>
+    <% photos.each do |row| %>
+    <li>
+      <%= link_to(image_tag(make_flickr_url(row, 's')), make_flickr_url(row, 'h')) %>
+    </li>
+  <% end %>
+</ul>
+</div>
