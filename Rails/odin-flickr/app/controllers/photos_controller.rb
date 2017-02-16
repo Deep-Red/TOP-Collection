@@ -23,7 +23,7 @@ class PhotosController < ApplicationController
 
     respond_to do |format|
       if @photo.save
-        format.html { redirect to @photo, notice: 'Photo was successfully created.' }
+        format.html { redirect_to @photo, notice: 'Photo was successfully created.' }
         format.json { render json: @photo.errors, status: :unprocessable_entity }
       end
     end
