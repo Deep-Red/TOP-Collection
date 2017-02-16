@@ -1,0 +1,3 @@
+key: ENV["FLICKR_KEY"]
+secret: ENV["FLICKR_SECRET"]
+token_cache: "token_cache.yml"
