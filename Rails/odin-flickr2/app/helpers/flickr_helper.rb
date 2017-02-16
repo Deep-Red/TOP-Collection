@@ -12,9 +12,7 @@ module FlickrHelper
 
   def render_flickr_sidebar_widget(user_id, photo_count = 12, columns = 2)
     begin
-      photos = user_photos(user_id, photo_count)
-      puts "BBBBBBBBBBBBBBBBBB"
-      puts photos.count
+      photos = user_photos(user_id, photo_count).to_a.in_groups_of(2)
       render :partial => '/flickr/sidebar_widget', :locals => { :photos => photos }
     rescue Exception
       render :partial => '/flickr/unavailable'

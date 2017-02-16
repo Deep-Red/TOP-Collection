@@ -1,0 +1,6 @@
+<h1>Home</h1>
+
+<%= form_tag root_path, method: :get do %>
+  <%= text_field_tag :flickr_id, "147716576@N06", placeholder: "Flickr ID" %>
+  <%= submit_tag "Load Photos" %>
+<% end %>
