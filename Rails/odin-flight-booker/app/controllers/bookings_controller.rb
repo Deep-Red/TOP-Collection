@@ -24,8 +24,13 @@ class BookingsController < ApplicationController
         passenger.email = params[:passengers]["#{@count}"][:email]
         passenger.save
     end
-    @booking.save
-    redirect_to @booking
+    if @booking.save
+      book = @booking
+      book.passengers.each do |pass|
+        PassengerMailer.booking_confirmation_email(pass, book).deliver_now
+      end
+      redirect_to @booking
+    end
   end
 
   def show
