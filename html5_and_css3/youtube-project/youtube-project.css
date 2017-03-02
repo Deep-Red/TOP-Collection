@@ -1,0 +1,27 @@
+.navbar {
+  background-color: #f00;
+  height: 3em;
+}
+
+.main-video {
+  background-color: #0f0;
+  margin: 40px;
+  height: 400px;
+  width: 600px;
+  float: left;
+}
+
+.video-data {
+  background-color: #0ff;
+  height: 3em;
+  width: 600px;
+  margin: 5px;
+}
+
+.sidebar {
+  background-color: #00f;
+  margin: 40px;
+  width: 300px;
+  height: 780px;
+  float: right;
+}
