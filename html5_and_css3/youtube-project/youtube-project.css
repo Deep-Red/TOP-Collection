@@ -14,24 +14,33 @@
 }
 
 .main-video {
-  background-color: #0f0;
+  /*background-color: #0f0;*/
   width: 100%;
   float: left;
-  padding-bottom: 75%
+  /*padding-bottom: 75%*/
 }
 
 .video-data {
   background-color: #0ff;
   width: 100%;
   float: left;
-  padding-bottom: 20%;
+  /*padding-bottom: 20%;*/
   margin-top: 5%;
+}
+#view-count {
+  float: right;
 }
 
 .sidebar {
-  background-color: #00f;
+  /*background-color: #00f;*/
   margin: 5%;
   width: 25%;
   float: right;
-  padding-bottom: 80vh;
+  /*padding-bottom: 80vh;*/
+}
+
+.preview-thumbnail {
+  width: 100%;
+  display: block;
+  margin-bottom: 40px;
 }
