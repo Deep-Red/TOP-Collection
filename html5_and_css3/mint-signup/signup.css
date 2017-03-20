@@ -1,3 +1,15 @@
+body {
+background-color: #f7f7f9;
+}
 table tr td:last-child {
   border-left: 1px solid #aeafb5;
+}
+aside {
+  background-color: #e8e8e8;
+}
+#form-title {
+  font-size: 1.5em;
+}
+#aside-title {
+  font-size: 1.3em;
 }
