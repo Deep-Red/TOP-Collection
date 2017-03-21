@@ -1,6 +1,10 @@
 body {
 background-color: #f7f7f9;
 }
+a {
+  color: #555;
+  font-size: .7em;
+}
 table tr td:last-child {
   border-left: 1px solid #aeafb5;
 }
@@ -12,4 +16,14 @@ aside {
 }
 #aside-title {
   font-size: 1.3em;
+}
+nav table tr td {
+  border-left: 1px solid #aeafb5;
+}
+nav table tr td:first-child {
+  border-left: 0;
+}
+footer {
+  margin: auto;
+  width: 80%;
 }
