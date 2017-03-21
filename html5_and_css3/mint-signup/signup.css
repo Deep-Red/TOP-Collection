@@ -3,9 +3,21 @@ background-color: #f7f7f9;
 margin: auto;
 width: 80%;
 }
-a {
+#page-content {
+  background-color: #fff;
+  margin: auto;
+  width: 80%;
+}
+table {
+  margin: auto;
+}
+a:link {
   color: #555;
   font-size: .7em;
+  text-decoration: none;
+}
+body table tr td {
+  padding: 5%;
 }
 table tr td:last-child {
   border-left: 1px solid #aeafb5;
@@ -16,6 +28,11 @@ aside {
   padding-top: 100%;
   padding-bottom: 100%;
   margin: 7%;
+}
+aside a:link {
+  color: #000;
+  font-size: 1em;
+  text-decoration: underline;
 }
 #form-title {
   font-size: 1.5em;
