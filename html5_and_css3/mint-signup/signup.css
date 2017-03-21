@@ -1,5 +1,7 @@
 body {
 background-color: #f7f7f9;
+margin: auto;
+width: 80%;
 }
 a {
   color: #555;
@@ -10,12 +12,22 @@ table tr td:last-child {
 }
 aside {
   background-color: #e8e8e8;
+  height: 100%;
+  padding-top: 100%;
+  padding-bottom: 100%;
+  margin: 7%;
 }
 #form-title {
   font-size: 1.5em;
 }
 #aside-title {
   font-size: 1.3em;
+}
+.disclaimer {
+  font-size: .7em;
+  color: #555;
+  padding-top: 0;
+  margin-top: 0;
 }
 nav table tr td {
   border-left: 1px solid #aeafb5;
