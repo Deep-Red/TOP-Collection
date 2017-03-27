@@ -118,7 +118,7 @@ footer {
   width: 103px;
   padding: 10px 0 10px 0;
   background-color: #aaa;
-  background: linear-gradient(to bottom, #999, #555);
+  background: linear-gradient(to bottom, #999, #aaa, #555, #999);
   display: inline-block;
   margin: -2px;
   vertical-align: top;
