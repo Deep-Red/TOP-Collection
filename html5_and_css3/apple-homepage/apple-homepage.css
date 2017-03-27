@@ -46,29 +46,39 @@ table {
   border-spacing: 0;
 }
 
+
+
 .nav {
-  background-color: #0f0;
+  font-size: .7em;
+}
+a {
+  text-decoration: none;
+  color: #07f;
 }
 .container {
   width: 80%;
-  max-width: 1450px;
-  height: 80%;
+  max-width: 1440px;
   margin: auto;
-  background-color: #f00;
   text-align: center;
+}
+.main {
+  background: url(assets/images/your_verse_hero.jpg) 50% 100% no-repeat;
+  background-size: 1440px 1315px;
+  height: 1315px;
+  margin-top: -700px;
 }
 .row {
   width: 100%;
   margin: auto;
 }
 .col-1-4 {
-  background-color: #00f;
   width: 24.8%;
   display: inline-block;
   margin: .1%;
 }
 .lead-head {
   font-size: 4em;
+  padding-top: 900px;
 }
 .lead-text {
   font-size: 2.5em;
@@ -76,8 +86,17 @@ table {
 .lead-link {
   font-size: 2em;
 }
+.lead {
+  color: white;
+}
 img {
   width: 100%;
+}
+footer {
+  padding-top: 10px;
+  width: 80%;
+  max-width: 1440px;
+  margin: auto;
 }
 .footer-info {
   display: inline-block;
@@ -87,9 +106,36 @@ img {
   display: inline-block;
   float: right;
 }
-table td {
-  border-right: 1px solid #888; 
+.top-nav {
+  margin: auto;
+  text-align: center;
+  font-size: 1em;
+  padding-top: 15px;
 }
-table:last-child {
+
+.nav li {
+  color: white;
+  width: 103px;
+  padding: 10px 0 10px 0;
+  background-color: #aaa;
+  background: linear-gradient(to bottom, #999, #555);
+  display: inline-block;
+  margin: -2px;
+  vertical-align: top;
+  border-right: 1px solid #222;
+}
+.nav li:first-child {
+  border-radius: 5px 0 0 5px;
+}
+.nav li:last-child {
+  border: none;
+  border-radius: 0 5px 5px 0;
+}
+
+table td {
+  border-right: 1px solid #888;
+  padding: 0 5px 5px 5px;
+}
+table td:last-child {
   border: none;
 }
