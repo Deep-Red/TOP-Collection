@@ -1,0 +1,42 @@
+div {
+  background-color: red;
+  border: 1px solid #0ff;
+}
+.article-container {
+  width: 75%;
+  float: left;
+  margin-left: -10px;
+  height: 1900px;
+  background-color: #eee;
+}
+.sidebar {
+  width: 25%;
+  float: right;
+  height: 1000px;
+  background-color: #aaa;
+}
+.site-nav {
+  float: left;
+  width: 10%;
+  height: 500px;
+  background-color: #bbb;
+}
+.tag-nav {
+  float: left;
+  width: 15%;
+  height: 1500px;
+  background-color: #ccc;
+}
+
+.ad {
+  float: right;
+  width: 70%;
+  height: 350px;
+  background-color: #888;
+}
+.article {
+  float: right;
+  width: 70%;
+  height: 700px;
+  background-color: #999;
+}
