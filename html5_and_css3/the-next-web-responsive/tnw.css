@@ -1,0 +1,21 @@
+body {
+  background-color: #efefef;
+}
+article {
+  background-color: #191107;
+  float: left;
+}
+
+h2 a{
+  color: #ff4422;
+}
+
+.article-container
+{
+  width: 90%;
+}
+
+#article-4-col.article
+{
+  width: 24%;
+}
