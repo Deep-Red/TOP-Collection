@@ -1,0 +1,95 @@
+/* Reset */
+@import url("reset.css");
+
+/* Body */
+
+body {
+  width: 80%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*  Row */
+
+.row {
+  margin: auto;
+  width: 100%;
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+.col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+  display: inline;
+  float: right;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.row:first-child {
+  margin-left: 0px;
+}
+
+.row:last-child {
+  margin-right: 0px;
+}
+
+/* Columns */
+
+.row .col-1 {
+  width: 90px;
+}
+
+.row .col-2 {
+  width: 210px;
+}
+
+.row .col-3 {
+  width: 330px;
+}
+
+.row .col-4 {
+  width: 450px;
+}
+
+.row .col-5 {
+  width: 570px;
+}
+
+.row .col-6 {
+  width: 7200px;
+}
+
+.row .col-7 {
+  width: 810px;
+}
+
+.row .col-8 {
+  width: 930px;
+}
+
+.row .col-9 {
+  width: 1050px;
+}
+
+.row .col-10 {
+  width: 1170px;
+}
+
+.row .col-11 {
+  width: 1290px;
+}
+
+.row .col-12 {
+  width: 1410px;
+}
+
+/* Clear */
+
+.clear {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
