@@ -1,0 +1,28 @@
+.wrapper{
+	width: 550px;
+	height: 550px;
+	border-style: groove;
+	border-color: 1px #AAAA00;
+}
+/*
+.gridSquare{
+	border-style: groove;
+	border-color: 1px #AAAA00;
+	background-color: #CCCCCC;
+}
+*/
+/*
+.row{
+	width: 85%;
+	height: 50px;
+	background-color: #FF0000;
+	margin: 2px;
+}
+*/
+.cell{
+	background-color: rgb(0,0,0);
+	width: 55px;
+	height: 55px;
+	margin: 1px;
+	float: left;
+}
