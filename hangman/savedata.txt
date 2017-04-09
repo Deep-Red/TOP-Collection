@@ -1,0 +1,2 @@
+word, knowledge, incorrect_guesses 
+ ["f", "i", "c", "h", "e"], ["_", "i", "_", "_", "e"], ["a", "t", "n", "s"]
