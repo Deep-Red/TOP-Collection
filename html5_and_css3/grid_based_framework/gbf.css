@@ -4,10 +4,19 @@
 /* Body */
 
 body {
-  width: 80%;
-  max-width: 1440px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Nav */
+
+.nav {
+  background: #191107;
+  border-bottom: 1px solid #000000;
+}
+
+.top-nav {
+  height: 50px;
 }
 
 /*  Row */
@@ -92,4 +101,13 @@ body {
   visibility: hidden;
   width: 0;
   height: 0;
+}
+
+/* Footer */
+
+footer {
+  padding-top: 10px;
+  width: 100%;
+  max-width: 1440px;
+  margin: auto;
 }

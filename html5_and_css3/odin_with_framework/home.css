@@ -1,0 +1,43 @@
+@import url('../grid_based_framework/gbf.css');
+
+nav .logo {
+  display: block;
+  max-height: 90%;
+  float: left;
+}
+
+#odin-logo {
+  max-height: 40px;
+}
+
+#logo {
+  font-variant: small-caps;
+  color: #eeeeee;
+  font-size: 35px;
+  text-decoration: none;
+  padding-left: 30%;
+}
+
+.menu table {
+  color: #6699ff;
+  margin-right: 10%;
+  margin-top: 15px;
+  float: right;
+}
+
+.menu table td {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.menu table td:last-child {
+  border-left: 1px solid #eeeeee;
+}
+
+.btn {
+  color: #ffffff;
+  background-color: #5bb75b;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+  border-radius: 20px;
+  font-size: 1.8rem;
+}
