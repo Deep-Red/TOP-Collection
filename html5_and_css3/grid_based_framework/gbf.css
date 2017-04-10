@@ -34,6 +34,20 @@ body {
   margin-left: 10px;
 }
 
+.push_1, .pull_1,
+.push_2, .pull_2,
+.push_3, .pull_3,
+.push_4, .pull_4,
+.push_5, .pull_5,
+.push_6, .pull_6,
+.push_7, .pull_7,
+.push_8, .pull_8,
+.push_9, .pull_9,
+.push_10, .pull_10,
+.push_11, .pull_11 {
+  position: relative;
+}
+
 .row:first-child {
   margin-left: 0px;
 }
@@ -92,6 +106,52 @@ body {
   width: 1410px;
 }
 
+/* Move rows */
+
+.row .push_1 {
+  right: 120px;
+}
+
+.row .push_2 {
+  right: 240px;
+}
+
+.row .push_3 {
+  right: 360px;
+}
+
+.row .push_4 {
+  right: 470px;
+}
+
+.row .push_5 {
+  right: 600px;
+}
+
+.row .push_6 {
+  right: 720px;
+}
+
+.row .push_7 {
+  right: 840px;
+}
+
+.row .push_8 {
+  right: 960px;
+}
+
+.row .push_9 {
+  right: 1080px;
+}
+
+.row .push_10 {
+  right: 1200px;
+}
+
+.row .push_11 {
+  right: 1440px;
+}
+
 /* Clear */
 
 .clear {
@@ -106,8 +166,8 @@ body {
 /* Footer */
 
 footer {
+  background-color: #191107;
   padding-top: 10px;
   width: 100%;
-  max-width: 1440px;
   margin: auto;
 }
