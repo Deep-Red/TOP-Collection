@@ -79,7 +79,7 @@ body {
 }
 
 .row .col-6 {
-  width: 7200px;
+  width: 720px;
 }
 
 .row .col-7 {
@@ -150,6 +150,50 @@ body {
 
 .row .push_11 {
   right: 1440px;
+}
+
+.row .pull_1 {
+  right: -120px;
+}
+
+.row .pull_2 {
+  right: -240px;
+}
+
+.row .pull_3 {
+  right: -360px;
+}
+
+.row .pull_4 {
+  right: -470px;
+}
+
+.row .pull_5 {
+  right: -600px;
+}
+
+.row .pull_6 {
+  right: -720px;
+}
+
+.row .pull_7 {
+  right: -840px;
+}
+
+.row .pull_8 {
+  right: -960px;
+}
+
+.row .pull_9 {
+  right: -1080px;
+}
+
+.row .pull_10 {
+  right: -1200px;
+}
+
+.row .pull_11 {
+  right: -1440px;
 }
 
 /* Clear */

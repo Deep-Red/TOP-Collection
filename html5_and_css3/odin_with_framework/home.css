@@ -24,6 +24,11 @@ h4 {
   font-size: 1.8rem;
 }
 
+.social {
+  height: 75px;
+  border-bottom: 1px solid #cccccc;
+}
+
 .top-row {
   background-image: url("images/jaromir-kavan-233704.jpg");
   background-color: #cccccc;
@@ -48,8 +53,41 @@ h4 {
   background-image: url("images/www.theodinproject.com/assets/subtle_dark_vertical-21737627e7ce510f7c824b1b94a80fd2ff5ebcd614309b227752493ec92c7b5f.png");
 }
 
+.light-row {
+  background-color: #ffffff;
+}
+
 .dark-row h4 {
   color: #efefef;
+}
+
+#lr1 {
+  display: block;
+  height: 600px;
+}
+
+#dr1 {
+  display: block;
+  height: 700px;
+}
+
+#dr1 img {
+  float: left;
+  height: 75px;
+  padding-bottom: 20px;
+  padding-right: 30px;
+}
+
+#dr1 h4 {
+  padding-top: 25px;
+}
+
+#dr1 li:after {
+  float: none;
+}
+
+#lr3 {
+  text-align: center;
 }
 
 #odin-logo {
