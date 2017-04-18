@@ -2,6 +2,12 @@ body {
   background-color: #00ffff;
 }
 
+.face {
+  background-color: #121212;
+  float: left;
+  margin: auto;
+}
+
 .row {
   display: block;
   clear: both;
@@ -11,7 +17,34 @@ body {
   background-color: #ff00ff;
   float: left;
   font-size: 4rem;
-  padding: 10px 15px 10px 15px;
+  width: 50px;
+  padding: 10px;
   margin: 5px;
   border-radius: 7px;
+  text-align: center;
+  font-family: sans-serif;
+  box-shadow: 1px 1px 5px #888888;
+}
+
+.btn-number {
+  background-color: #ffffff;
+}
+
+.btn-function {
+  background-color: #faebd7;
+}
+
+.last-row {
+  float: left;
+  margin-top: -105px;
+}
+
+#equals {
+  background-color: #466bb0;
+  padding: 65px 10px 60px 10px;
+  float: right;
+}
+
+#clear-all {
+  background-color: #d12f19;
 }
