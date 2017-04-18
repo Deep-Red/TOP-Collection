@@ -1,9 +1,9 @@
 body {
-  background-color: #00ffff;
+  background-color: #dddddd;
 }
 
 .face {
-  background-color: #121212;
+  background-color: #191107;
   float: left;
   margin: auto;
 }
@@ -22,7 +22,7 @@ body {
   margin: 5px;
   border-radius: 7px;
   text-align: center;
-  font-family: sans-serif;
+  font-family: "Arial Black", "Arial Bold" sans-serif;
   box-shadow: 1px 1px 5px #888888;
 }
 
@@ -47,4 +47,17 @@ body {
 
 #clear-all {
   background-color: #d12f19;
+}
+
+#display {
+  background: #110000;
+  font-family: Orbitron;
+  font-size: 55px;
+  color: #dd0000;
+  text-align: right;
+  height: 60px;
+  max-width: 375px;
+  margin: 10px;
+  border-radius: 2px;
+  border-color: #aa9999;
 }
