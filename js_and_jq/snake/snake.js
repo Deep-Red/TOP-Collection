@@ -68,7 +68,20 @@
     }
   };
 
+  function Snake( config ) {
+    this.head = [config.x, config.y];
+    this.body = [[this.head]];
+    this.direction = config.direction;
+  };
+
+  Snake.prototype = {
+    render: function ( options ) {
+//      Grid.getCellAt(options.body).$el.css('background', 'blue');
+    }
+  }
+
   global.Grid = Grid;
+  global.Snake = Snake;
 }( window ));
 
 (function() {
@@ -81,5 +94,12 @@
       placeholder: ".grid"
     }
   });
-  grid.getCellAt(20, 20).$el.css('background', 'red');
+  var snake = new Snake({
+    x: 20,
+    y: 20,
+    direction: "E"
+  });
+  console.log(snake);
+  console.log(snake.head[0]);
+  grid.getCellAt(snake.head[0], snake.head[1]).$el.css('background', 'blue');
 }());
