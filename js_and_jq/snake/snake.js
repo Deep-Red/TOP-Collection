@@ -30,12 +30,12 @@
       return new Cell(config);
     },
     getCellAt: function( x,y ) {
-      if (!this.grid[y]) {
-        console.warn("No such Y coordinate: %i (grid size is: x[%i], y[%i])", y, this.colsCount, this.rowsCount);
-        return false;
-      }
       if (!this.grid[x]) {
         console.warn("No such X coordinate: %i (grid size is: x[%i], y[%i])", x, this.colsCount, this.rowsCount);
+        return false;
+      }
+      if (!this.grid[y]) {
+        console.warn("No such Y coordinate: %i (grid size is: x[%i], y[%i])", y, this.colsCount, this.rowsCount);
         return false;
       }
       return this.grid[y][x];
@@ -70,7 +70,7 @@
 
   function Snake( config ) {
     this.head = [config.x, config.y];
-    this.body = [[this.head]];
+    this.body = [this.head];
     this.direction = config.direction;
   };
 
@@ -103,46 +103,113 @@
   console.log(snake);
 
 var rendersnake = function(){
-  grid.getCellAt(snake.head[0], snake.head[1]).$el.css('background', 'blue');
-  if (snake.body > 1) {
-    console.log("SNAKEBODY");
-    grid.getCellAt(snake.body[-1][0], snake.body[-1][1]).$el.css('background', 'red');
+  grid.getCellAt(snake.head[0], snake.head[1]).$el.addClass("snakehead");
+  if (snake.body.length > 1) {
+
+    grid.getCellAt(snake.body[0][0], snake.body[0][1]).$el.removeClass("snakehead");
+    grid.getCellAt(snake.body[0][0], snake.body[0][1]).$el.addClass("snakebody");
+    grid.getCellAt(snake.body[snake.body.length-1][0], snake.body[snake.body.length-1][1]).$el.attr('class', 'cell');
+
   };
 };
 
+var score = 0;
+var foodvalue = 10;
+var timer = 1100;
+
+var renderfood = function() {
+
+  jQuery(".food").removeClass("food");
+  $('.foodvalue').remove();
+  var a = (Math.floor(Math.random()*40));
+  var b = (Math.floor(Math.random()*40));
+
+/* implement logic to keep food from appearing in same square as snake
+  if inArray([a, b], snake.body) === -1 {
+    renderfood();
+  };
+*/
+  foodvalue += (10 * snake.body.length);
+  var foodsquare = [a, b];
+  window.foodsquare = foodsquare;
+  grid.getCellAt(a, b).$el.addClass("food");
+  jQuery(".food").append('<p class="foodvalue">'+foodvalue+'</p>');
+}
+
+var eatfood = function() {
+  score += foodvalue;
+  $('#score').replaceWith("<div id=score>"+score+"</div>");
+  snake.body.push(snake.body[snake.body.length-1]);
+  timer *= .75;
+}
+
+var gameover = function(){
+  Playing = false;
+  console.log("Game Over");
+}
+
+var selfcollide = function(){
+  if (this === undefined)
+    return false;
+
+  (this[0] === snake.head[0]) && (this[1] === snake.head[1]);
+}
+
+$('.stats').append("<div id=score>"+score+"</div>");
+
 rendersnake();
-var turn = window.setInterval(function() {
+renderfood();
+var turn = function() {
   if (Playing) {
-    console.log("AAAAA");
+
+    if ((snake.head[0] > 40) || (snake.head[1] > 40) || (snake.head[0] < 0) || (snake.head[1] < 0)) {
+      gameover();
+    };
+
+    if (jQuery(".snakehead").hasClass("snakebody")) {
+      gameover();
+    };
+
+    if ((window.foodsquare[0] === snake.head[0]) && (window.foodsquare[1] === snake.head[1])) {
+      eatfood();
+      renderfood();
+    };
+
     switch (snake.direction) {
       case "E":
-      console.log("move right");
+      var newsegment = jQuery.extend({}, snake.head);
       snake.head[0]++;
+      snake.body.unshift(newsegment);
       rendersnake();
       console.log(snake.head);
       break;
       case "W":
-      console.log("move left");
+      var newsegment = jQuery.extend({}, snake.head);
       snake.head[0]--;
+      snake.body.unshift(newsegment);
       rendersnake();
       break;
       case "S":
-      console.log("move down");
+      var newsegment = jQuery.extend({}, snake.head);
       snake.head[1]--;
+      snake.body.unshift(newsegment);
       rendersnake();
       break;
       case "N":
-      console.log("move up");
+      var newsegment = jQuery.extend({}, snake.head);
       snake.head[1]++;
+      snake.body.unshift(newsegment);
       rendersnake();
       break;
       default:
       console.log("default move switch " + snake);
-
     };
+    snake.body.pop();
   };
-}, 1200);
+  setTimeout(turn, timer);
+};
 
+turn();
 /*
 var turn = window.setTimeout(function() {
   if (Playing) {
