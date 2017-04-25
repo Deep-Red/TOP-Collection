@@ -80,6 +80,7 @@
     }
   }
 
+  global.Playing = false;
   global.Grid = Grid;
   global.Snake = Snake;
 }( window ));
@@ -100,6 +101,79 @@
     direction: "E"
   });
   console.log(snake);
-  console.log(snake.head[0]);
+
+var rendersnake = function(){
   grid.getCellAt(snake.head[0], snake.head[1]).$el.css('background', 'blue');
-}());
+  if (snake.body > 1) {
+    console.log("SNAKEBODY");
+    grid.getCellAt(snake.body[-1][0], snake.body[-1][1]).$el.css('background', 'red');
+  };
+};
+
+rendersnake();
+var turn = window.setInterval(function() {
+  if (Playing) {
+    console.log("AAAAA");
+    switch (snake.direction) {
+      case "E":
+      console.log("move right");
+      snake.head[0]++;
+      rendersnake();
+      console.log(snake.head);
+      break;
+      case "W":
+      console.log("move left");
+      snake.head[0]--;
+      rendersnake();
+      break;
+      case "S":
+      console.log("move down");
+      snake.head[1]--;
+      rendersnake();
+      break;
+      case "N":
+      console.log("move up");
+      snake.head[1]++;
+      rendersnake();
+      break;
+      default:
+      console.log("default move switch " + snake);
+
+    };
+  };
+}, 1200);
+
+/*
+var turn = window.setTimeout(function() {
+  if (Playing) {
+    console.log("HHHHHH");
+  };
+}, 500);
+*/
+
+$(window).keypress(function( event ) {
+  console.log(event.which);
+  switch (event.which) {
+    case 97 || 65:
+      snake.direction = "W";
+      break;
+    case 115 || 83:
+      snake.direction = "S";
+      break;
+    case 119 || 87:
+      snake.direction = "N";
+      break;
+    case 100 || 68:
+      snake.direction = "E";
+      break;
+    case 32:
+      Playing = !Playing;
+      console.log(Playing);
+//      Playing && gameplay();
+      break;
+    default:
+      console.log("Unrecognized Command");
+  }
+})
+
+})();
