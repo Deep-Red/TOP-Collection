@@ -79,20 +79,55 @@ h1 {
   margin-left: 0;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  width: 4520px;
-  height: 100%;
-  top: 0;
+.arrow {
+  font-size: 4rem;
+  position: absolute;
+  top: 15rem;
+  content: "";
+  display: inline-block;
+  width: 4rem;
+  height: 4rem;
+  border-right: 0.8rem solid black;
+  border-top: 0.8rem solid black;
+  margin-right: 0.5rem;
+
+  border-color: #000;
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+         opacity: 0.5;
 }
 
-ul li {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  display: inline;
+#prev-arrow {
+  transform: translateX(2rem) rotate(-135deg);
+  float: left;
+}
+
+#next-arrow {
+  transform: translateX(50rem) rotate(45deg);
+  float: left;
+}
+
+.dots {
+  position: absolute;
+  height: 20px;
+  width: 150px;
+  background-color: "red";
+  float: left;
+  transform: translate(25rem, 29rem);
+}
+
+.dot {
+  margin: 2px;
+  padding: 2px;
+  display: block;
+  float: left;
+  vertical-align: bottom;
+  border: 0.5rem solid red;
+  border-radius: 50%;
+  border-color: #000;
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+         opacity: 0.5;
 }
 
 img {

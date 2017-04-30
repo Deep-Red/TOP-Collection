@@ -40,7 +40,7 @@ var prev = function() {
   $currslide.addClass('previous');
   $currslide.removeClass('active');
 
-  if ($currslide.prev().hasClass('first')) {
+  if ($currslide.prev().hasClass('first') || $currslide.hasClass('first')) {
     $allslides.animate({"margin-left": "+=" + cswidth}, 1200, function() {
       $(this).css('margin-left', (-cswidth * (slidescount-1)))});
     var newslide = $currslide.siblings().filter(':last');
@@ -53,12 +53,12 @@ var prev = function() {
 
 }
 
-$('#next-btn').click(function() {
+$('.next-btn').click(function() {
   console.log("Next Slide");
   next();
 });
 
-$('#prev-btn').click(function() {
+$('.prev-btn').click(function() {
   console.log("Previous Slide");
   prev();
 })
