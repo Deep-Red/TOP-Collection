@@ -73,7 +73,7 @@ h1 {
 }
 
 .slides {
-  width: 100%;
+  width: 20000px;
   max-height: 100%;
   padding: 0;
   margin-left: 0;
@@ -107,7 +107,8 @@ img {
 .slide {
   margin: 0;
   padding: 0;
-  display: inline;
+  display: block;
+  float: left;
 }
 
 .active {

@@ -6,17 +6,21 @@ var slideout = function() {
 
 var next = function() {
 
+  var allslides = $('.slides');
   var oldslide =  $('.previous');
   var currslide = $('.active');
+  var cswidth = currslide.width();
+
   oldslide.removeClass('previous');
   currslide.addClass('previous');
   currslide.removeClass('active');
-  if (currslide.hasClass('last')) {
+  if (currslide.next().hasClass('last')) {
+    allslides.animate({"margin-left": "-=" + cswidth}, function() {
+      $(this).css('margin-left', 0)});
     var newslide = currslide.siblings().filter(':first');
-    $('.slide').animate({"left": "show"}, 600);
   } else {
+    allslides.animate({"margin-left": "-=" + cswidth});
     var newslide = currslide.next();
-    currslide.animate({"left": "toggle" }, 600);
   };
   newslide.addClass('active');
 
