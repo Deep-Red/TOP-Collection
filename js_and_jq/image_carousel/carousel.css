@@ -91,7 +91,7 @@ h1 {
   border-top: 0.8rem solid black;
   margin-right: 0.5rem;
 
-  border-color: #000;
+  border-color: #FFF;
     filter: alpha(opacity=50);
     -moz-opacity: 0.5;
          opacity: 0.5;
@@ -124,10 +124,14 @@ h1 {
   vertical-align: bottom;
   border: 0.5rem solid red;
   border-radius: 50%;
-  border-color: #000;
+  border-color: #FFF;
     filter: alpha(opacity=50);
     -moz-opacity: 0.5;
          opacity: 0.5;
+}
+
+.active-dot {
+	border-color: #f00;
 }
 
 img {
