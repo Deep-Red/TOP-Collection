@@ -1,6 +1,6 @@
 class Board
 
-WINS = [[0,1,2],[3,4,5,],[6,7,8],[0,3,6],[2,5,8],[1,4,7],[0,4,8],[2,4,6]]
+WINS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[2,5,8],[1,4,7],[0,4,8],[2,4,6]]
 
 def initialize()
 	@gamestate = Array.new(9, " ")
@@ -29,7 +29,7 @@ def show_board_map()
 end
 
 def winner
-	
+
 end
 def mark(player, choice)
 	piece = player == 1 ? "X" : "O"
@@ -49,11 +49,11 @@ def game_over_check(player, turn, choice)
 			return true
 		end
 		}
-	then 
+	then
 		return true
 	elsif turn == 9
 		return true
-	else 
+	else
 		return false
 	end
 end
@@ -67,7 +67,7 @@ def play(turn)
 	turn += 1
 	player = (turn % 2) == 1 ? 1 : 2
 
-	puts "Turn #{turn}:" 
+	puts "Turn #{turn}:"
 	puts "It is player #{player}'s turn!"
 
 	show_gamestate
