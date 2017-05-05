@@ -55,7 +55,7 @@ table {
   margin-top: 5%;
   width: 50rem;
   height: 50rem;
-  border: 1px solid #dddddd;
+  border: 5px solid #966f33;
   background-color: #65836a;
 }
 
@@ -78,12 +78,12 @@ table {
   width: 33%;
   height: 100%;
   float: left;
-  font: sans-serif;
+  font-family: 'sans-serif';
   font-size: 18rem;
   color: #fff;
-    filter: alpha(opacity=50);
-    -moz-opacity: 0.5;
-         opacity: 0.5;
+    filter: alpha(opacity=75);
+    -moz-opacity: 0.75;
+         opacity: 0.75;
   text-align: center;
   vertical-align: middle;
 }
@@ -95,4 +95,11 @@ p {
 .square-1 {
   border-left: 4px solid #cbe9c0;
   border-right: 4px solid #cbe9c0;
+}
+
+.winning-square {
+  color: #ffff99;
+    filter: alpha(opacity=75);
+    -moz-opacity: 0.75;
+         opacity: 0.75;
 }
