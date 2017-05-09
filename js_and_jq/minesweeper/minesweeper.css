@@ -49,8 +49,15 @@ table {
 
 /* Custom css */
 
-#form {
+.container {
+	float: none;
+  width: 243px;
+  height: 275px;
+  margin: auto;
+}
 
+#form {
+	display: none;
 }
 
 .forminput {
@@ -58,12 +65,20 @@ table {
   padding: 30px;
 }
 
+.timer {
+	position: relative;
+	float: none;
+	width: 243px;
+	margin: auto;
+	border: 1px solid #000000;
+}
+
 #minefield{
+	position: relative;
   float: none;
   width: 243px;
   height: 243px;
   margin: auto;
-  margin-top: 90px;
   border: 1px solid #000000;
 }
 .row {

@@ -18,7 +18,7 @@ var Board = function(rows, cols, mines){
   }
   for (var j = 0; j < rows; j++) {
     for(var k = 0; k < cols; k++) {
-      $('#row-'+j).append("<div class='cell' id='cell-"+j+k+"'></div>");
+      $('#row-'+j).append("<div class='cell' id='cell-"+j+"-"+k+"'></div>");
       cells[j].push(new Cell(false, false, j, k));
     }
   }
@@ -30,47 +30,47 @@ var setMines = function(count) {
     r = Math.floor(Math.random() * height);
     c = Math.floor(Math.random() * width);
     cells[r][c].mined = true;
-//    console.log(r+""+c);
+//    console.log(r+"-"+c);
 
-    $('#cell-'+r+""+c).addClass('mined');
+    $('#cell-'+r+"-"+c).addClass('mined');
     if (c < 8) {
       cells[r][(c+1)].touching++;
-//      $('#cell-'+(r)+""+(c+1)).addClass('flagged');
+//      $('#cell-'+(r)+"-"+(c+1)).addClass('flagged');
 
       if (r < 8) {
         cells[(r+1)][(c+1)].touching++;
-//        $('#cell-'+(r+1)+""+(c+1)).addClass('flagged');
+//        $('#cell-'+(r+1)+"-"+(c+1)).addClass('flagged');
 
       }
       if (r > 0) {
         cells[(r-1)][(c+1)].touching++;
-//        $('#cell-'+(r-1)+""+(c+1)).addClass('flagged');
+//        $('#cell-'+(r-1)+"-"+(c+1)).addClass('flagged');
 
       }
     }
     if (c > 0) {
       cells[r][(c-1)].touching++;
-//      $('#cell-'+(r)+""+(c-1)).addClass('flagged');
+//      $('#cell-'+(r)+"-"+(c-1)).addClass('flagged');
 
       if (r < 8) {
         cells[r+1][(c-1)].touching++;
-//        $('#cell-'+(r+1)+""+(c-1)).addClass('flagged');
+//        $('#cell-'+(r+1)+"-"+(c-1)).addClass('flagged');
 
       }
       if (r > 0) {
         cells[(r-1)][(c-1)].touching++;
-//        $('#cell-'+(r-1)+""+(c-1)).addClass('flagged');
+//        $('#cell-'+(r-1)+"-"+(c-1)).addClass('flagged');
 
       }
     }
     if (r < 8) {
       cells[r+1][(c)].touching++;
-//      $('#cell-'+(r+1)+""+(c)).addClass('flagged');
+//      $('#cell-'+(r+1)+"-"+(c)).addClass('flagged');
 
     }
     if (r > 0) {
       cells[(r-1)][c].touching++;
-//      $('#cell-'+(r-1)+""+(c)).addClass('flagged');
+//      $('#cell-'+(r-1)+"-"+(c)).addClass('flagged');
 
     }
 
@@ -78,8 +78,8 @@ var setMines = function(count) {
 }
 
 var toggleFlag = function () {
-  r = event.target.id.split("")[5];
-  c = event.target.id.split("")[6];
+  r = event.target.id.split("-")[1];
+  c = event.target.id.split("-")[2];
   cells[r][c].flagged = !cells[r][c].flagged;
   $(this).toggleClass('flagged');
 }
@@ -88,9 +88,9 @@ var boom = function () {
   $('.mined').addClass('exploded');
 }
 
-var height = $('#rowinput').value || 9;
-var width = $('#colinput').value || 9;
-var mines = $('#mininput').value || 9;
+var height = Number($('#rowinput').value) || 9;
+var width = Number($('#colinput').value) || 9;
+var mines = Number($('#mininput').value) || 9;
 var board = new Board(height, width, mines);
 setMines(mines);
 
@@ -104,13 +104,22 @@ console.log(formData);
 var formnumber = document.getElementsByName("rows").value;
 console.log(formnumber);
 
-
+$('#minefield').one('click', function() {
+  start = Date.now();
+  setInterval(function() {
+    minutes = Math.floor((new Date - start) / 1000 / 60, 1000);
+    secint = Math.round((new Date - start) / 1000 % 60, 1000);
+    seconds = ("0" + secint).slice(-2);
+    $('.timer').text(minutes + ":" + seconds);
+  }, 1000);
+});
 $('.cell').on('click', function() {
   if (!$(this).hasClass('clicked')) {
     $(this).addClass('clicked');
 //    console.log("Clicked on "+$(this)[0].id);
-    var r = Number($(this)[0].id.split("")[5]);
-    var c = Number($(this)[0].id.split("")[6]);
+    var r = Number($(this)[0].id.split("-")[1]);
+    var c = Number($(this)[0].id.split("-")[2]);
+    console.log("c, r:"+ c+ ""+r);
 //    console.log($(this)[0].id + event.which);
     if (cells[r][c].mined) {
       boom.call($(this));
@@ -119,20 +128,20 @@ $('.cell').on('click', function() {
     } else {
       for (i = -1; i < 2; i++) {
         for (j = -1; j < 2; j++) {
-          $('#cell-'+(r+i)+""+(c+j)).click();
+          $('#cell-'+(r+i)+"-"+(c+j)).click();
         }
       }
-//      console.log('#cell-'+r+''+(c+1));
-//      $('#cell-'+r+""+(c+1)[0]).click();
+//      console.log('#cell-'+r+'-'+(c+1));
+//      $('#cell-'+r+"-"+(c+1)[0]).click();
 //      console.log("AAAAAAAAAAAA");
-//      $('#cell-'+r+""+(c-1)[0]).click();
-//      $('#cell-'+(r+1)+""+c[0]).click();
-//      $('#cell-'+(r+1)+""+(c-1)[0]).click();
+//      $('#cell-'+r+"-"+(c-1)[0]).click();
+//      $('#cell-'+(r+1)+"-"+c[0]).click();
+//      $('#cell-'+(r+1)+"-"+(c-1)[0]).click();
 //      console.log("BBBBBBBBBBBB");
-//      $('#cell-'+(r+1)+""+(c+1)[0]).click();
-//      $('#cell-'+(r-1)+""+c[0]).click();
-//      $('#cell-'+(r-1)+""+(c-1)[0]).click();0
-//      console.log($('#cell-'+(r-1)+""+(c+1)[0]).click());
+//      $('#cell-'+(r+1)+"-"+(c+1)[0]).click();
+//      $('#cell-'+(r-1)+"-"+c[0]).click();
+//      $('#cell-'+(r-1)+"-"+(c-1)[0]).click();0
+//      console.log($('#cell-'+(r-1)+"-"+(c+1)[0]).click());
 //      console.log("CCCCCCCCCCCC");
     }
   }
@@ -146,5 +155,6 @@ $('.cell').on('contextmenu', function(){
     console.log("YOU WIN");
   }
 })
+
 
 });
