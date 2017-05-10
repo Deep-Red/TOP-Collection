@@ -1,0 +1,31 @@
+<html>
+<body>
+  <canvas width="500" height="500" id="canvas"></canvas>
+  <script>
+  var data = [ 19, 29, 35, 12, 77, 95, 2, 25 ];
+  var canvas = document.getElementById('canvas');
+  var c = canvas.getContext('2d');
+
+  c.fillStyle = '#DDDDDD';
+  c.fillRect(0,0,500,500);
+
+  for(var i=0; i < data.length; i++ ) {
+    var xcoord = (i * 400 / data.length ) + 30;
+    var ycoord = 400 - data[i];
+    var nexxco = ((i+1) * 400 / data.length ) + 30;
+    var nexyco = 400 - data[(i+1)];
+    c.fillStyle = "#191107";
+    c.beginPath();
+    c.moveTo (xcoord, ycoord);
+    c.arc(xcoord, ycoord, 5, 2*Math.PI, false);
+    c.fill();
+    c.lineTo(nexxco, nexyco);
+    c.strokeStyles = "black";
+    c.stroke();
+  }
+
+
+
+  </script>
+</body>
+</html>
