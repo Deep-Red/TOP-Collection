@@ -17,6 +17,23 @@ var reticule = {
   fired: false
 };
 
+var firedMissiles = [];
+
+var centerSilo = {
+  x: 300,
+  y: 330
+};
+
+var eastSilo = {
+  x: 545,
+  y: 340
+};
+
+var westSilo = {
+  x: 55,
+  y: 340
+};
+
 // draw background
 c.fillStyle = "#002040";
 c.fillRect(0,0,600,400);
@@ -144,15 +161,22 @@ function targeting(e, silo) {
   reticule.x = pos.x;
   reticule.y = pos.y;
   var trajectory = {
-    rise = Math.abs(pos.y - silo.y),
-    run = Math.abs(pox.x - silo.x),
-    velocity = 1,
+    rise: Math.abs(pos.y - silo.y),
+    run: Math.abs(pos.x - silo.x),
+    velocity: 1,
   }
+  return trajectory;
 }
 
 function fireMissile(event, silo) {
-  targeting(event, silo);
-  console.log("Feuer!"+reticule.x+","+reticule.y+" from "+silo);
+  var traj = targeting(event, silo);
+  firedMissiles.push({
+    x: centerSilo.x,
+    y: centerSilo.y,
+    vector: (traj.rise / traj.run)
+  })
+  console.log(firedMissiles[firedMissiles.length-1]);
+  console.log("Feuer!"+reticule.x+","+reticule.y+" from "+silo.x + "," +silo.y);
 };
 
 
@@ -160,12 +184,12 @@ $('#canvas').on('click', function(e) {
   event.preventDefault();
   var mousePos = getMousePos(canvas, event);
   event.stopPropagation();
-  var silo = "center";
+  var silo = centerSilo;
   if (keydown.w) {
-    silo = "west";
+    silo = westSilo;
   }
   if (keydown.e) {
-    silo = "east";
+    silo = eastSilo;
   }
   fireMissile(event, silo);
 });
