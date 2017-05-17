@@ -18,6 +18,10 @@ var reticule = {
 };
 
 var firedMissiles = [];
+var centerMissiles = [];
+var eastMissiles = [];
+var westMissiles = [];
+var incomingMissiles = [];
 
 var centerSilo = {
   x: 300,
@@ -65,53 +69,42 @@ c.lineTo(555, 340);
 c.lineTo(560, 350);
 c.fill();
 
+// make missiles
+function Missile(x, y, vx, vy) {
+  this.xp = x || 0,
+  this.yp = y || 0,
+  this.xv = vx || 0,
+  this.yv = vy || 0
+}
 //draw missiles
-//mid
-c.fillStyle = "#DDDDDD";
-var missilesc = [
-c.fillRect(283,335,4,9),
-c.fillRect(293,335,4,9),
-c.fillRect(303,335,4,9),
-c.fillRect(313,335,4,9),
-c.fillRect(283,347,4,9),
-c.fillRect(293,347,4,9),
-c.fillRect(303,347,4,9),
-c.fillRect(313,347,4,9),
-c.fillRect(283,359,4,9),
-c.fillRect(293,359,4,9),
-c.fillRect(303,359,4,9),
-c.fillRect(313,359,4,9),
-c.fillRect(283,371,4,9),
-c.fillRect(293,371,4,9),
-c.fillRect(303,371,4,9),
-c.fillRect(313,371,4,9),
-c.fillRect(283,383,4,9),
-c.fillRect(293,383,4,9),
-c.fillRect(303,383,4,9),
-c.fillRect(313,383,4,9),
-];
-//west
-missilesw = [
-c.fillRect(48,345,4,9),
-c.fillRect(58,345,4,9),
-c.fillRect(48,357,4,9),
-c.fillRect(58,357,4,9),
-c.fillRect(48,369,4,9),
-c.fillRect(58,369,4,9),
-c.fillRect(48,381,4,9),
-c.fillRect(58,381,4,9),
-];
-//east
-missilese = [
-c.fillRect(538,345,4,9),
-c.fillRect(548,345,4,9),
-c.fillRect(538,357,4,9),
-c.fillRect(548,357,4,9),
-c.fillRect(538,369,4,9),
-c.fillRect(548,369,4,9),
-c.fillRect(538,381,4,9),
-c.fillRect(548,381,4,9),
-];
+var drawMissile = function(missile) {
+  c.fillStyle = "#DDDDDD";
+//  console.log(missile);
+  c.fillRect(missile.xp, missile.yp, 4, 4);
+}
+// populate central missiles
+for (var i = 335; i <= 383; i += 12) {
+  for (var j = 283; j <= 313; j += 10) {
+    var newMissile = new Missile(j, i);
+    centerMissiles.push(newMissile);
+  }
+}
+
+// west
+for (var i = 345; i <= 381; i += 12) {
+  for (var j = 48; j <= 58; j += 10) {
+    var newMissile = new Missile(j, i);
+    westMissiles.push(newMissile);
+  }
+}
+
+// east
+for (var i = 345; i <= 381; i+= 12) {
+  for (var j = 538; j <= 548; j += 10) {
+    var newMissile = new Missile(j, i);
+    eastMissiles.push(newMissile);
+  }
+}
 
 // draw cities
 c.fillStyle = "#778899";
@@ -175,8 +168,8 @@ function fireMissile(event, silo) {
     y: centerSilo.y,
     vector: (traj.rise / traj.run)
   })
-  console.log(firedMissiles[firedMissiles.length-1]);
-  console.log("Feuer!"+reticule.x+","+reticule.y+" from "+silo.x + "," +silo.y);
+//  console.log(firedMissiles[firedMissiles.length-1]);
+//  console.log("Feuer!"+reticule.x+","+reticule.y+" from "+silo.x + "," +silo.y);
 };
 
 
@@ -195,10 +188,24 @@ $('#canvas').on('click', function(e) {
 });
 
 function update() {
-
+//  console.log(centerMissiles.length);
 //  console.log("Update");
 };
 
 function draw() {
-//  console.log("Draw");
+  for (var i = 0; i < centerMissiles.length; i++) {
+    drawMissile(centerMissiles[i]);
+  };
+  for (var i = 0; i < westMissiles.length; i++) {
+    drawMissile(westMissiles[i]);
+  };
+  for (var i = 0; i < eastMissiles.length; i++) {
+    drawMissile(eastMissiles[i]);
+  }
+  for (var i = 0; i < firedMissiles.length; i++) {
+    drawMissile(firedMissiles[i]);
+  }
+  for (var i = 0; i < incomingMissiles.length; i++) {
+    drawMissile(incomingMissiles[i]);
+  }
 };
