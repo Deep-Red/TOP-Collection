@@ -23,6 +23,8 @@ var eastMissiles = [];
 var westMissiles = [];
 var incomingMissiles = [];
 
+var cities = [];
+
 var centerSilo = {
   x: 300,
   y: 330
@@ -76,12 +78,25 @@ function Missile(x, y, vx, vy) {
   this.xv = vx || 0,
   this.yv = vy || 0
 }
+// make cities
+function City(pos, dmg) {
+  this.a = pos,
+  this.b = (pos + 5),
+  this.dmg = dmg || 0
+}
+
 //draw missiles
 var drawMissile = function(missile) {
   c.fillStyle = "#DDDDDD";
 //  console.log(missile);
   c.fillRect(missile.xp, missile.yp, 4, 4);
 }
+var drawCity = function(city) {
+  c.fillStyle = "#778899";
+  c.fillRect(city.a, 340, 20, 10);
+  c.fillRect(city.b, 335, 10, 10);
+}
+
 // populate central missiles
 for (var i = 335; i <= 383; i += 12) {
   for (var j = 283; j <= 313; j += 10) {
@@ -89,7 +104,6 @@ for (var i = 335; i <= 383; i += 12) {
     centerMissiles.push(newMissile);
   }
 }
-
 // west
 for (var i = 345; i <= 381; i += 12) {
   for (var j = 48; j <= 58; j += 10) {
@@ -97,7 +111,6 @@ for (var i = 345; i <= 381; i += 12) {
     westMissiles.push(newMissile);
   }
 }
-
 // east
 for (var i = 345; i <= 381; i+= 12) {
   for (var j = 538; j <= 548; j += 10) {
@@ -106,25 +119,16 @@ for (var i = 345; i <= 381; i+= 12) {
   }
 }
 
-// draw cities
-c.fillStyle = "#778899";
-c.fillRect(100,340,20,10);
-c.fillRect(105,335,10,10);
-
-c.fillRect(150,340,20,10);
-c.fillRect(155,335,10,10);
-
-c.fillRect(200,340,20,10);
-c.fillRect(205,335,10,10);
-
-c.fillRect(385,340,20,10);
-c.fillRect(390,335,10,10);
-
-c.fillRect(435,340,20,10);
-c.fillRect(440,335,10,10);
-
-c.fillRect(485,340,20,10);
-c.fillRect(490,335,10,10);
+// make cities
+for (var i = 100; i <= 200; i += 50) {
+  var newCity = new City(i);
+  cities.push(newCity);
+}
+for (var i = 385; i <= 485; i += 50) {
+  var newCity = new City(i);
+  cities.push(newCity);
+  console.log(cities);
+}
 
 $(function() {
   window.keydown = {};
@@ -207,5 +211,8 @@ function draw() {
   }
   for (var i = 0; i < incomingMissiles.length; i++) {
     drawMissile(incomingMissiles[i]);
+  }
+  for (var i = 0; i < cities.length; i++) {
+    drawCity(cities[i]);
   }
 };
