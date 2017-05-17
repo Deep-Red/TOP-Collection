@@ -2,7 +2,6 @@
 var canvas = document.getElementById('canvas');
 var c = canvas.getContext('2d');
 
-
 //set variables
 var FPS = 1;
 setInterval(function() {
@@ -18,36 +17,35 @@ var reticule = {
 };
 
 var firedMissiles = [];
-var centerMissiles = [];
-var eastMissiles = [];
-var westMissiles = [];
 var incomingMissiles = [];
 
 var cities = [];
 
 var centerSilo = {
+  missiles: [],
   x: 300,
   y: 330
 };
 
 var eastSilo = {
+  missiles: [],
   x: 545,
   y: 340
 };
 
 var westSilo = {
+  missiles: [],
   x: 55,
   y: 340
 };
 
+function drawScene() {
 // draw background
 c.fillStyle = "#002040";
 c.fillRect(0,0,600,400);
-
 // draw ground
 c.fillStyle = "#B0A892";
 c.fillRect(0,350,600,50);
-
 // draw base
 c.beginPath();
 c.moveTo(270,350);
@@ -70,6 +68,8 @@ c.lineTo(535, 340);
 c.lineTo(555, 340);
 c.lineTo(560, 350);
 c.fill();
+};
+
 
 // make missiles
 function Missile(x, y, vx, vy) {
@@ -101,21 +101,21 @@ var drawCity = function(city) {
 for (var i = 335; i <= 383; i += 12) {
   for (var j = 283; j <= 313; j += 10) {
     var newMissile = new Missile(j, i);
-    centerMissiles.push(newMissile);
+    centerSilo.missiles.push(newMissile);
   }
 }
 // west
 for (var i = 345; i <= 381; i += 12) {
   for (var j = 48; j <= 58; j += 10) {
     var newMissile = new Missile(j, i);
-    westMissiles.push(newMissile);
+    westSilo.missiles.push(newMissile);
   }
 }
 // east
 for (var i = 345; i <= 381; i+= 12) {
   for (var j = 538; j <= 548; j += 10) {
     var newMissile = new Missile(j, i);
-    eastMissiles.push(newMissile);
+    eastSilo.missiles.push(newMissile);
   }
 }
 
@@ -157,23 +157,32 @@ function targeting(e, silo) {
   var pos = getMousePos(canvas, e);
   reticule.x = pos.x;
   reticule.y = pos.y;
+  console.log(pos.x +" " + " " +pos.y);
+  console.log(silo.x+" "+" "+silo.y);
+  var rise = Math.abs(pos.y - silo.y);
+  var run = -1 * (pos.x - silo.x);
+  var velocity = 11;
+  var ao = Math.abs(rise) + Math.abs(run);
+  console.log(rise + " " + run + " " + ao);
   var trajectory = {
-    rise: Math.abs(pos.y - silo.y),
-    run: Math.abs(pos.x - silo.x),
-    velocity: 1,
+    vy: 1 + Math.floor(velocity / ao * run),
+    vx: 1 + Math.abs(Math.floor(velocity / ao * rise))
   }
   return trajectory;
 }
 
 function fireMissile(event, silo) {
   var traj = targeting(event, silo);
-  firedMissiles.push({
-    x: centerSilo.x,
-    y: centerSilo.y,
-    vector: (traj.rise / traj.run)
-  })
-//  console.log(firedMissiles[firedMissiles.length-1]);
-//  console.log("Feuer!"+reticule.x+","+reticule.y+" from "+silo.x + "," +silo.y);
+  var source = silo.name+"Missiles";
+  var activeMissile = silo.missiles.shift();
+
+//  console.log(activeMissile);
+  activeMissile.xv = traj.vy;
+  activeMissile.yv = traj.vx;
+  firedMissiles.push(activeMissile);
+  console.log(traj);
+//  console.log(centerSilo.missiles.length);
+//  console.log(firedMissiles.length);
 };
 
 
@@ -192,27 +201,39 @@ $('#canvas').on('click', function(e) {
 });
 
 function update() {
-//  console.log(centerMissiles.length);
-//  console.log("Update");
+  for(var i = 0; i < firedMissiles.length; i++) {
+    var m = firedMissiles[i];
+    m.xp -= m.xv;
+    m.yp -= m.yv;
+  }
+};
+function draw() {
+  c.clearRect(0,0,600,400);
+  drawScene();
+  drawMissiles();
+  drawCities();
 };
 
-function draw() {
-  for (var i = 0; i < centerMissiles.length; i++) {
-    drawMissile(centerMissiles[i]);
+function drawCities() {
+  for (var i = 0; i < cities.length; i++) {
+    drawCity(cities[i]);
   };
-  for (var i = 0; i < westMissiles.length; i++) {
-    drawMissile(westMissiles[i]);
+};
+
+function drawMissiles() {
+  for (var i = 0; i < centerSilo.missiles.length; i++) {
+    drawMissile(centerSilo.missiles[i]);
   };
-  for (var i = 0; i < eastMissiles.length; i++) {
-    drawMissile(eastMissiles[i]);
+  for (var i = 0; i < westSilo.missiles.length; i++) {
+    drawMissile(westSilo.missiles[i]);
+  };
+  for (var i = 0; i < eastSilo.missiles.length; i++) {
+    drawMissile(eastSilo.missiles[i]);
   }
   for (var i = 0; i < firedMissiles.length; i++) {
     drawMissile(firedMissiles[i]);
   }
   for (var i = 0; i < incomingMissiles.length; i++) {
     drawMissile(incomingMissiles[i]);
-  }
-  for (var i = 0; i < cities.length; i++) {
-    drawCity(cities[i]);
   }
 };
