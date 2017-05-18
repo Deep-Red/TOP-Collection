@@ -1,12 +1,13 @@
 // set environment
 var canvas = document.getElementById('canvas');
 var c = canvas.getContext('2d');
-
+var counter = 0;
 //set variables
 var FPS = 1;
 setInterval(function() {
   update();
   draw();
+  counter += 1;
 }, 1000/30);
 
 var reticule = {
@@ -40,34 +41,34 @@ var westSilo = {
 };
 
 function drawScene() {
-// draw background
-c.fillStyle = "#002040";
-c.fillRect(0,0,600,400);
-// draw ground
-c.fillStyle = "#B0A892";
-c.fillRect(0,350,600,50);
-// draw base
-c.beginPath();
-c.moveTo(270,350);
-c.lineTo(280,330);
-c.lineTo(320,330);
-c.lineTo(330,350);
-c.closePath();
-c.fill();
+  // draw background
+  c.fillStyle = "#002040";
+  c.fillRect(0,0,600,400);
+  // draw ground
+  c.fillStyle = "#B0A892";
+  c.fillRect(0,350,600,50);
+  // draw base
+  c.beginPath();
+  c.moveTo(270,350);
+  c.lineTo(280,330);
+  c.lineTo(320,330);
+  c.lineTo(330,350);
+  c.closePath();
+  c.fill();
 
-c.beginPath();
-c.moveTo(40, 350);
-c.lineTo(45, 340);
-c.lineTo(65, 340);
-c.lineTo(70, 350);
-c.fill();
+  c.beginPath();
+  c.moveTo(40, 350);
+  c.lineTo(45, 340);
+  c.lineTo(65, 340);
+  c.lineTo(70, 350);
+  c.fill();
 
-c.beginPath();
-c.moveTo(530, 350);
-c.lineTo(535, 340);
-c.lineTo(555, 340);
-c.lineTo(560, 350);
-c.fill();
+  c.beginPath();
+  c.moveTo(530, 350);
+  c.lineTo(535, 340);
+  c.lineTo(555, 340);
+  c.lineTo(560, 350);
+  c.fill();
 };
 
 
@@ -76,7 +77,10 @@ function Missile(x, y, vx, vy) {
   this.xp = x || 0,
   this.yp = y || 0,
   this.xv = vx || 0,
-  this.yv = vy || 0
+  this.yv = vy || 0,
+  this.yt = 0,
+  this.detonated = false,
+  this.blastradius = 2
 }
 // make cities
 function City(pos, dmg) {
@@ -87,9 +91,15 @@ function City(pos, dmg) {
 
 //draw missiles
 var drawMissile = function(missile) {
-  c.fillStyle = "#DDDDDD";
-//  console.log(missile);
-  c.fillRect(missile.xp, missile.yp, 4, 4);
+  if (!missile.detonated) {
+    c.fillStyle = "#DDDDDD";
+    c.fillRect(missile.xp, missile.yp, 4, 4);
+  } else {
+    c.fillStyle = "#EEAAAA";
+    c.beginPath();
+    c.arc(missile.xp, missile.yp, missile.blastradius, 0, 2*Math.PI);
+    c.fill();
+  }
 }
 var drawCity = function(city) {
   c.fillStyle = "#778899";
@@ -165,6 +175,7 @@ function targeting(e, silo) {
   var ao = Math.abs(rise) + Math.abs(run);
   console.log(rise + " " + run + " " + ao);
   var trajectory = {
+    ty: pos.y,
     vy: 1 + Math.floor(velocity / ao * run),
     vx: 1 + Math.abs(Math.floor(velocity / ao * rise))
   }
@@ -175,16 +186,41 @@ function fireMissile(event, silo) {
   var traj = targeting(event, silo);
   var source = silo.name+"Missiles";
   var activeMissile = silo.missiles.shift();
-
-//  console.log(activeMissile);
   activeMissile.xv = traj.vy;
   activeMissile.yv = traj.vx;
+  activeMissile.yt = traj.ty;
   firedMissiles.push(activeMissile);
-  console.log(traj);
-//  console.log(centerSilo.missiles.length);
-//  console.log(firedMissiles.length);
 };
 
+function explode(missile) {
+  console.log("BOOM" + missile);
+  missile.xv = 0;
+  missile.yv = 0;
+  missile.detonated = true;
+  missile.blastradius = 5;
+};
+
+function collisionCheck(mOne, bOne, iOne) {
+  var explosion = {x: mOne.xp, y: mOne.yp, r: mOne.blastradius};
+  for (var i = 0; i < incomingMissiles.length; i++) {
+    if (bOne !== incomingMissiles || iOne !== i) {
+    var target = {x: incomingMissiles[i].xp, y: incomingMissiles[i].yp, r: incomingMissiles[i].blastradius};
+    var xdist = Math.abs(explosion.x - target.x);
+    var ydist = Math.abs(explosion.y - target.y);
+    var rcomb = explosion.r + target.r;
+    console.log(target + " " + xdist + " " + ydist + " " + rcomb + " ");
+    if (xdist <= rcomb && ydist <= rcomb && !incomingMissiles[i].detonated) {
+      incomingMissiles[i].yt = 500;
+      explode(incomingMissiles[i]);
+    };
+  };
+  };
+};
+
+function remove(missile, battery) {
+  var i = battery.indexOf(missile);
+  battery.splice(i, 1);
+};
 
 $('#canvas').on('click', function(e) {
   event.preventDefault();
@@ -200,11 +236,44 @@ $('#canvas').on('click', function(e) {
   fireMissile(event, silo);
 });
 
+function missileUpdate(battery){
+  for(var i = 0; i < battery.length; i++) {
+    var m = battery[i];
+    if (m.yp > 400 || m.yp < 0) {
+      remove(m, battery);
+    }
+    if (m.yt <= m.yp) {
+      m.xp -= m.xv;
+      m.yp -= m.yv;
+//      console.log(m.yt +" "+ m.yp);
+    } else if (m.yt > m.yp && m.blastradius === 2) {
+      console.log("THIS "+m.yp +" "+ m.xp+" "+ m.yt+" " + m.blastradius);
+      explode(m);
+    } else if (m.blastradius > 2 && m.blastradius < 40) {
+      m.blastradius += 2;
+      collisionCheck(m, battery, i);
+    } else {
+      remove(m, battery);
+    }
+  }
+}
+
+function loadIncoming() {
+  var a = Math.random() * 7;
+  for (var i = 0; i < a; i ++) {
+    var b = Math.random() * 600;
+    var c = (Math.random() * 8) - 4;
+    var newMissile = new Missile(b,0, c, -2);
+    incomingMissiles.push(newMissile);
+  };
+    console.log("FIRE");
+};
+
 function update() {
-  for(var i = 0; i < firedMissiles.length; i++) {
-    var m = firedMissiles[i];
-    m.xp -= m.xv;
-    m.yp -= m.yv;
+  missileUpdate(incomingMissiles);
+  missileUpdate(firedMissiles);
+  if ((counter % 100) === 0) {
+    loadIncoming();
   }
 };
 function draw() {
