@@ -1,0 +1,39 @@
+<html>
+<body>
+
+<form>
+<p id="form-title">
+See all your finances in one place and create a budget
+</p>
+<fieldset>
+<label for="name">Name<span>(required, at least 2 characters)</span></label><br />
+<input id="name" name="name" minlength="2" type="text" required /><br />
+
+<label for="email">Your Email</label><br />
+<input type="email" name="email"><br />
+<label for="email-confirmation">
+  Confirm Email
+</label><br />
+<input type="email" name="email-confirmation"><br />
+<label for="phone">Phone (recommended)</label><br />
+<input type="tel" name="phone"><br />
+<p class="disclaimer">
+Standard call, messaging or data rates may apply.
+</p>
+<label for="password">Password</label><br />
+<input type="password" name="password"><br />
+<label for="password-confirmation">Confirm Password</label><br />
+<input type="password" name="password-confirmation"><br />
+<label><input type="checkbox">Remember Me</label><br />
+<input type="submit" name="sign up"><br />
+<p class="disclaimer">
+By clicking Sign Up you agree to our <a href="https://www.mint.com/terms">Terms of Use</a> and <a href="https://www.mint.com/privacy">Privacy Statement</a>
+</p>
+</fieldset>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="../../sharedscripts/jquery.validate.js"></script>
+<script src="mint_form.js"></script>
+</body>
+</html>
