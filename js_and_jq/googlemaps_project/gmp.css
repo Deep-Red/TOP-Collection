@@ -1,0 +1,9 @@
+.text-box {
+  max-width: 200px;
+  padding-bottom: 4px;
+}
+
+#map {
+  height: 400px;
+  width: 400px;
+}
