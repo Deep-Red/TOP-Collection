@@ -1,0 +1,16 @@
+function boxIt(e) {
+  $('#target-box').remove();
+  console.log(e);
+  var wrapper = $('#image-container');
+  var parentOffset = wrapper.offset();
+  var relX = e.pageX - parentOffset.left - 10;
+  var relY = e.pageY - parentOffset.top + 90;
+  $('#image-container').append('<div id="target-box">')
+  $('#target-box').css({left: relX, top: relY});
+};
+$(document).ready(function(){
+  $('#image-container').append("<image src=<%= asset_path('kLH2UK6redditordisposedshrimp.jpg') %> class='search-image'></image>");
+  $('#image-container').on('click', function(e) {
+    boxIt(e);
+  });
+});
