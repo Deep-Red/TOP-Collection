@@ -7,14 +7,21 @@ function setClickLocation(e) {
   relY = e.pageY - parentOffset.top + 90;
 };
 function boxIt(e) {
-  $('#target-box').remove();
-  console.log(e);
-  $('#image-container').append('<div id="target-box">')
-  $('#target-box').css({left: relX, top: relY});
+  if ($('#target-box').length){
+    $('#target-box').remove();
+  } else {
+    console.log(e);
+    $('#image-container').append('<div id="target-box">')
+    $('#target-box').css({left: relX, top: relY});
+  };
 };
 function targetMenu() {
-  $('#target-menu').css({top: relY - $('#target-menu').height(), left: relX + 35});
-  $('#target-menu').show();
+  if ($('#target-menu').is(":visible")) {
+    $('#target-menu').hide();
+  } else {
+    $('#target-menu').css({top: relY - $('#target-menu').height(), left: relX - 140});
+    $('#target-menu').show();
+  }
 }
 
 $(document).ready(function(){
