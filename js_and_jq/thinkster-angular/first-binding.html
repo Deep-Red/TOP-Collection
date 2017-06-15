@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Angular JS Binding</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.5/angular.min.js"></script>
+  </head>
+  <body>
+    <div ng-app>
+      <h1 ng-bind="'Binding' + message"></h1>
+      <input type="text" ng-model="message" ng-init="message = 'hello'">
+      <p ng-bind="message"></p>
+      <p ng-bind="message + message"></p>
+      <p ng-bind="::message === 'hello'"></p>
+      <p ng-bind="1 + 2"><p>
+    </div>
+  </body>
+</html>
