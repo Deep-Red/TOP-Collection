@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+</head>
+<body>
+
+  <div ng-app="app">
+    <div
+    class="button"
+    ng-repeat="item in 'somewords'.split('') track by $index"
+    ng-click="$log.debug($event)"
+    >
+    {{$index + 1}}. {{item}}
+    {{ev.pageX}}
+  </div>
+</div>
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.5/angular.min.js"></script>
+<script type="text/javascript">
+  var app = angular.module("app", []);
+
+  app.config(function($logProvider){
+    $logProvider.debugEnabled(false);
+  });
+
+  app.run(function($rootScope, $log){
+    $rootScope.$log = $log;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<head>
+  <title>$http fun</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.5/angular.min.js"></script>
+  <script src="twelfth-h.js"></script>
+</head>
+<body ng-app="app" ng-controller="TestCtrl as test">
+  <input ng-model="test.sendMessage" placeholder="Enter a message">
+  <button ng-click="test.postData(test.sendMessage)">uppercase</button>
+</body>
+</html>
