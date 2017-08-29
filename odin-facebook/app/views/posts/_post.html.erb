@@ -1,0 +1,25 @@
+<li id="post-<%= post.id %>">
+<h3 style="display:inline"><%= link_to "#{post.title}", post %>
+</h3>
+<h4 style="display:inline;"><%= "#{post.user.first_name} #{post.user.last_name} " %></h4>
+<h5 style="display:inline;"><%= "#{post.created_at.to_formatted_s(:short)}" %></h5>
+<span class ="content">
+  <%= "#{post.content}" %>
+  <%= image_tag post.picture.url if post.picture? %>
+</span>
+<p>
+  <span id="post_like">
+    <% if signed_in? && liked(post) %>
+    <span id="post_<%= post.id %>_likes"><%= upvotes(post) %>likes</span>
+      <%= link_to like_post_path(post, like:false), method: 'post', remote: true do %>
+        <i class="glyphicon glyphicon-thumbs-down"></i>
+        <% end %>
+    <% else %>
+    <span id="post_<%= post.id %>_likes"><%= upvotes(post) %>likes</span>
+      <%= link_to like_post_path(post, like: true), method: 'post', remote: true do %>
+        <i class="glyphicon glyphicon-thumbs-up"></i>
+      <% end %>
+    <% end %>
+  </span>
+
+</p>

@@ -1,0 +1,18 @@
+  <td>
+  <h4>
+    <% if user.avatar.exists? %>
+      <%= image_tag user.avatar.url(:thumb) %>
+    <% else %>
+      <%= gravatar_for user %>
+    <% end %>
+    <%= link_to "#{user.first_name} #{user.last_name}", user %>
+  </h4>
+  </td>
+  <td>
+<% unless user == current_user || current_user.requested_friends.include?(user) || current_user.friends.include?(user) || current_user.pending_friends.include?(user) -%>      <% friend = user %>
+      <%= form_for(:friendship, :url => user_friends_path(:user_id => current_user.id, :friend_id => user.id )) do |f| %>
+        <%= render 'shared/error_messages', object: f.object %>
+        <%= f.submit "Add Friend", class: "btn btn-primary" %>
+      <% end %>
+    <% end -%>
+  </td>

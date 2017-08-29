@@ -1,0 +1,6 @@
+$("body").on "click", "#sortable .onoff", (event) ->
+<% if liked(@post) %>
+  $("#user_like_<%= @post.id %>").addClass("like");
+<% else %>
+  $("#user_like_<%= @post.id %>").removeClass("like");
+<% end %>

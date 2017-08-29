@@ -1,0 +1,8 @@
+<h3><%= render @post %></h3>
+<%= render 'shared/comment_form' %>
+<% if @feed_items.any? %>
+  <ol class="posts">
+    <%= render @feed_items %>
+  </ol>
+  <%= will_paginate @feed_items %>
+<% end %>

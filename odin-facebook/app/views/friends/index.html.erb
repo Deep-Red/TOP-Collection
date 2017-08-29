@@ -1,0 +1,11 @@
+<h2>Your Friends:</h2>
+<% unless @user == current_user %>
+You do not have permission to access <%= "#{@user.first_name}'s" %>  friends list!
+<% else %>
+<h4>Current Friends:</h4>
+<%= render 'friends' %><br />
+<h4>Requested Friends:</h4>
+<%= render 'requested_friends' %><br />
+<h4>Pending Friends:</h4>
+<%= render 'pending_friends' %><br />
+<% end %>

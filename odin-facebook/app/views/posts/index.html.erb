@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<div>
+<%= "#{current_user.first_name}" %>
+</div>
+
+<% if user_signed_in? %>
+
+<%= render "shared/logged_in_home" %>
+
+<% unless @user == current_user || current_user.friends.include?(@user) || current_user.pending_friends.include?(@user) %>
+
+<%= form_for(:friendship, :url => user_friends_path(:user_id => current_user.id, :friend_id => @user.id)) do |f| %>
+<%= submit_tag "Add to My Friends" %>
+<% end %>
+<% end %>
+<% else %>
+<%= render "shared/logged_out_home" %>
+<% end %>

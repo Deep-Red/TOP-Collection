@@ -1,0 +1,22 @@
+<li id="comment-<%= comment.id %>">
+
+<h4 style="display:inline;"><%= "#{comment.user.first_name} #{comment.user.last_name} " %></h4>
+<h5 style="display:inline;"><%= "#{comment.created_at.to_formatted_s(:short)}" %></h5>
+
+<p><%= "#{comment.content}" %></p>
+<p>
+  <span id="comment_like">
+    <% if signed_in? && liked(comment) %>
+    <span id="comment_<%= comment.id %>_likes"><%= upvotes(comment) %>likes</span>
+      <%= link_to like_post_comment_path(comment, like:false), method: 'post', remote: true do %>
+        <i class="glyphicon glyphicon-thumbs-down"></i>
+        <% end %>
+    <% else %>
+    <span id="comment_<%= comment.id %>_likes"><%= upvotes(comment) %>likes</span>
+      <%= link_to like_post_comment_path(comment, like: true), method: 'post', remote: true do %>
+        <i class="glyphicon glyphicon-thumbs-up"></i>
+      <% end %>
+    <% end %>
+  </span>
+
+</p>
