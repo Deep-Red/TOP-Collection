@@ -1,0 +1,38 @@
+#Header {
+	position:absolute;
+	top:0;
+	right:0;
+}
+
+a {
+		font-family: "Impact";
+		text-decoration: none;
+		color: #333333;
+	}
+a:hover {
+	text-decoration: underline;
+ 
+}
+
+li {
+	display: inline;
+}
+
+#sib {
+	float: right;
+	background-color: #4285F4;
+}
+
+#Center {
+	position: absolute;
+	left: 30%;
+	top: 30%;
+	margin: auto;
+}
+
+#Footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	a:color777777;
+}
